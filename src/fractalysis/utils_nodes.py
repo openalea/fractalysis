@@ -44,7 +44,7 @@ class linearRegression( Node ):
         self.add_input( name = "X", interface=None, value=[ 0.69314718,  1.79175949,  2.48490667,  3.17805386,  3.87120104] )
         self.add_input( name = "Y", interface=None, value=[ 2.07944154,  2.7080502,   4.41884061,  5.58724866,  6.92264389] )
         self.add_input( name = "alpha", interface=IFloat, value=5. )
-        self.add_input( name = "origin", interface=None, value=True )
+        self.add_input( name = "origin", interface=None, value=False )
         self.add_output( name = "reg", interface=None )
 
     def __call__( self, inputs= () ):

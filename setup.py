@@ -75,7 +75,7 @@ url= 'http://openalea.gforge.inria.fr'
 license= 'Cecill-C' 
 
 # Scons build directory
-#build_prefix= "build-scons"
+build_prefix= "build_scons"
 
 # For other meta-information, please read the Python distutils documentation.
 
@@ -94,10 +94,10 @@ setup(
     # Define what to execute with scons
     # scons is responsible to put compiled library in the write place
     # ( lib/, package/, etc...)
-    #scons_scripts = ['SConstruct'],
+    scons_scripts = ['SConstruct'],
 
     # scons parameters  
-    #scons_parameters = ["build","build_prefix="+build_prefix],
+    scons_parameters = ["build","build_prefix="+build_prefix],
     
 
     # pure python  packages
@@ -106,17 +106,16 @@ setup(
     package_dir= { pkg_name : pj('src',name)},
 
     # add package platform libraries if any
-    #package_data= { pkg_name : ['*.so', '*.dll', '*.pyd']},
+    package_data= { pkg_name : ['*.so', '*.dll', '*.pyd']},
                      
 
     # copy shared data in default OpenAlea directory
     # map of 'destination subdirectory' : 'source subdirectory'
-    #external_data={pj('doc', name) : 'doc',
-    #               pj('examples', name) : 'examples' ,
-    #               pj('test', name) : 'test',
-    #               pj('include', name) : pj(build_prefix, 'include', name),
-    #               pj('lib'):  pj(build_prefix,'lib'),
-    #               },
+    external_data={pj('doc', name) : 'doc',
+                   pj('test', name) : 'test',
+                   pj('include', name) : pj(build_prefix, 'include', name),
+                   pj('lib'):  pj(build_prefix,'lib'),
+                   },
 
     
 

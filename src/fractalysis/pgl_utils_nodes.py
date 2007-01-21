@@ -41,7 +41,7 @@ class loadScene( Node ):
        self.add_output( name = 'scene', interface = None )
 
     def __call__( self, inputs=() ):
-        return ( pgu.pgl( self.get_input_by_key( 'file' ) ), )
+        return ( pgu.pgl.Scene( self.get_input_by_key( 'file' ) ), )
 
 class viewScene( Node ):
     """Scene visualization using PlantGL's viewer
@@ -54,5 +54,5 @@ class viewScene( Node ):
        #defines I/O
        self.add_input( name = 'scene', interface = None )
 
-    def __call__( self ):
+    def __call__( self, inputs=() ):
         pgu.viewScene( self.get_input_by_key( 'scene' ) )

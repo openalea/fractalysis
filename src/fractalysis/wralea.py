@@ -27,6 +27,8 @@ __revision__=" $Id$ "
 from openalea.core.core import Package
 import utils_nodes_factory
 import pgl_utils_nodes_factory
+import engine_nodes_factory
+
 print "before def"
 def register_packages(pkgmanager):
     """ Initialisation function
@@ -47,6 +49,7 @@ def register_packages(pkgmanager):
 
     utils_nodes_factory.define_factory(package)
     pgl_utils_nodes_factory.define_factory(package)
+    engine_nodes_factory.define_factory( package )
 
     pkgmanager.add_package(package)
 

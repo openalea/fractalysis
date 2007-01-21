@@ -17,7 +17,7 @@ SConsignFile()
 options = Options( 'options.py', ARGUMENTS )
 
 wrapper_conf= ALEAConfig(name,['boost_python', 'alea'])
-cpp_conf= ALEAConfig(name, [])
+cpp_conf= ALEAConfig(name, ['alea'])
 opt_conf= ALEAConfig(name, ['boost_python', 'alea'])
 
 # Set all the common options for the package
@@ -37,9 +37,9 @@ prefix= opt_env['build_prefix']
 BuildDir( prefix, '.' )
 
 
-cpp_env= ALEAEnvironment( cpp_conf, 'options.py', ARGUMENTS )
+#cpp_env= ALEAEnvironment( cpp_conf, 'options.py', ARGUMENTS )
 wrapper_env= ALEAEnvironment( wrapper_conf, 'options.py', ARGUMENTS )
-
+cpp_env= wrapper_env
 # Build stage
 SConscript( pj(prefix,"src/cpp/SConscript"),
             exports={"env": cpp_env} )

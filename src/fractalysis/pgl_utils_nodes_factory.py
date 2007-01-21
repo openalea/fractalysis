@@ -31,7 +31,7 @@ def define_factory(package):
                       nodeclass = "loadScene",
                       widgetmodule = None,
                       widgetclass = None, 
-                      parameters = []
+                      parameters = ['file']
                       )
 
     package.add_factory( nf )
