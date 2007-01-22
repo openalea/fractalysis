@@ -29,7 +29,6 @@ import utils_nodes_factory
 import pgl_utils_nodes_factory
 import engine_nodes_factory
 
-print "before def"
 def register_packages(pkgmanager):
     """ Initialisation function
     Return a list of package to include in the package manager.

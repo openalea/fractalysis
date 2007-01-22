@@ -54,7 +54,7 @@ class linearRegression( Node ):
         else:
             reg = utils.regLin(self.get_input_by_key( "X" ),self.get_input_by_key( "Y" ),self.get_input_by_key( "alpha" ) )
         
-        print reg
+        #print reg
         return ( reg, )
 
 class regLin2Plot( Node ):

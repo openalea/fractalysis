@@ -58,8 +58,6 @@ class boxMethod( Node ):
             iv.append( r[ 0 ] )
         scales =  p.log( 1./ p.array( sc ) )
         interVox = p.log( p.array( iv ) )
-        print "scales :", scales
-        print "interVox :", interVox
 
         return ( scales, interVox )
 
