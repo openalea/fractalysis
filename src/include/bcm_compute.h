@@ -29,16 +29,20 @@
  *
  *  ----------------------------------------------------------------------------
  */
-#include <util_vector.h>
-#include <util_array.h>
-#include <geom_triangleset.h>
-#include <actn_bboxcomputer.h>
-#include <geom_boundingbox.h>
-#include <scne_scene.h>
-#include <scne_shape.h>
-#include <actn_tesselator.h>
-#include <actn_surfcomputer.h>
+
 #include <string>
+#include <vector>
+#include <plantgl/math/util_vector.h>
+#include <plantgl/tool/util_array.h>
+#include <plantgl/scenegraph/scene/scene.h>
+#include <plantgl/scenegraph/scene/shape.h>
+#include <plantgl/gui3/viewer/pglapplication.h>
+#include <plantgl/algo/base/bboxcomputer.h>
+#include <plantgl/algo/base/tesselator.h>
+#include <plantgl/algo/base/surfcomputer.h>
+#include <plantgl/scenegraph/geometry/boundingbox.h>
+#include <plantgl/scenegraph/geometry/triangleset.h>
+
 
 GEOM_USING_NAMESPACE
 TOOLS_USING_NAMESPACE
