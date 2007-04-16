@@ -31,7 +31,7 @@
  */
 
 #include <boost/python.hpp>
-#include "fractalysis/bcmCompute.h"
+#include "fractalysis/engine/bcmCompute.h"
 
 PGL_USING_NAMESPACE
 TOOLS_USING_NAMESPACE
