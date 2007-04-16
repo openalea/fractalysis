@@ -78,3 +78,4 @@ BCM_API pair<int,double> computeGrid(const ScenePtr& scene, int gridSize);
 
 BCM_API FrResult computeGrids(const ScenePtr& scene, int maxGridSize);
 
+#endif

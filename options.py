@@ -2,6 +2,8 @@
 #use this file to pass custom parameter to SConstruct script
 
 build_prefix="build_scons"
+QTDIR = "/usr/share/qt3"
+EXTRA_CPPPATH = "/usr/local/openalea/include/plantgl/"
 
 import sys
 if('win' in sys.platform):
