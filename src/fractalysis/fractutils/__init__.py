@@ -1,3 +1,3 @@
 #from fractconf import *
-from Results import *
+from results import *
 
