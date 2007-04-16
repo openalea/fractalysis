@@ -31,9 +31,9 @@
  */
 
 #include <boost/python.hpp>
-#include "fractalysis/bcm_compute.h"
+#include "fractalysis/bcmCompute.h"
 
-GEOM_USING_NAMESPACE
+PGL_USING_NAMESPACE
 TOOLS_USING_NAMESPACE
 using namespace boost::python;
 using namespace std;
