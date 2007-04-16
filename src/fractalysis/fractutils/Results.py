@@ -8,7 +8,7 @@
 :Date: July 2005
 """
 
-class Results:
+class ParamRes:
     """
     :Abstract: This module is dedicated to save the results obtained with one parameters set
     """
