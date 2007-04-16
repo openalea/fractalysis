@@ -48,7 +48,7 @@ pkg_name= namespace + '.' + name
 # beta: patch= patch + 'b' + 'number'
 major= '0'
 minor= '0'
-patch= '1'
+patch= '2'
 version= '%s.%s.%s' % (major, minor, patch)
 
 # Description of the package
@@ -99,11 +99,16 @@ setup(
     # scons parameters  
     scons_parameters = ["build","build_prefix="+build_prefix],
     
+    namespace=[namespace],
 
     # pure python  packages
-    packages= [ pkg_name ],
+    packages= [ pkg_name, pkg_name+'.light', pkg_name+'.engine', pkg_name+'.fractutils' ],
     # python packages directory
-    package_dir= { pkg_name : pj('src',name)},
+    package_dir= {  pkg_name : pj('src',name)
+                    pkg_name+'.light' :pj('src', name, 'light'),
+                    pkg_name+'.engine' :pj('src', name, 'engine'),
+                    pkg_name+'.fractutils' :pj('src', name, 'fractutils'),
+                  },
 
     # add package platform libraries if any
     package_data= { pkg_name : ['*.so', '*.dll', '*.pyd']},

@@ -1,5 +1,5 @@
 # -*-python-*-
-import os, re
+#import os, re
 
 Import( "env" )
 
