@@ -29,12 +29,11 @@
  *
  *  ----------------------------------------------------------------------------
  */
+#define BCM_MAKEDLL
 
-#include "fractalysis/engine/bcm_compute.h"
+#include "fractalysis/engine/bcmCompute.h"
 #include <cmath>
 
-GEOM_USING_NAMESPACE
-TOOLS_USING_NAMESPACE
 using namespace std;
 
 //typedef vector<pair<Vector3,float> > FrPointList;

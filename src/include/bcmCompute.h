@@ -29,6 +29,19 @@
  *
  *  ----------------------------------------------------------------------------
  */
+#ifndef bcmCompute_h
+#define bcmCompute_h
+
+#ifdef _WIN32
+#ifdef BCM_MAKEDLL  /* create a DLL library */
+#define BCM_API  __declspec(dllexport)
+#else               /* use a  DLL library */
+#define BCM_API  __declspec(dllimport)
+#endif
+#else
+#define BCM_API  
+#endif
+
 
 #include <string>
 #include <vector>
@@ -44,22 +57,24 @@
 #include <plantgl/scenegraph/geometry/triangleset.h>
 
 
-GEOM_USING_NAMESPACE
+PGL_USING_NAMESPACE
 TOOLS_USING_NAMESPACE
 using namespace std;
+using namespace STDEXT;
+
 
 typedef vector<pair<int,double> > FrResult; //vecteur de couple pour transformer en liste ?
 typedef vector<pair<Vector3,float> > FrPointList;
 
-FrPointList * pointDiscretize(const ScenePtr& scene);
+BCM_API FrPointList * pointDiscretize(const ScenePtr& scene);
 
-pair<Vector3,Vector3> bbox(const FrPointList& points);
+BCM_API pair<Vector3,Vector3> bbox(const FrPointList& points);
 
-pair<Vector3,Vector3> bbox2(const ScenePtr& sc);
+BCM_API pair<Vector3,Vector3> bbox2(const ScenePtr& sc);
 
-void scene2Grid( const FrPointList& points, const pair<Vector3,Vector3>& mbbox, int gridSize, int& intercepted, double& voxelSize  );
+BCM_API void scene2Grid( const FrPointList& points, const pair<Vector3,Vector3>& mbbox, int gridSize, int& intercepted, double& voxelSize  );
 
-pair<int,double> computeGrid(const ScenePtr& scene, int gridSize);
+BCM_API pair<int,double> computeGrid(const ScenePtr& scene, int gridSize);
 
-FrResult computeGrids(const ScenePtr& scene, int maxGridSize);
+BCM_API FrResult computeGrids(const ScenePtr& scene, int maxGridSize);
 
