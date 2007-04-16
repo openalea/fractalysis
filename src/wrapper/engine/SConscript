@@ -8,9 +8,9 @@ py_dir = '../../fractalysis/engine'
 lib_env=env.Copy()
 
 sources= lib_env.ALEAGlob( '*.cpp' )
-target= "_bcmcompute"
+target= "_engine"
 
-lib_env.AppendUnique(LIBS= ['pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
+lib_env.AppendUnique(LIBS= ['engine','pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
 lib_env.ALEAWrapper( py_dir, target, sources )
 
 
