@@ -16,7 +16,7 @@
 
 
 __doc__="""
-Wralea for Core.Library 
+Wralea for Fractalysis.Library 
 """
 
 __license__= "Cecill-C"
