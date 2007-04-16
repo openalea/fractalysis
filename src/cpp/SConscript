@@ -1,52 +1,14 @@
 # -*-python-*-
-import os, re
-
 Import( "env" )
- 
-#Import("geom_dir")
-#Import("tools_dir")
 
 # 1. Select and install the headers
- 
-include_dir = str(env.Dir( "../include" ).srcnode())
-h_pattern = re.compile( r".*\.(h|hpp)$" )
-includes = [ "../include/%s" % ( s, ) for s in os.listdir(include_dir) if h_pattern.match( s ) ]
- 
+
+includes= env.ALEAGlob('*.h')
+
 env.ALEAIncludes( "fractalysis", includes )
- 
- 
-# 2. Build shared libraries
 
-# WARNING: we are waiting a proper PLANTGL installation in OpenAlea.
-# Before that we need to write a little hack....
-# To be corrected as soon as ...
+# 2. Call other SConscript files in sub directories
+dirs= env.ALEAGlob( 'SConscript' , dir='*')
 
-# 2.1 PlantGL ( a.k.a. GEOM, TOOLS ) include path
-# 2.2 PlantGL ( a.k.a. GEOM, TOOLS ) lib path
-amapmod_dir= '/home/ddasilva/dev/AMAPmod'
-geom_libdir=amapmod_dir+"/build-linux/lib"
-amapmod_src= amapmod_dir+"/src/"
-tools_dir= amapmod_src+"Tools/"
-geom_dir= amapmod_src+"GEOM/"
-
-libpath= [ geom_libdir]
-libs= [ 'tools','geom','geomext','qhull','octree']
-inc= [ amapmod_src, tools_dir, geom_dir ]
-
-env.AppendUnique( CPPPATH= inc )
-env.AppendUnique( LIBPATH= libpath )
-env.AppendUnique( LIBS= libs )
-env.Append( RPATH= geom_libdir )
-
-
-# Build first library
-sources= "pgl_compute.cpp"
-target= "pglcompute"
- 
-# Add defines to export symbols on Windows
-DEFINES= list(env['CPPDEFINES'])
-DEFINES.append('PGLCOMPUTE_DLL')
- 
-# Build the library
-lib = env.ALEALibrary( target, sources, CPPDEFINES=DEFINES )
+SConscript( dirs, exports= { 'env' : env } )
 
