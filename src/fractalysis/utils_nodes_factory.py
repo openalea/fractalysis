@@ -31,7 +31,7 @@ def define_factory(package):
                       nodeclass = "linearRegression",
                       widgetmodule = None,
                       widgetclass = None, 
-                      parameters = [ 'alpha', 'origin' ]
+                      #parameters = [ 'alpha', 'origin' ]
                       )
 
     package.add_factory( nf )
@@ -43,7 +43,7 @@ def define_factory(package):
                       nodeclass = "regLin2Plot",
                       widgetmodule = None,
                       widgetclass = None, 
-                      parameters = [ 'pointLegend', 'pointMarker', 'pointColor', 'regLineStyle' ]
+                      #parameters = [ 'pointLegend', 'pointMarker', 'pointColor', 'regLineStyle' ]
                       )
 
     package.add_factory( nf )
@@ -55,7 +55,7 @@ def define_factory(package):
                       nodeclass = "plot2D",
                       widgetmodule = None,
                       widgetclass = None, 
-                      parameters = [ 'title', 'xlabel', 'ylabel' ]
+                      #parameters = [ 'title', 'xlabel', 'ylabel' ]
                       )
 
     package.add_factory( nf )

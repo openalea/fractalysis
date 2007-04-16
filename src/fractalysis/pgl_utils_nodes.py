@@ -25,6 +25,7 @@ __revision__=" $Id: utils_nodes.py $ "
 #from core.core import Node
 #from openalea.core.interface import IFileStr
 from openalea.core import *
+import openalea.config
 import pgl_utils as pgu
 
 class loadScene( Node ):
@@ -37,7 +38,7 @@ class loadScene( Node ):
        Node.__init__( self )
 
        #defines I/O
-       self.add_input( name = 'file', interface = IFileStr )
+       self.add_input( name = 'file', interface = IFileStr, value=openalea.config.prefix_dir )
        self.add_output( name = 'scene', interface = None )
 
     def __call__( self, inputs=() ):

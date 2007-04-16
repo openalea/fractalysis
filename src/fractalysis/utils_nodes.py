@@ -44,12 +44,13 @@ class linearRegression( Node ):
         self.add_input( name = "X", interface=None, value=[ 0.69314718,  1.79175949,  2.48490667,  3.17805386,  3.87120104] )
         self.add_input( name = "Y", interface=None, value=[ 2.07944154,  2.7080502,   4.41884061,  5.58724866,  6.92264389] )
         self.add_input( name = "alpha", interface=IFloat, value=5. )
-        self.add_input( name = "origin", interface=None, value=False )
+        self.add_input( name = "origin", interface=IBool, value=False )
         self.add_output( name = "reg", interface=None )
 
     def __call__( self, inputs= () ):
         """ inputs is the list of input values """
         if self.get_input_by_key( "origin" ):
+            print "Origin will not work if x values are < 0"
             reg = utils.regLinOri(self.get_input_by_key( "X" ),self.get_input_by_key( "Y" ),self.get_input_by_key( "alpha" ) )
         else:
             reg = utils.regLin(self.get_input_by_key( "X" ),self.get_input_by_key( "Y" ),self.get_input_by_key( "alpha" ) )
@@ -68,10 +69,10 @@ class regLin2Plot( Node ):
 
         #defines I/O
         self.add_input( name='reg', interface=None )
-        self.add_input( name='pointLegend', interface=IStr )
-        self.add_input( name='pointMarker', interface=IStr )
-        self.add_input( name='pointColor', interface=IStr )
-        self.add_input( name='regLineStyle', interface=IStr )
+        self.add_input( name='pointLegend', interface=IStr, value='Data' )
+        self.add_input( name='pointMarker', interface=IStr, value='^' )
+        self.add_input( name='pointColor', interface=IStr, value='dodgerblue' )
+        self.add_input( name='regLineStyle', interface=IStr, value='-' )
         self.add_output( name='plotObj', interface=None )
 
     def __call__( self, inputs=() ):
@@ -87,9 +88,9 @@ class plot2D( Node ):
 
         #defines I/O
         self.add_input( name='plotObjList', interface=Node )
-        self.add_input( name='title', interface=IStr )
-        self.add_input( name='xlabel', interface=IStr )
-        self.add_input( name='ylabel', interface=IStr )
+        self.add_input( name='title', interface=IStr, value='MyPlot' )
+        self.add_input( name='xlabel', interface=IStr, value='x-axis' )
+        self.add_input( name='ylabel', interface=IStr, value='y-axis' )
 
     def __call__( self, inputs=() ):
         utils.plot2D( self.get_input_by_key( 'plotObjList' ), self.get_input_by_key( 'title' ), self.get_input_by_key( 'xlabel' ), self.get_input_by_key( 'ylabel' ) )

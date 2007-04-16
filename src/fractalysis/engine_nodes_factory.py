@@ -33,7 +33,7 @@ def define_factory(package):
                       nodeclass = "boxMethod",
                       widgetmodule = None,
                       widgetclass = None, 
-                      parameters = [ 'finalSubFactor' ]
+                      #parameters = [ 'finalSubFactor' ]
                       )
 
     package.add_factory( nf )
