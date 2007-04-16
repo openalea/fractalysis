@@ -1,27 +1,7 @@
 # -*-python-*-
- 
-Import( "env" )
- 
-py_dir = '../fractalysis'
- 
-# Build wrappers as shared libraries
-# First wrapper
-env1=env.Copy()
- 
-sources= ["pgl_compute_wrapper.cpp"]
-target= "_pglcompute"
-lib = ["pglcompute"]
- 
-env1.AppendUnique(LIBS=lib)
-env1.ALEAWrapper( py_dir, target, sources )
 
-# Second wrapper
-#env2=env.Copy()
- 
-#sources= ["scenecontainer_wrap.cpp", "export_scene_container.cpp"]
-#target= "_scenecontainer"
-#lib2 = ["libscenecontainer"]
- 
-#env2.AppendUnique(LIBS=lib2)
- 
-#env2.ALEAWrapper( py_dir, target, sources )
+Import( "env" )
+
+dirs= env.ALEAGlob( 'SConscript', '*' )
+SConscript( dirs, exports= { 'env' : env } )
+

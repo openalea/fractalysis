@@ -31,7 +31,7 @@
  */
 
 #include <boost/python.hpp>
-#include "fractalysis/pgl_compute.h"
+#include "fractalysis/bcm_compute.h"
 
 GEOM_USING_NAMESPACE
 TOOLS_USING_NAMESPACE
@@ -61,14 +61,14 @@ boost::python::object pyComputeGrids(const ScenePtr& scene, int maxGridSize)
 }
 
 
-void module_pglcompute()
+void module_bcmcompute()
 {
 	def("computeGrid"  ,&pyComputeGrid, args("scene","gridSize"));
 	def("computeGrids" ,&pyComputeGrids, args("scene","maxGridSize"));
 }
 
 
-BOOST_PYTHON_MODULE(_pglcompute)
+BOOST_PYTHON_MODULE(_bcmcompute)
 {
-	module_pglcompute();
+	module_bcmcompute();
 }
