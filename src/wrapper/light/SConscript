@@ -7,7 +7,8 @@ py_dir = '../../fractalysis/light'
 # Build wrappers as shared libraries
 lib_env=env.Copy()
 
-sources= lib_env.ALEAGlob( '*.cpp' )
+#sources= lib_env.ALEAGlob( '*.cpp' )
+sources= ["msStruct_wrapper.cpp"]
 target= "_light"
 
 lib_env.AppendUnique(LIBS= ['light','pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
