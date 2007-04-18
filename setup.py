@@ -104,7 +104,7 @@ setup(
     # pure python  packages
     packages= [ pkg_name, pkg_name+'.light', pkg_name+'.engine', pkg_name+'.fractutils' ],
     # python packages directory
-    package_dir= {  pkg_name : pj('src',name)
+    package_dir= {  pkg_name : pj('src',name),
                     pkg_name+'.light' :pj('src', name, 'light'),
                     pkg_name+'.engine' :pj('src', name, 'engine'),
                     pkg_name+'.fractutils' :pj('src', name, 'fractutils'),

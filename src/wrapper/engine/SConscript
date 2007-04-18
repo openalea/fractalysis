@@ -5,12 +5,12 @@ Import( "env" )
 py_dir = '../../fractalysis/engine'
 
 # Build wrappers as shared libraries
-lib_env=env.Copy()
+env1=env.Copy()
 
-sources= lib_env.ALEAGlob( '*.cpp' )
-target= "_engine"
+sources= ["bcmCompute_wrapper.cpp"]
+target= "_bcmcompute"
 
-lib_env.AppendUnique(LIBS= ['engine','pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
-lib_env.ALEAWrapper( py_dir, target, sources )
+env1.AppendUnique(LIBS= ['engine','pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
+env1.ALEAWrapper( py_dir, target, sources )
 
 

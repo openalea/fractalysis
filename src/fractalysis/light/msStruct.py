@@ -3,7 +3,7 @@ import os
 import openalea.plantgl.all as pgl
 #import fractalysis.fractutils as frut
 import skyTurtle as skt
-import fractalysis.results as fres
+import fractalysis.fractutils as fruti
 import cPickle
 import csv
 from PIL import Image
@@ -23,7 +23,7 @@ def saveBeams(self,skt_idx, beams, pth=os.path.abspath(os.curdir)):
   dir.normalize()
   param = {'dir':(dir.x, dir.y, dir.z)}
   result = {'beams':beams}
-  res = fres.ParamRes(param, result)
+  res = fruti.ParamRes(param, result)
   if not os.path.isdir(savedir):
     os.mkdir(savedir) 
   file = os.path.join(savedir, beam_file)
@@ -60,7 +60,7 @@ def saveSproj(self, skt_idx, sproj, pth=os.path.abspath(os.curdir)):
   dir.normalize()
   param = {'dir':(dir.x, dir.y, dir.z)}
   result = {'sproj':sproj}
-  res = fres.ParamRes(param, result)
+  res = fruti.ParamRes(param, result)
   if not os.path.isdir(savedir):
     os.mkdir(savedir) 
   file = os.path.join(savedir, sproj_file)
