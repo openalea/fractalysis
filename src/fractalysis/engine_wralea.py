@@ -34,9 +34,9 @@ def register_packages(pkgmanager):
 
     metainfo={ 'version' : '0.0.1',
                'license' : 'CECILL-C',
-               'authors' : 'SDK, CP',
+               'authors' : 'DDS',
                'institutes' : 'INRIA/CIRAD',
-               'description' : 'utils nodes.',
+               'description' : 'fractalysis.engine nodes.',
                }
 
 
@@ -46,7 +46,7 @@ def register_packages(pkgmanager):
 
     nf = Factory( name="BCM",
                   description="Apply box counting method on scene",
-                  category="Data Types",
+                  category="compute engine",
                   nodemodule="engine_nodes",
                   nodeclass="BCM",
                   inputs=(dict(name="scene", interface=IFileStr,),

@@ -15,22 +15,16 @@
 
 
 __doc__="""
-utils nodes
+fractalysis.engine nodes
 """
 
 __license__= "Cecill-C"
 __revision__=" $Id: utils_nodes.py $ "
 
-
-
-#from core.core import Node
-#from openalea.core.interface import IFloat
-#from openalea.core.interface import IStr
 from openalea.core import *
 import openalea.plantgl.all as pgl
 import openalea.fractalysis.engine as engine
 import pylab as p
-
 
 class BCM( Node ):
     """Box Method a.k.a counting intercepted voxel at each scale
