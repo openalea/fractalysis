@@ -2,7 +2,6 @@
 #use this file to pass custom parameter to SConstruct script
 
 build_prefix="build_scons"
-QTDIR = "/usr/"
 EXTRA_CPPPATH = "/usr/local/openalea/include/plantgl/"
 
 import sys

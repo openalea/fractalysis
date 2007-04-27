@@ -1,9 +1,9 @@
 #from _light import *
 import os
 import openalea.plantgl.all as pgl
-#import fractalysis.fractutils as frut
 import skyTurtle as skt
-import fractalysis.fractutils as fruti
+import openalea.fractalysis.fractutils
+fruti = openalea.fractalysis.fractutils
 import cPickle
 import csv
 from PIL import Image
