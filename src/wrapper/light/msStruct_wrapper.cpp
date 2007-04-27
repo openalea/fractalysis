@@ -96,11 +96,11 @@ boost::python::list array2List( const T& matrix )
 }
 
 
-ViewRayPointHitBuffer3 * list_to_raybuf(  boost::python::list l )//beams structure from python to C++
+ViewRayPointHitBuffer * list_to_raybuf(  boost::python::list l )//beams structure from python to C++
 {
   //iteration over lines
   object iter_list = boost::python::object( handle<>( PyObject_GetIter( l.ptr() ) ) );
-  vector< vector<RayPointHitList3> > ray_array;
+  vector< vector<RayPointHitList> > ray_array;
   while( 1 )
   {
     object obj_line; 
@@ -114,7 +114,7 @@ ViewRayPointHitBuffer3 * list_to_raybuf(  boost::python::list l )//beams structu
     boost::python::list line = boost::python::extract<boost::python::list>( obj_line );
     //iteration over columns wich are beams
     object iter_line = boost::python::object( handle<>( PyObject_GetIter( line.ptr() ) ) );
-    vector<RayPointHitList3> ray_line;
+    vector<RayPointHitList> ray_line;
     while( 1 )
       {
         object obj_col;
@@ -128,7 +128,7 @@ ViewRayPointHitBuffer3 * list_to_raybuf(  boost::python::list l )//beams structu
         boost::python::list col = boost::python::extract<boost::python::list>( obj_col );
         //iteration inside beam list that represent each hit
         object iter_col = boost::python::object( handle<>( PyObject_GetIter( col.ptr() ) ) );
-        RayPointHitList3 beam;
+        RayPointHitList beam;
         while( 1 )
           {
             object obj_hit;
@@ -150,7 +150,7 @@ ViewRayPointHitBuffer3 * list_to_raybuf(  boost::python::list l )//beams structu
                 PyErr_Clear();
                 zmin = zmax;
               }
-            RayPointHit3 ray_hit( id, zmin, zmax );
+            RayPointHit ray_hit( id, zmin, zmax );
 
             beam.push_back( ray_hit );
           }
@@ -162,10 +162,10 @@ ViewRayPointHitBuffer3 * list_to_raybuf(  boost::python::list l )//beams structu
   if( nbLines == 0 )
     cout<<"there was a problem during python list iteration"<<endl;
   size_t nbCols = ray_array[ 0 ].size();
-  ViewRayPointHitBuffer3 * all_beams = new ViewRayPointHitBuffer3( nbLines ,  nbCols  );
+  ViewRayPointHitBuffer * all_beams = new ViewRayPointHitBuffer( nbLines ,  nbCols  );
   for( int i=0; i<nbLines; ++i )
     {
-      vector<RayPointHitList3> array_line = ray_array[ i ]; //should test if nbCols == array_line.size()
+      vector<RayPointHitList> array_line = ray_array[ i ]; //should test if nbCols == array_line.size()
       for( int j=0; j<nbCols; ++j )
         {
           all_beams->getAt( i,j ) = array_line[ j ];
@@ -174,7 +174,7 @@ ViewRayPointHitBuffer3 * list_to_raybuf(  boost::python::list l )//beams structu
   return all_beams;
 }
 
-boost::python::object raybuf_to_list(ViewRayPointHitBuffer3 * buf) //beams structure from C++ to python
+boost::python::object raybuf_to_list(ViewRayPointHitBuffer * buf) //beams structure from C++ to python
 {
   boost::python::list res;
   for(size_t i = 0; i < buf->getColsSize();i++){
@@ -182,7 +182,7 @@ boost::python::object raybuf_to_list(ViewRayPointHitBuffer3 * buf) //beams struc
     for(size_t j = 0; j < buf->getRowsSize();j++){
       boost::python::list zlist;
       for(size_t k = 0; k < buf->getAt(i,j).size();k++){
-        RayPointHit3& inter = buf->getAt(i,j)[k];
+        RayPointHit& inter = buf->getAt(i,j)[k];
         if(std::fabs(norm(inter.zmax-inter.zmin))<GEOM_EPSILON)
           zlist.append(make_tuple(inter.id,inter.zmin,inter.zmin));
         else zlist.append(make_tuple(inter.id,inter.zmin,inter.zmax));

@@ -21,13 +21,18 @@
 //#include <hash_map.h>
 #include <plantgl/scenegraph/scene/scene.h>
 #include <plantgl/scenegraph/scene/shape.h>
-//#include <plantgl/gui/viewer/pglapplication.h>
-#include <plantgl/gui3/viewer/pglapplication.h>
 #include <plantgl/algo/base/bboxcomputer.h>
 #include <plantgl/scenegraph/geometry/boundingbox.h>
-//#include <plantgl/gui/base/zbuffer.h>
-#include <plantgl/gui3/base/zbuffer.h>
-
+#include <plantgl/gui/base/zbuffer.h>
+#include <plantgl/gui/viewer/pglapplication.h>
+//#include <plantgl/gui3/base/zbuffer.h>
+//#include <plantgl/gui3/viewer/pglapplication.h>
+/*
+if qt4 is not available and qt3 is, gui3 must be used and changes in .h and .cpp are to be made :
+PGLViewerApplication --> PGLViewerApplication3
+ViewRayPointHitBuffer --> ViewRayPointHitBuffer3
+RayPointHitList --> RayPointHitList3
+*/
 
 PGL_USING_NAMESPACE
 TOOLS_USING_NAMESPACE
@@ -139,7 +144,7 @@ public:
   vector< pair<uint32_t,double> >   computeProjections( Vector3 );
   void sprojToNodes(Vector3, vector< pair<uint32_t,double> > );
 
-  void beamsToNodes( Vector3, ViewRayPointHitBuffer3 * );
+  void beamsToNodes( Vector3, ViewRayPointHitBuffer * );
   float probaClassic(int, Vector3);
   Array2<float> probaImage( int, Vector3, vector<distrib>, uint32_t, uint32_t );
   float probaIntercept( int, Vector3, vector<distrib> );

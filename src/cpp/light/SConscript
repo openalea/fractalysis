@@ -21,7 +21,7 @@ DEFINES.append('LIGHT_DLL')
 
 # Link with the following libraries
 LIBRARIES= list(lib_env['LIBS'])
-LIBRARIES.extend(['pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
+LIBRARIES.extend(['pgltool','pglmath','pglsg', 'pglgui', 'pglalgo'])  #for qt3 use pglgui3 instead of pglgui
 
 lib_env.ALEALibrary( "light",
                      sources, 

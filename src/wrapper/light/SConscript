@@ -11,7 +11,7 @@ lib_env=env.Copy()
 sources= ["msStruct_wrapper.cpp"]
 target= "_light"
 
-lib_env.AppendUnique(LIBS= ['light','pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
+lib_env.AppendUnique(LIBS= ['light','pgltool','pglmath','pglsg', 'pglgui', 'pglalgo']) #for qt3 use pglgui3 instead of pglgui
 lib_env.ALEAWrapper( py_dir, target, sources )
 
 

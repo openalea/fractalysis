@@ -32,7 +32,7 @@ DEFINES.append('ENGINE_DLL')
 
 # Link with the following libraries
 LIBRARIES= list(lib_env['LIBS'])
-LIBRARIES.extend(['pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
+LIBRARIES.extend(['pgltool','pglmath','pglsg', 'pglgui', 'pglalgo']) #with qt3, pglgui3 instead of pglgui
 
 lib_env.ALEALibrary( "engine",
                      sources, 

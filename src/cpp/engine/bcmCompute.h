@@ -49,7 +49,7 @@
 #include <plantgl/tool/util_array.h>
 #include <plantgl/scenegraph/scene/scene.h>
 #include <plantgl/scenegraph/scene/shape.h>
-#include <plantgl/gui3/viewer/pglapplication.h>
+//#include <plantgl/gui3/viewer/pglapplication.h>
 #include <plantgl/algo/base/bboxcomputer.h>
 #include <plantgl/algo/base/tesselator.h>
 #include <plantgl/algo/base/surfcomputer.h>

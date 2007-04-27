@@ -10,7 +10,7 @@ env1=env.Copy()
 sources= ["bcmCompute_wrapper.cpp"]
 target= "_bcmcompute"
 
-env1.AppendUnique(LIBS= ['engine','pgltool','pglmath','pglsg', 'pglgui3', 'pglalgo'])
+env1.AppendUnique(LIBS= ['engine','pgltool','pglmath','pglsg', 'pglgui', 'pglalgo']) #for qt3 use pglgui3 instead of pglgui
 env1.ALEAWrapper( py_dir, target, sources )
 
 

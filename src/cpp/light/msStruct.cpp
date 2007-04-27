@@ -343,7 +343,7 @@ ScenePtr scaledStruct::genNodeScene( int id )
 
 ScenePtr scaledStruct::genSelectScene()
 {
-  vector<uint32_t> sel = PGLViewerApplication3::getSelection();
+  vector<uint32_t> sel = PGLViewerApplication::getSelection();
   ScenePtr scene = new Scene();
   for ( int i=0; i<sel.size(); ++i )
   {
@@ -388,11 +388,11 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
   //setting the camera according to scene size
   v.normalize();
   
-  PGLViewerApplication3::animation( true );
-  PGLViewerApplication3::glFrameSize( 600,600 ); //size can be changed...
-  PGLViewerApplication3::setOrthographicCamera ();
-  PGLViewerApplication3::setGrid (false, false, false, false);
-  PGLViewerApplication3::display( genScaleScene( 1 ) );
+  PGLViewerApplication::animation( true );
+  PGLViewerApplication::glFrameSize( 600,600 ); //size can be changed...
+  PGLViewerApplication::setOrthographicCamera ();
+  PGLViewerApplication::setGrid (false, false, false, false);
+  PGLViewerApplication::display( genScaleScene( 1 ) );
   //camera is set, doing the projections
   vector< pair<uint32_t,double> > proj, total;
   vector< pair<uint32_t,double> >::const_iterator it_proj;
@@ -415,9 +415,9 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
     float d_factor = ( bbox->getXRange()+bbox->getYRange()+bbox->getZRange() );
     cam_pos = bb_center + v*-3*d_factor;
     //cout<<"Camera pos : "<<cam_pos<<"  looking at : "<<bb_center<<endl;
-    PGLViewerApplication3::lookAt(cam_pos, bb_center );
-    PGLViewerApplication3::display( sc );
-    proj = PGLViewerApplication3::getProjectionSizes( sc );
+    PGLViewerApplication::lookAt(cam_pos, bb_center );
+    PGLViewerApplication::display( sc );
+    proj = PGLViewerApplication::getProjectionSizes( sc );
     
     for( it_proj = proj.begin(); it_proj != proj.end(); ++it_proj )
     {
@@ -446,19 +446,19 @@ void scaledStruct::sprojToNodes(Vector3 v, vector< pair<uint32_t,double> > sproj
   delete node;
 }
 
-void scaledStruct::beamsToNodes( Vector3 direction, ViewRayPointHitBuffer3 * beams )
+void scaledStruct::beamsToNodes( Vector3 direction, ViewRayPointHitBuffer * beams )
 {
   direction.normalize();
   int nbLign = beams->getColsSize();
   int nbCol = beams->getRowsSize();
-  RayPointHitList3::iterator raypointhit_it;
+  RayPointHitList::iterator raypointhit_it;
   msNode * node;
   iBeam ib ;
   for( int lgn=0; lgn< nbLign; ++lgn )
   {
     for( int col=0; col<nbCol; ++col )
     {
-      RayPointHitList3 oneBeam = beams->getAt( lgn, col );
+      RayPointHitList oneBeam = beams->getAt( lgn, col );
       for( raypointhit_it=oneBeam.begin(); raypointhit_it!=oneBeam.end(); ++raypointhit_it )
       {
         node = getNode( raypointhit_it->id );
