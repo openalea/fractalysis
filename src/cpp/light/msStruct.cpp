@@ -123,6 +123,7 @@ float msNode::getBeamLength( Vector3 v, int x, int y )
   if( interceptedBeams.find( v ) == interceptedBeams.end() )
   {
     //cout<<"getBeamLength : Direction was not computed or an error has occured, please report, nodeId : "<<getId()<<endl;
+    return -1;
   }
   else
   {
@@ -516,6 +517,8 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
 
 Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<distrib> distribution, uint32_t width, uint32_t height )
 {
+  Timer t;
+  t.start();
   Array2<float> picture(width, height, 0);
   msNode * node = getNode(node_id);
   direction.normalize();
@@ -535,8 +538,10 @@ Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<d
     som += pixOmega;
     picture.setAt((*ibeams_it).id_x, (*ibeams_it).id_y, pixOmega);
   }
-  //cout<<node_id<<"  som : "<<som<<endl;
+  //cout<<"from probaImage "<<node_id<<"  som : "<<som<<"   beta : "<<beta<<endl;
   node->setPOmega(direction, distribution, som/beta);
+  t.stop();
+  cout<<"image and star computed in "<<t.elapsedTime()<<"s"<<endl;
   node = NULL;
   delete node;
   return picture;
@@ -574,7 +579,7 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
         {
           som += probaBeamIntercept( node_id, direction, distribution, (*ibeams_it).id_x, (*ibeams_it).id_y);
         }
-        cout<<node_id<<"  som : "<<som<<"   beta : "<<beta<<endl;
+        //cout<<node_id<<"  som : "<<som<<"   beta : "<<beta<<endl;
         node->setPOmega(direction, distribution, som/beta);
         return som/beta;
       }
@@ -605,7 +610,10 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       if(node->getGlobalOpacity() != -1)
         return node->getGlobalOpacity();
       else
-        return 1;
+        {
+          //cout<<"\x0d"<<"that is a leaf : "<<node->getId()<<" scale "<<node->getScale()<<flush;
+          return 1;
+        }
     }
   else
   {
@@ -642,6 +650,8 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
   else if(local_distrib == Turbid)
   {
     float length = node->getBeamLength(direction, x_beamId, y_beamId);
+    if(length <= 0)
+      length = 0;
     float prod=1;
     float px, sproj ;
     vector<int> compo =node->getComponents(); 
@@ -651,8 +661,9 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       sproj = x->getProjSurface(direction);
       if(sproj == 0)
       {
-        computeProjections(direction);
-        sproj = x->getProjSurface(direction);
+        //computeProjections(direction);
+        cout<<"node without sproj : "<<x->getId()<<endl;
+        //sproj = x->getProjSurface(direction);
       }
       px = probaIntercept(x->getId(), direction, distribution);
       prod *= (1 - ( ( sproj * length * px) / node->getVolume()));
@@ -690,8 +701,8 @@ float scaledStruct::starClassic(int node_id, Vector3 direction)
 
 float scaledStruct::star(int node_id, Vector3 direction, vector<distrib> distribution)
 {
-  Timer t;
-  t.start();
+  //Timer t;
+  //t.start();
   msNode * node = getNode(node_id);
   direction.normalize();
   float pomega, somega, surfaceFoliaire;
@@ -708,8 +719,8 @@ float scaledStruct::star(int node_id, Vector3 direction, vector<distrib> distrib
   if(pomega < 0)
     pomega = probaIntercept(node_id, direction, distribution);
 
-  t.stop();
-  cout<<"star computed in "<<t.elapsedTime()<<"s"<<endl;
+  //t.stop();
+  //cout<<"star computed in "<<t.elapsedTime()<<"s"<<endl;
   node = NULL;
   delete node;
   return somega * pomega / surfaceFoliaire;
@@ -763,7 +774,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
 {
   Timer t;
   t.start();
-  hash_map<int, int> idList; // id shape are uint32, does it matter ?
+  hash_map<int, int> idList; // contains all scene ids, id shape are uint32, does it matter ?
   int pos =0; //position de la shape dans la scene
   for( Scene::iterator sc_it = scene->getBegin(); sc_it != scene->getEnd(); ++sc_it )
   {
@@ -791,7 +802,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
       {
         bool leaf = false;
         int idx; //idList index of target id in case of leaf = shape index in scene
-        int idl =0;
+        //int idl =0;
         hash_map<int,int>::const_iterator idl_it=idList.find( subelmt[ sb ] ) ;
         if( idl_it != idList.end() )
           {
@@ -819,8 +830,9 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
           }
         }
       }
-      if( dcm_it->first != node->getId() )
-        old2new[ dcm_it->first ] = node->getId();
+      //if( dcm_it->first != node->getId() )
+      //  old2new[ dcm_it->first ] = node->getId();
+      old2new[ dcm_it->first ] = node->getId();
       ShapePtr cvxhull = new Shape();
       
       /*
@@ -840,12 +852,18 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
       Fit f;
       f.setPoints( pointList );
       GeometryPtr hull = f.convexHull();
-      if( hull.isNull() )
-        cout<<"Convex hull not computed"<<endl;
-      cvxhull->getGeometry() = hull; 
-      AppearancePtr ap = nodeList[ compo[ 0 ] -1 ]->getShape()->getAppearance();
-      cvxhull->getAppearance() = ap;
-      node->setShape( cvxhull );
+      if( !hull.isNull() )
+      {
+        cvxhull->getGeometry() = hull; 
+        AppearancePtr ap = nodeList[ compo[ 0 ] -1 ]->getShape()->getAppearance();
+        cvxhull->getAppearance() = ap;
+        node->setShape( cvxhull );
+      }
+      else
+      {
+        cout<<"Convex hull of "<< node ->getId() <<" not computed"<<endl;
+        return NULL; //pas boooooooo
+      }
     }
   }
   for( int i=0; i<nodeList.size(); ++i )

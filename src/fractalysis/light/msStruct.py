@@ -123,7 +123,7 @@ def prepareScene(self, scene, skt_idx, width, height, dist_factor=4):
   pgl.Viewer.frameGL.setSize(width,height)
   d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
   pgl.Viewer.camera.lookAt(bbox.getCenter() + dir*(-dist_factor)*d_factor, bbox.getCenter())
-  pgl.Viewer.display(scene)
+  #pgl.Viewer.display(scene)
   return dir
 
 def checkFactor(self, factor):
@@ -144,9 +144,51 @@ def checkFactor(self, factor):
 #    total += proj
 #  return total
 
+def vgStar(self, **kwds):
+  width = kwds.get('width', 300)
+  height = kwds.get('height', 300)
+  d_factor = kwds.get('d_factor', 4)
+  pth = kwds.get('pth', os.path.abspath(os.curdir))
+  root_id = self.get1Scale(1)[0]
+  tla = self.totalLA(root_id)
+  rstar = []
+  #cstar = []
+  for s in range(1,47):
+    dir = skt.getSkyTurtleDir(s)
+    dir.normalize()
+    self.prepareScene(self.genScaleScene(self.depth), s, width, height, d_factor)
+    sproj = pgl.Viewer.frameGL.getProjectionSize()[0]
+    real_star = sproj / tla
+    #classic_star = self.starClassic(root_id, dir)
+    rstar.append(real_star)
+    #cstar.append(classic_star)
+    #writing result to file
+    az,el,wg = skt.getSkyTurtleAt(s)
+    row=[] #line to write in csv file
+    row.append(s)   #skyTurtle index
+    row.append(str(az).replace('.',','))        #azimut
+    row.append(str(el).replace('.',','))        #elevation
+    #row.append(str(classic_star).replace('.',',')) #star with uniform leaves distribution in root hull
+    row.append(str(real_star).replace('.',',')) #star with uniform leaves distribution in root hull
+    row.append(str(wg).replace('.',','))
+    savedir = os.path.join(pth, self.name)
+    csv_file = self.name + "_vgstar.csv"
+    file = os.path.join(savedir, csv_file)
+    writer = csv.writer(open(file, 'ab'), dialect='excel')
+    writer.writerow(row)
+
+  starReal = 0
+  #starUnif = 0
+  for i,w in enumerate(skt.weights) :
+    starReal+= w*rstar[i]
+    #starUnif+= w*cstar[i]
+
+  return starReal#, starUnif
+
+
 def computeDir(self, skt_idx, distrib=None, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
   if distrib== None:
-    distrib=[['R','R','R','R'],['R','R','R','U'],['R','R','U','R'],['R','U','R','R'],['U','R','R','R'],['U','U','U','U'],['U','U','U','R'],['U','U','R','U'],['U','R','U','U'],['R','U','U','U']]
+    distrib=[['R']*self.countScale()]
 
   dir = skt.getSkyTurtleDir(skt_idx)
   dir.normalize()
@@ -159,23 +201,23 @@ def computeDir(self, skt_idx, distrib=None, width=300, height=300, d_factor=4, p
   self.prepareScene(globScene, skt_idx, width, height, d_factor)
   #raw_input("Hit return when scene is completely visible in GL frame")
   
-  b=self.loadBeams(skt_idx)
+  b=self.loadBeams(skt_idx, pth)
   if b != None:
     print "beams loaded..."
   else :
     print "computing beams..."
     b=pgl.Viewer.frameGL.castRays2(pgl.Viewer.getCurrentScene())
-    self.saveBeams(skt_idx,b)
+    self.saveBeams(skt_idx,b, pth)
   self.beamsToNodes(dir, b)
 
-  sproj=self.loadSproj(skt_idx)
+  sproj=self.loadSproj(skt_idx, pth)
   if sproj != None:
     print "projected surface loaded..."
     self.sprojToNodes(dir, sproj)
   else :
     print "computing projections..."
     sproj=self.computeProjections( dir )
-    self.saveSproj(skt_idx, sproj)
+    self.saveSproj(skt_idx, sproj, pth)
 
   res=[]
   row=[] #line to write in csv file
@@ -190,7 +232,7 @@ def computeDir(self, skt_idx, distrib=None, width=300, height=300, d_factor=4, p
   for d in distrib:
     print "computing ",d,"..."
     matrix = self.probaImage(root_id, dir, d, width, height)
-    self.makePict(skt_idx,d, matrix, width, height)
+    self.makePict(skt_idx,d, matrix, width, height, pth)
     s=self.star(root_id, dir, d)
     po = self.getNode(root_id).getPOmega(dir,d)
     res.append((d, s, po ))
