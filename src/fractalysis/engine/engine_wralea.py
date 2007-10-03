@@ -1,6 +1,6 @@
 # -*- python -*-
 #
-#       OpenAlea.Core.Library: OpenAlea Core Library module
+#       OpenAlea.Fractalysis : OpenAlea fractal analysis library module
 #
 #       Copyright or (C) or Copr. 2006 INRIA - CIRAD - INRA  
 #
@@ -20,8 +20,6 @@ Wralea for Fractalysis.Library
 
 __license__= "Cecill-C"
 __revision__=" $Id$ "
-
-
 
 from openalea.core import *
 

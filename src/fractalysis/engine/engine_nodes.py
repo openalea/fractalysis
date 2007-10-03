@@ -1,10 +1,11 @@
+#! /usr/bin/env python
 # -*- python -*-
 #
-#       OpenAlea.Core.Library: OpenAlea Core Library module
+#       OpenAlea.Fractalysis : OpenAlea fractal analysis library module
 #
 #       Copyright or (C) or Copr. 2006 INRIA - CIRAD - INRA  
 #
-#       File author(s): David Da SILVA <david.da_silva@cirad.fr>
+#       File author(s): Da SILVA David <david.da_silva@cirad.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
@@ -21,26 +22,12 @@ fractalysis.engine nodes
 __license__= "Cecill-C"
 __revision__=" $Id: utils_nodes.py $ "
 
+from copy import deepcopy
 from openalea.core import *
 import openalea.plantgl.all as pgl
-import openalea.fractalysis.engine as engine
-from copy import deepcopy
-
-from matplotlib import rc, rcParams,use
-rc('text', usetex=True )
-use('Qt4Agg')
-import pylab
-
-#the following allows a smooth use of pylab windows with Qt4.2#
-try:
-  from matplotlib.backends.backend_qt4 import qApp
-except ImportError:
-  import matplotlib as mymat
-  from matplotlib.backends import backend_qt4, backend_qt4agg
-  from PyQt4 import QtGui
-  backend_qt4.qApp = QtGui.qApp
-  backend_qt4agg.matplotlib = mymat
-#==============================================================#
+#import openalea.fractalysis.engine as engine
+from openalea.fractalysis.engine import computeGrids
+from openalea.fractalysis.fractutils.pgl_utils import surfPerTriangle, gridIndex, color
 
 class BCM( Node ):
     """Box Method a.k.a counting intercepted voxel at each scale
@@ -55,7 +42,7 @@ class BCM( Node ):
 
     def __call__( self, inputs ):
         scene = pgl.Scene(self.get_input( 'scene' ))
-        res = engine.computeGrids( scene , self.get_input( 'stopFactor' ) )
+        res = computeGrids( scene , self.get_input( 'stopFactor' ) )
         
         sc=[]
         iv = []
@@ -89,7 +76,7 @@ def voxelize(sceneFile, gridSize, density=True ):
   step = ( bbox.getSize() + epsilon )*2 / ( gridSize )
   origin_center = origin + step/2.
   
-  tgl_list = surfPerTriangle( sceneFile )
+  tgl_list = surfPerTriangle( scene )
 
   grid = {}
   for tgl in tgl_list:
@@ -147,34 +134,5 @@ def voxelize(sceneFile, gridSize, density=True ):
 
   #return (vxls, scene)
   return ( voxSize, ctrs, mass, scene ) 
-
-def surfPerTriangle(sceneFile):
-  """return an array of center, surface cople for every triangle in the scene"""
-  sc = pgl.Scene(sceneFile)
-  res = []
-  t = pgl.Tesselator()
-  for sh in sc:
-    sh.geometry.apply(t)
-    d = t.triangulation
-    for i in range(d.indexListSize()):
-      center = (d.pointAt(i,0)+d.pointAt(i,1)+d.pointAt(i,2))/3
-      surf = pgl.surface (d.pointAt(i,0),d.pointAt(i,1),d.pointAt(i,2))
-      res += [(center,surf)]
-  return res 
-
-def color( r, g, b , trans=False, name='material', diffu = 1):
-  c=pgl.Color3( r,g,b )
-  diffuse=diffu
-  specular=pgl.Color3(40,40,40)
-  emission=pgl.Color3(0,0,0)
-  shininess=0
-  if trans:
-    transparency=0.5
-  else:
-    transparency=0
-  return pgl.Material( name, c, diffuse, specular, emission, shininess, transparency )
-
-def gridIndex(point,step):
-  return ( int(point.x/step.x) , int(point.y/step.y), int(point.z/step.z) ) 
 
 
