@@ -40,6 +40,7 @@ msNode::msNode( int s ):
 msNode::~msNode() {}
 
 void msNode::setId( int i) {id = i;}
+void msNode::setScale( int s) {scale = s;}
 void msNode::setCplx( int c ) {cplx = c; }
 void msNode::addComponent( int c )
 { 
@@ -292,10 +293,13 @@ int scaledStruct::countScale()
     for( int i=0; i<nodeList.size(); i++ )
     {
       msNode * n = nodeList[ i ];
-      if( scales.find( n->getScale() ) == scales.end() )
-        scales[ n->getScale() ] = 1;
-      else
-        scales[ n->getScale() ] += 1;
+      if( n->getScale() > 0 )
+      {
+        if( scales.find( n->getScale() ) == scales.end() )
+          scales[ n->getScale() ] = 1;
+        else
+          scales[ n->getScale() ] += 1;
+      }
     }
 
   hash_map<int, int>::iterator mit;
@@ -663,6 +667,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       {
         //computeProjections(direction);
         cout<<"node without sproj : "<<x->getId()<<endl;
+        x -> setProjSurface(direction, 0.001);
         //sproj = x->getProjSurface(direction);
       }
       px = probaIntercept(x->getId(), direction, distribution);
@@ -854,6 +859,8 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
       GeometryPtr hull = f.convexHull();
       if( !hull.isNull() )
       {
+        if ( !hull.isValid() )
+          cout<<"Node "<<node->getId()<<" has invalid hull, need to be fixed"<<endl;
         cvxhull->getGeometry() = hull; 
         AppearancePtr ap = nodeList[ compo[ 0 ] -1 ]->getShape()->getAppearance();
         cvxhull->getAppearance() = ap;

@@ -301,7 +301,7 @@ float pyGetPOmega( msNode * node, Vector3 dir, boost::python::list l)
 void classMsNode(){
         class_<msNode>("msNode",init<int >("node for multiscaled structure",args( "scale" )))
             .add_property("id", &msNode::getId, &msNode::setId)
-            .add_property("scale", &msNode::getScale)
+            .add_property("scale", &msNode::getScale, &msNode::setScale)
             .add_property("cplx", &msNode::getCplx, &msNode::setCplx )
             .add_property("surface", &msNode::getSurface, &msNode::setSurface )
             .add_property("volume", &msNode::getVolume, &msNode::setVolume )

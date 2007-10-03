@@ -41,6 +41,22 @@ using namespace std;
 typedef vector<pair<Vector3,float> > FrPointList;
 typedef vector<pair<int,double> > FrResult; //vecteur de couple pour transformer en liste ?
 
+boost::python::object FrPList_to_list(FrPointList * fpl)
+{
+  boost::python::list points;
+  for(size_t i=0; i<fpl->size(); ++i)
+  {
+    points.append(make_tuple(make_tuple((*fpl)[i].first.x(),(*fpl)[i].first.y(),(*fpl)[i].first.z()), (*fpl)[i].second));
+  }
+  return points;
+}
+
+boost::python::object pyPointDiscretize(const ScenePtr& scene)
+{
+    if (scene.isNull() | scene->isEmpty() ) return boost::python::object();
+    return FrPList_to_list(pointDiscretize(scene));
+}
+
 boost::python::object pyComputeGrid(const ScenePtr& scene, int gridSize)
 {
 	if (scene.isNull() | scene->isEmpty() | gridSize < 2) return boost::python::object();
@@ -63,6 +79,7 @@ boost::python::object pyComputeGrids(const ScenePtr& scene, int maxGridSize)
 
 void module_bcmcompute()
 {
+	def("pointDiscretize"  ,&pyPointDiscretize, args("scene"));
 	def("computeGrid"  ,&pyComputeGrid, args("scene","gridSize"));
 	def("computeGrids" ,&pyComputeGrids, args("scene","maxGridSize"));
 }

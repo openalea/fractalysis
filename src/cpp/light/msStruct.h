@@ -79,6 +79,7 @@ public:
   ~msNode();
 
   void setId( int );
+  void setScale( int);
   void setCplx( int );
   void addComponent(int );
   void setComponents( const vector<int>& );

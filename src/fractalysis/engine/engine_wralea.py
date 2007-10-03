@@ -57,6 +57,25 @@ def register_packages(pkgmanager):
 
     package.add_factory( nf )
 
+    nf = Factory( name="Voxelize",
+                  description="Generates an embedding grid for a scene",
+                  category="compute engine",
+                  nodemodule="engine_nodes",
+                  nodeclass="voxelize",
+                  inputs=(dict(name="scene", interface=IFileStr,),
+                          dict(name="Division Factor", interface=IInt, value=10),),
+                  outputs=(dict(name="Voxels size", interface = IInt),
+                           dict(name="Centers", interface = ISequence),
+                           dict(name="Densities", interface = ISequence),
+                           dict(name="VoxScene", interface = None),
+                          ),
+                  #outputs=(dict(name="Voxels", interface = None),
+                  #         dict(name="VoxScene", interface = None),),
+                  )
+
+    package.add_factory( nf )
+
+
 ###### end nodes definitions ###############
 
     pkgmanager.add_package(package)
