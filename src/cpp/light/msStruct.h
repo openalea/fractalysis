@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <tool/util_hashmap.h>
+#include <plantgl/tool/util_hashmap.h>
 #include <plantgl/math/util_vector.h>
 #include <plantgl/tool/util_array.h>
 //#include <hash_map.h>
