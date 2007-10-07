@@ -23,6 +23,7 @@ __license__= "Cecill-C"
 __revision__=" $Id: utils_nodes.py $ "
 
 from copy import deepcopy
+from scipy import log, array
 from openalea.core import *
 import openalea.plantgl.all as pgl
 #import openalea.fractalysis.engine as engine
@@ -49,8 +50,8 @@ class BCM( Node ):
         for r in res:
             sc.append( r[ 1 ] )
             iv.append( r[ 0 ] )
-        scales =  p.log( 1./ p.array( sc ) )
-        interVox = p.log( p.array( iv ) )
+        scales =  log( 1./ array( sc ) )
+        interVox = log( array( iv ) )
 
         return ( scales, interVox )
 

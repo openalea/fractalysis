@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- python -*-
 #
-#       OpenAlea.Fractalysis : OpenAlea fractal analysis library module
+#       OpenAlea.PlantGL.ext : PlantGL external utilities
 #
 #       Copyright or (C) or Copr. 2006 INRIA - CIRAD - INRA  
 #
