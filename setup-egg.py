@@ -74,7 +74,7 @@ setup(
                   },
 
     # add package platform libraries if any
-    package_data= { pkg_name : ['*.so', '*.dll', '*.pyd']},
+    package_data= { '' : ['*.so', '*.dll', '*.pyd']},
     include_package_data=True,
     zip_safe = False,
                      
