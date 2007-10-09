@@ -42,7 +42,8 @@ class BCM( Node ):
         Node.__init__( self, inputs, outputs )
 
     def __call__( self, inputs ):
-        scene = pgl.Scene(self.get_input( 'scene' ))
+        #scene = pgl.Scene(self.get_input( 'scene' ))
+        scene = self.get_input( 'scene' ) 
         res = computeGrids( scene , self.get_input( 'stopFactor' ) )
         
         sc=[]
@@ -50,9 +51,10 @@ class BCM( Node ):
         for r in res:
             sc.append( r[ 1 ] )
             iv.append( r[ 0 ] )
-        scales =  log( 1./ array( sc ) )
-        interVox = log( array( iv ) )
-
+        #scales =  log( 1./ array( sc ) )
+        #interVox = log( array( iv ) )
+        scales =   1./ array( sc ) 
+        interVox =  array( iv ) 
         return ( scales, interVox )
 
 class Voxels(object):
@@ -68,9 +70,9 @@ class Voxels(object):
         return "Voxels size : " + str(self.size) + "\n Voxels centers : " + str(self.centers) + "\n Voxels density : " + str(self.density)
 
 
-def voxelize(sceneFile, gridSize, density=True ):
+def voxelize(scene, gridSize, density=True ):
   """generate the scene resulting of grid discretization"""
-  scene = pgl.Scene(sceneFile)
+  #scene = pgl.Scene(sceneFile)
   bbox = pgl.BoundingBox(scene)
   epsilon = pgl.Vector3( 0.01, 0.01, 0.01 )
   origin = bbox.lowerLeftCorner - epsilon
