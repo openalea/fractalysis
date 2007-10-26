@@ -5,6 +5,7 @@
 #       Copyright or (C) or Copr. 2006 INRIA - CIRAD - INRA  
 #
 #       File author(s): Da SILVA David <david.da_silva@cirad.fr>
+#                       Boudon Frederic <frederic.boudon@cirad.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
@@ -32,7 +33,7 @@ def register_packages(pkgmanager):
 
     metainfo={ 'version' : '0.0.1',
                'license' : 'CECILL-C',
-               'authors' : 'DDS',
+               'authors' : 'DDS, FB',
                'institutes' : 'INRIA/CIRAD',
                'description' : 'fractalysis.engine nodes.',
                }
@@ -76,6 +77,20 @@ def register_packages(pkgmanager):
 
     package.add_factory( nf )
 
+
+    nf = Factory( name="TwoSurfaces",
+                  description="Computes two surfaces on a multiscale scenes",
+                  category="Fractal Analysis",
+                  nodemodule="twosurfaces",
+                  nodeclass="TwoSurfaces",
+                  inputs=(dict(name="leaves", interface=None,),
+                          dict(name="macrorep", interface=ISequence),
+                          ),
+                  outputs=(dict(name="macrosurfaces", interface = ISequence),
+                           dict(name="microsurfaces", interface = ISequence),),
+                  )
+
+    package.add_factory( nf )
 
 ###### end nodes definitions ###############
 
