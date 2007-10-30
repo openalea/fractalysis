@@ -17,7 +17,7 @@ sources+= lib_env.ALEAGlob('*.cpp')
 
 # Add defines to export symbols on Windows
 DEFINES= list(lib_env['CPPDEFINES'])
-DEFINES.append('LIGHT_DLL')
+DEFINES.append('LGT_MAKEDLL')
 
 # Link with the following libraries
 LIBRARIES= list(lib_env['LIBS'])

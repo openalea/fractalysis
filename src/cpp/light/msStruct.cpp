@@ -1,7 +1,7 @@
 #include <iostream>
 #include <assert.h>
 
-#define LGT_MAKEDLL
+// #define LGT_MAKEDLL
 
 #include <plantgl/tool/timer.h>
 #include <plantgl/scenegraph/container/pointarray.h>

@@ -28,7 +28,7 @@ sources+= lib_env.ALEAGlob('*.cpp')
 
 # Add defines to export symbols on Windows
 DEFINES= list(env['CPPDEFINES'])
-DEFINES.append('ENGINE_DLL')
+DEFINES.append('BCM_MAKEDLL')
 
 # Link with the following libraries
 LIBRARIES= list(lib_env['LIBS'])

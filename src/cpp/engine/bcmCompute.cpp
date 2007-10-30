@@ -29,7 +29,7 @@
  *
  *  ----------------------------------------------------------------------------
  */
-#define BCM_MAKEDLL
+// #define BCM_MAKEDLL
 
 #include "fractalysis/engine/bcmCompute.h"
 #include <cmath>

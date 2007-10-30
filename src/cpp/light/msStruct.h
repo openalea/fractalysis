@@ -47,7 +47,7 @@ int id_y;
 float length;
 };
 
-enum LGT_API distrib {Turbid, Real};
+LGT_API enum distrib {Turbid, Real};
 
 typedef vector<distrib> DistribVect;
 typedef map<Vector3, map< DistribVect, float> > DirectionalDistribPMap;
