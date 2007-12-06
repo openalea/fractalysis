@@ -90,7 +90,10 @@ setup(
     install_requires = install_requires,
     dependency_links = ['http://openalea.gforge.inria.fr/pi'],
 
-    
+    # entry_points
+    entry_points = {
+            "wralea": ["aml = openalea.fractalysis",]
+            },
 
     )
 
