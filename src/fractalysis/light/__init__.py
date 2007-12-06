@@ -15,3 +15,5 @@ scaledStruct.vgStar = msStruct.vgStar
 scaledStruct.getPEA = msStruct.getPEA
 
 prepareScene = msStruct.prepareScene
+azel2vect = msStruct.azel2vect
+

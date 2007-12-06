@@ -51,6 +51,7 @@ def loadBeams(self, az, el, pth=os.path.abspath(os.curdir)):
   #dir.normalize()
   dir = azel2vect(az, el)
   file = os.path.join(savedir, beam_file)
+  print "loading ", file
   if os.path.isfile( file ):
     f = open( file, 'r' )
     try:
@@ -173,11 +174,12 @@ def makePict(self, az, el, distrib, matrix, width, height, pth=os.path.abspath(o
         img.putpixel((x,y), 0) #cause picture are 1/4 clockwise rotated
   out = img.rotate(90)
   out.save(file, "JPEG")
+  return out
 
 #def computeDir(self, skt_idx, distrib=None, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
 def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
   if distrib== None:
-    distrib=[['R']*self.countScale()]
+    distrib=[['R']*(self.depth - 1)]
 
   #dir = skt.getSkyTurtleDir(skt_idx)
   #dir.normalize()
@@ -193,28 +195,30 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
   #prepareScene(globScene, width, height, skt_idx=skt_idx, dist_factor=d_factor)
   prepareScene(globScene, width, height, az, el, dist_factor=d_factor)
   
-  #b=self.loadBeams(skt_idx, pth)
-  b=self.loadBeams(az, el, pth)
-  if b != None:
-    print "beams loaded..."
-  else :
-    print "computing beams..."
-    b=pgl.Viewer.frameGL.castRays2(pgl.Viewer.getCurrentScene())
-    #self.saveBeams(skt_idx,b, pth)
-    self.saveBeams(az, el,b, pth)
-  self.beamsToNodes(dir, b)
-
-  #sproj=self.loadSproj(skt_idx, pth)
-  sproj=self.loadSproj(az, el, pth)
-  if sproj != None:
-    print "projected surface loaded..."
-    self.sprojToNodes(dir, sproj)
-  else :
-    print "computing projections..."
-    sproj=self.computeProjections( dir )
-    #self.saveSproj(skt_idx, sproj, pth)
-    self.saveSproj(az, el, sproj, pth)
-
+  n = self.getNode(self.get1Scale(1)[0])
+  if (n.getProjSurface(dir) == 0 ):
+    #b=self.loadBeams(skt_idx, pth)
+    b=self.loadBeams(az, el, pth)
+    if b != None:
+      print "beams loaded..."
+    else :
+      print "computing beams..."
+      b=pgl.Viewer.frameGL.castRays2(pgl.Viewer.getCurrentScene())
+      #self.saveBeams(skt_idx,b, pth)
+      self.saveBeams(az, el,b, pth)
+    self.beamsToNodes(dir, b)
+  
+    #sproj=self.loadSproj(skt_idx, pth)
+    sproj=self.loadSproj(az, el, pth)
+    if sproj != None:
+      print "projected surface loaded..."
+      self.sprojToNodes(dir, sproj)
+    else :
+      print "computing projections..."
+      sproj=self.computeProjections( dir )
+      #self.saveSproj(skt_idx, sproj, pth)
+      self.saveSproj(az, el, sproj, pth)
+  
   res=[]
   row=[] #line to write in csv file
   #row.append(skt_idx)   #skyTurtle index

@@ -45,11 +45,11 @@ def register_packages(pkgmanager):
 
     nf = Factory( name="BCM",
                   description="Apply box counting method on scene",
-                  category="compute engine",
+                  category="Fractal Analysis",
                   nodemodule="engine_nodes",
                   nodeclass="BCM",
                   inputs=(dict(name="scene", interface=None,),
-                          dict(name="stopFactor", interface=IInt, value=10),
+                          dict(name="stopFactor", interface=IInt(min=3), value=10),
                           ),
                   outputs=(dict(name="scales", interface = ISequence),
                            dict(name="interceptedVoxels", interface = ISequence),),
@@ -59,7 +59,7 @@ def register_packages(pkgmanager):
 
     nf = Factory( name="Voxelize",
                   description="Generates an embedding grid for a scene",
-                  category="compute engine",
+                  category="Fractal Analysis",
                   nodemodule="engine_nodes",
                   nodeclass="voxelize",
                   inputs=(dict(name="Scene", interface=None,),

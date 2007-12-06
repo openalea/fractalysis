@@ -20,7 +20,7 @@ fractalysis.engine nodes
 """
 
 __license__= "Cecill-C"
-__revision__=" $Id: utils_nodes.py $ "
+__revision__=" $Id: engine_nodes.py $ "
 
 from copy import deepcopy
 from scipy import log, array
