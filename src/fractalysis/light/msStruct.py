@@ -255,12 +255,12 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
 
 #####################extra functions not mandatory to light interception###############################
 
-def checkFactor(self, factor):
+def checkFactor(self, width, height, factor):
   pix_width = 0
   for i in range(1,47):
     az, el, soc = sd.getSkyTurtleAt(i)
     #prepareScene(self.genScaleScene(1), 300,300, skt_idx = i, dist_factor=factor)
-    prepareScene(self.genScaleScene(1), 300,300, az, el, dist_factor=factor)
+    prepareScene(self.genScaleScene(1), width, height, az, el, dist_factor=factor)
     pix_width += pgl.Viewer.frameGL.getProjectionSize()[2]
     sleep(0.3)
   return pix_width / 46.
