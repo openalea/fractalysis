@@ -456,4 +456,70 @@ def surfPerTriangle(sc):
       res += [(center,surf)]
   return res 
  
+################### Scene <---> Pts list #########################################
+  
+def scene2grid( scene, gridSize ):
+  """
+  Convert a scene into a matrix-grid where non-zero values are the coresponding surface included in the coresponding voxel
+  """
+  bbox=pgl.BoundingBox(scene)
+  epsilon = pgl.Vector3( 0.01, 0.01, 0.01 )
+  origin = bbox.lowerLeftCorner - epsilon
+  step = ( bbox.getSize() + epsilon )*2 / ( gridSize )
+  """
+  getSize is a radius vector whereas gridSize is the voxel number desired per dimension, hence the gridSize must be *2
+  """
+  print "Bbox size : ", bbox.getSize()*2
+  print "Step : ", step, "    gridSize : ", gridSize
+  grid = {}
+  tgl_list = surfPerTriangle(scene)
+  for tgl in tgl_list:
+    pos = gridIndex( tgl[ 0 ] - origin, step )
+    if grid.has_key(  pos  ):
+      grid[  pos  ] += tgl[ 1 ]
+    else:
+      grid[  pos  ] = tgl[ 1 ]
+  print "nbTgl : ", len( tgl_list ), "  <--->   nbVoxel : ", len( grid )
+  kize = grid.keys()
+  kize.sort()
+  pts=[]
+  mass=[]
+  for k in kize:
+    pts.append(  list( k )  )
+    mass.append( grid[ k ] )
+  return ( pts, mass, step ) #gridSize )
+
+def toPglScene( ptList, mass=None, radius=0.5 ):
+  """generate a box-based scene from a point list"""
+  scene = pgl.Scene()
+  x = y = z = 0
+  if ( mass ==None ):
+    colors=[ gradient( 0 ) ]*len( ptList )
+  else:
+    colors=[]
+    step=( max( mass ) - min( mass ) )/7
+    if( step == 0 ):
+      step =1
+    for m in mass:
+      colors.append( gradient( int( ( m - min( mass ) )/step ) ) )
+  
+  for i in range( len( ptList ) ) :
+    pt = ptList[ i ]
+    try:
+      x = pt[ 0 ]*2*radius
+    except IndexError:
+      x = 00.3
+    try:
+      y = pt[ 1 ]*2*radius
+    except IndexError:
+      y = 0
+    try:
+      z = pt[ 2 ]*2*radius
+    except IndexError:
+      z = 0
+    #scene.add( disc( x,y,z ) )
+    #scene.add( sphere( x, y, z , color=colors[ i ]) )
+    scene.add( box( x, y, z ,radius=radius, color=colors[ i ],id=i+1) )
+  return scene
+
 

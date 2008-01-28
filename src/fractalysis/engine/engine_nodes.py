@@ -28,7 +28,8 @@ from openalea.core import *
 import openalea.plantgl.all as pgl
 #import openalea.fractalysis.engine as engine
 from openalea.fractalysis.engine import computeGrids
-from openalea.fractalysis.fractutils.pgl_utils import surfPerTriangle, gridIndex, color
+from openalea.fractalysis.engine.lac_engine import MatrixLac
+from openalea.fractalysis.fractutils.pgl_utils import surfPerTriangle, gridIndex, color, scene2grid, toPglScene
 
 class BCM( Node ):
     """Box Method a.k.a counting intercepted voxel at each scale
@@ -139,3 +140,65 @@ def voxelize(scene, gridSize, density=True ):
   return ( voxSize, ctrs, mass, scene ) 
 
 
+def lactrix_fromScene( scene, file_name, gridSize, spath, density):
+  """
+  Generate a `MatrixLac` instance from a PlantGL scene.
+
+  :Parameters:
+    - `file` : name of geom/bgeom scene file, without extension
+    - `gridSize` : subdivision factor of the bonuding box defining the grid step
+    - `density` : when True each non-empty voxel is associated with a proper value (e.g. leaf area density inside each voxel)
+
+  :Types:
+    - `file` : string
+    - `gridSize` : int
+    - `density` : boolean
+  
+  :returns: `MatrixLac` instance generated from the scene
+  :returntype: `MatrixLac`
+
+  """
+  ( pts, m, s ) = scene2grid( scene, gridSize )
+  if ( not density ):
+    print "Density not taken into account..."
+    mat=MatrixLac( name=file_name, points=pts, size=gridSize, vox_size = s, mass=None, spath = spath )
+    visu = toPglScene( mat.points) 
+  else:
+    print "Considering Density..."
+    mat=MatrixLac( name=file_name, points=pts, size=gridSize, vox_size = s, mass=m, spath = spath )
+    visu = toPglScene( mat.points, m ) 
+  return mat, visu 
+
+class lacunarity( Node ):
+  """
+  Compute the lacunarity of a n-dimensional matrix
+  """
+
+  lac_func =  { "Centered" : "_ctrdlac",
+                "Allain & Cloitre" : "_lacac",
+              }
+
+  def __init__(self):
+
+    Node.__init__(self)
+    funs = self.lac_func.keys()
+    funs.sort()
+    self.add_input( name = "Matrix", interface=None,)
+    self.add_input( name = "Type", interface = IEnumStr(funs), value=funs[-1])
+    self.add_input( name = "Start", interface = IInt(min = 0) )
+    self.add_input( name = "Stop", interface = IInt(min = 0) )
+    self.add_output( name = "Lacunarity", interface = ISequence)
+    self.add_output( name = "Box sizes", interface = ISequence)
+
+  def __call__(self, inputs):
+    func_name = self.get_input("Type")
+    f = self.lac_func[func_name]
+    self.set_caption(func_name)
+    mat = self.get_input("Matrix")
+    lac, boxes = mat.lacunarity(  radius_start = self.get_input("Start"),
+                                  radius_stop = self.get_input("Stop"),
+                                  lac_type = getattr(mat,f),
+                                )
+    box_size = [pgl.norm(b) for b in boxes]
+
+    return lac, box_size

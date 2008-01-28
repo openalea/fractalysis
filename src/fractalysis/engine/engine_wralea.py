@@ -23,6 +23,7 @@ __license__= "Cecill-C"
 __revision__=" $Id$ "
 
 from openalea.core import *
+from openalea.core.traitsui import View, Group, Item
 
 def register_packages(pkgmanager):
     """ Initialisation function
@@ -91,6 +92,44 @@ def register_packages(pkgmanager):
                   )
 
     package.add_factory( nf )
+
+    nf = Factory( name="Scene2MatrixLac",
+                  description="Generate a MatrixLac from PlantGL scene",
+                  category="Fractal Analysis",
+                  nodemodule="engine_nodes",
+                  nodeclass="lactrix_fromScene",
+                  inputs=(dict(name="Scene", interface=None,),
+                          dict(name="Name", interface=IStr),
+                          dict(name="Grid Size", interface=IInt(min=2)),
+                          dict(name="Save Directory", interface=IDirStr, value='/tmp'),
+                          dict(name="Density", interface=IBool, value=False),
+                          ),
+                  outputs=(dict(name="MatrixLac", interface = None,),
+                           dict(name="Pgl scene", interface = None,),
+                          ),
+                  )
+
+    package.add_factory( nf )
+
+    nf = Factory( name="Lacunarity",
+                  description="Compute lacunarity of n-dimensional matrix",
+                  category="Fractal Analysis",
+                  nodemodule="engine_nodes",
+                  nodeclass="lacunarity",
+                  view=View(
+                          Item("Type"),
+                          Group(
+                              "GlidingBox radius",
+                              Item("Start"),
+                              Item("Stop"),
+                              layout='-',
+                              )
+                            ),
+                )
+
+    package.add_factory( nf )
+
+
 
 ###### end nodes definitions ###############
 

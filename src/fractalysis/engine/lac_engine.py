@@ -16,7 +16,7 @@ Module for computing n-dimensional lacunarity using n-dimensional matrix. The no
 __docformat__ = "restructuredtext en"
 
 import cPickle
-from scipy import zeros, ones, take
+from scipy import zeros, ones, take, array
 from scipy.signal import convolve
 from os.path import join, isdir, isfile
 from os import makedirs, getcwd
@@ -53,10 +53,10 @@ class MatrixLac:
     self.size = size
     self.vox_size = vox_size
     self.dim = len( self.points[ 0 ] )
-    self.matrix= self.__toMatrix(mass)
+    self.matrix= self._toMatrix(mass)
     self.save_path = spath
 
-  def __toMatrix( self , mass):
+  def _toMatrix( self , mass):
     """
     Inner method : transform the points list into a valid n-dimensional matrix.
     If mass is ``None`` it will generate a binary matrix.
@@ -88,7 +88,7 @@ class MatrixLac:
         m[xyz] = mass[i]
     return m
   
-  def __get_convol( self, gb_radius, conv_mod = 'same'):
+  def _get_convol( self, gb_radius, conv_mod = 'same'):
     """
     Inner method : convolve the matrix with a ones-matrix of given radius.
     The output size is determined by convolution mode.
@@ -137,10 +137,10 @@ class MatrixLac:
         print "convol shape : ", conv.shape
         #transform it to an original shaped matrix ?
   
-      self.__save_convol( gb_radius, conv )
+      self._save_convol( gb_radius, conv )
     return conv
 
-  def __save_convol( self, radius, convol_mat ):
+  def _save_convol( self, radius, convol_mat ):
     """
     Inner method : save the convolution matrix so it can be used again without computation.
     The file is saved in the result directory named after the name instance attribute (see `__init__`) as **radiusX.convol** where **X** is the ``radius`` value.
@@ -173,8 +173,34 @@ class MatrixLac:
       f = open(saveabs, 'w')
       cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
       f.close()
+    
+  def _lacac( self, weight ):
+    """
+    Inner method : compute the **Allain and Cloitre lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
+    
+    :Parameters:
+      - `weight`: The gliding boxe mass distribution matrix
+    
+    :Types:
+      - `weight`: A n-dimensional square matrix
+    
+    :returns: Triplet constitued of the number of gliding boxes, the first and the second moment of the gliding boxes mass distribution
+    :returntype: ( int, float, float )
 
-  def __ctrdlac( self, weight ):
+    """
+    nbBox=1.0
+    for s in weight.shape:
+      nbBox*=s
+
+    Z1=weight/nbBox
+    Z2=( weight*weight )/nbBox
+    for i in range( self.dim ):
+      Z1=sum( Z1 )
+      Z2=sum( Z2 )
+    return ( nbBox, Z1, Z2 )
+
+
+  def _ctrdlac( self, weight ):
     """
     Inner method : compute the **Centered lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
     
@@ -192,8 +218,8 @@ class MatrixLac:
 
     if weight.shape != self.matrix.shape:
       #modify the values of points to change origin position, should work for both bigger and smaller weight matrix
-      diff = scipy.array([self.matrix.shape[i] - weight.shape[i] for i in range(len(weight.shape))])
-      curPoints = [ scipy.array(pt) - diff for pt in self.points ] 
+      diff = array([self.matrix.shape[i] - weight.shape[i] for i in range(len(weight.shape))])
+      curPoints = [ array(pt) - diff for pt in self.points ] 
     else :
       curPoints = self.points
 
@@ -220,10 +246,10 @@ class MatrixLac:
     gliding box size = scale_radius*2+1 so it is always odd
     """
     if lac_type == None:
-      lac_type = self.__ctrdlac
+      lac_type = self._ctrdlac
 
     gbSize = scale_radius*2+1
-    wght=self.__get_convol( scale_radius )
+    wght=self._get_convol( scale_radius )
     
     ( nbBox, Z1, Z2 ) = lac_type( wght )
     lac=Z2/( Z1**2 )
