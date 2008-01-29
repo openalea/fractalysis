@@ -173,8 +173,36 @@ class MatrixLac:
       f = open(saveabs, 'w')
       cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
       f.close()
+
+  def _lacac( self, weight, gb_radius ):
+    """
+    Inner method : compute the **Allain and Cloitre lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
     
-  def _lacac( self, weight ):
+    :Parameters:
+      - `weight`: The gliding boxe mass distribution matrix
+    
+    :Types:
+      - `weight`: A n-dimensional square matrix
+    
+    :returns: Triplet constitued of the number of gliding boxes, the first and the second moment of the gliding boxes mass distribution
+    :returntype: ( int, float, float )
+
+    """
+    for i in range(self.dim):
+      weight = weight.take( range(gb_radius, weight.shape[i]-gb_radius), axis = i)
+    nbBox=1.0
+    for s in weight.shape:
+      nbBox*=s
+
+    Z1=weight/nbBox
+    Z2=( weight*weight )/nbBox
+    for i in range( self.dim ):
+      Z1=sum( Z1 )
+      Z2=sum( Z2 )
+    return ( nbBox, Z1, Z2 )
+
+   
+  def _lacac_ext( self, weight, gb_radius ):
     """
     Inner method : compute the **Allain and Cloitre lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
     
@@ -200,7 +228,7 @@ class MatrixLac:
     return ( nbBox, Z1, Z2 )
 
 
-  def _ctrdlac( self, weight ):
+  def _ctrdlac( self, weight, gb_radius ):
     """
     Inner method : compute the **Centered lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
     
@@ -251,7 +279,7 @@ class MatrixLac:
     gbSize = scale_radius*2+1
     wght=self._get_convol( scale_radius )
     
-    ( nbBox, Z1, Z2 ) = lac_type( wght )
+    ( nbBox, Z1, Z2 ) = lac_type( wght, scale_radius )
     lac=Z2/( Z1**2 )
     
     return ( lac, self.vox_size*gbSize )

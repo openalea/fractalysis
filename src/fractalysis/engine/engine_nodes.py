@@ -175,6 +175,7 @@ class lacunarity( Node ):
   """
 
   lac_func =  { "Centered" : "_ctrdlac",
+                "A & C extended" : "_lacac_ext",
                 "Allain & Cloitre" : "_lacac",
               }
 
