@@ -65,11 +65,13 @@ private:
   float volume;
   ShapePtr shape;
   float globalOpacity;
+  bool opak;
 
 //directional datas should be stored in map or hashtable with direction as key
 
   DirectionalHitBeamsMap interceptedBeams;
   DirectionalFloatMap projSurface;
+  DirectionalFloatMap glad;
   DirectionalDistribPMap pOmega;
 
 public:
@@ -87,8 +89,10 @@ public:
   void setVolume( float );
   void setShape( ShapePtr sh );
   void setGlobalOpacity(float);
+  void setOpak(bool);
   void addInterBeam( Vector3, iBeam );
   void setProjSurface( Vector3, float );
+  void setGlad( Vector3, float );
   void setPOmega( Vector3, DistribVect, float );
 
   int getId();
@@ -99,15 +103,19 @@ public:
   float getVolume();
   ShapePtr getShape();
   float getGlobalOpacity();
+  bool getOpak();
   float getBeamLength( Vector3, int, int );
+  vector<float> getLengthDistrib(Vector3);
   vector<iBeam> * getIBeams(Vector3);
   float getProjSurface( Vector3 );
+  float getGlad( Vector3 );
   float getPOmega( Vector3, DistribVect );
 
   float computeSurface();
   float computeVolume();
   void afficheInfo();
   void cleanMaps();
+  float estimateGlad(Vector3);
 
 };
 

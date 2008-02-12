@@ -288,6 +288,11 @@ void pyAddInterBeam( msNode * node, Vector3 dir,  int beam_x, int beam_y, float 
   node->addInterBeam( dir, ib );
 }
 
+boost::python::object pyGetLengthDistrib(msNode * node, Vector3 dir)
+{
+  return vect2List( node->getLengthDistrib(dir) );
+}
+
 void pySetPOmega(msNode * node, Vector3 dir, boost::python::list l, float po)
 {
   node->setPOmega(dir, list2distrib(l), po);
@@ -306,17 +311,22 @@ void classMsNode(){
             .add_property("surface", &msNode::getSurface, &msNode::setSurface )
             .add_property("volume", &msNode::getVolume, &msNode::setVolume )
             .add_property("globalOpacity", &msNode::getGlobalOpacity, &msNode::setGlobalOpacity )
+            .add_property("opak", &msNode::getOpak, &msNode::setOpak )
             .add_property("shape", &msNode::getShape, &msNode::setShape )
             .add_property( "components", &pyGetComponents, &pySetComponents )
             .def("addComponent", &msNode::addComponent)
             .def("setPOmega", &pySetPOmega)
             .def( "getPOmega", &pyGetPOmega )
+            .def( "getLengthDistrib", &pyGetLengthDistrib )
             .def("setProjSurface", &msNode::setProjSurface)
             .def( "getProjSurface", &msNode::getProjSurface )
+            .def("setGlad", &msNode::setGlad )
+            .def( "getGlad", &msNode::getGlad )
             .def( "addInterBeam", &pyAddInterBeam )
             .def( "getBeamLength", &msNode::getBeamLength )
             .def( "cout", &msNode::afficheInfo )
             .def( "cleanMaps", &msNode::cleanMaps )
+            .def( "estimateGlad", &msNode::estimateGlad )
         ;
 
 }

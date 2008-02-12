@@ -1,5 +1,6 @@
 #include <iostream>
 #include <assert.h>
+#include <math.h>
 
 // #define LGT_MAKEDLL
 
@@ -24,7 +25,8 @@ msNode::msNode( int s ):
  cplx( 0 ),
  surface( 0 ),
  volume( 0 ),
- globalOpacity(-1)
+ globalOpacity(-1),
+ opak(false)
 {/*
   scale = s;
   id = 0;
@@ -59,6 +61,8 @@ void msNode::setShape( ShapePtr sh )
 
 void msNode::setGlobalOpacity(float p) { globalOpacity = p;}
 
+void msNode::setOpak(bool o) { opak = o;}
+
 void msNode::addInterBeam( Vector3 v, iBeam ib )
 {
   v.normalize();
@@ -74,12 +78,19 @@ void msNode::addInterBeam( Vector3 v, iBeam ib )
        interceptedBeams[ v ].push_back( ib );
     }
 }
+
 void msNode::setProjSurface( Vector3 v, float s ) 
 {
   v.normalize();
   projSurface[ v ] = s;
-  //cout<<"projSurface of node "<<getId()<<" : "<<s<<endl;
 }
+
+void msNode::setGlad( Vector3 v, float g ) 
+{
+  v.normalize();
+  glad[ v ] = g;
+}
+
 void msNode::setPOmega( Vector3 v, DistribVect d, float po )
 {
   v.normalize();
@@ -105,6 +116,7 @@ float msNode::getSurface() {return surface;}
 float msNode::getVolume() {return volume;}
 ShapePtr msNode::getShape() {return shape;}
 float msNode::getGlobalOpacity() {return globalOpacity;}
+bool msNode::getOpak() {return opak;}
 
 vector<iBeam> * msNode::getIBeams(Vector3 v)
 {
@@ -138,6 +150,26 @@ float msNode::getBeamLength( Vector3 v, int x, int y )
   }
 }
 
+vector<float> msNode::getLengthDistrib(Vector3 v)
+{
+  vector<float> lDistrib;
+  v.normalize();
+  if( interceptedBeams.find( v ) == interceptedBeams.end() )
+  {
+    cout<<"Direction not computed"<<endl ;
+    return lDistrib;
+  }
+  else
+  {
+    vector<iBeam> vect = interceptedBeams[ v ];
+    for( vector<iBeam>::iterator iBeam_iter = vect.begin(); iBeam_iter != vect.end(); ++iBeam_iter )
+    {
+      lDistrib.push_back(iBeam_iter->length);
+    }
+    return lDistrib ;
+  }
+}
+
 float msNode::getProjSurface( Vector3 v ) //return 0 if problem
 {
   v.normalize();
@@ -148,6 +180,18 @@ float msNode::getProjSurface( Vector3 v ) //return 0 if problem
   }
   else
     { return projSurface[ v ]; }
+}
+
+float msNode::getGlad( Vector3 v ) //return 0 if problem
+{
+  v.normalize();
+  if( glad.find( v ) == glad.end() )
+  {
+    float gl = estimateGlad(v);
+    setGlad(v, gl);
+    cout<<"\x0d"<<"Estimated GLAD, nodeId : "<<getId()<<" direction : "<<v<<" glad : "<<gl<<flush;
+  }
+  return glad[ v ];
 }
 
 float msNode::getPOmega( Vector3 v, DistribVect d ) //return -1 if problem
@@ -196,12 +240,7 @@ void msNode::afficheInfo()
   cout<<"Id : "<<getId()<<endl;
   cout<<"Scale : "<<getScale()<<endl;
   cout<<"Complex : "<<getCplx()<<endl;
-  cout<<"Components by idx : ";
-  for( int i = 0; i<getComponents().size(); ++i )
-  {
-    cout<<getComponents()[ i ]<<" ";
-  }
-  cout<<endl<<"Components by iterator : ";
+  cout<<endl<<"Components : ";
   vector<int> v = getComponents();
   for( vector<int>::const_iterator vit = v.begin(); vit != v.end(); ++vit )
   {
@@ -218,6 +257,61 @@ void msNode::cleanMaps()
   interceptedBeams.clear();
   projSurface.clear();
   pOmega.clear();
+}
+
+float msNode::estimateGlad(Vector3 v)
+{
+  v.normalize();
+  float error = 0.005, sum_p0 = 0, p0 = 0, len = 0, cvg = 0;
+  float porosity = 1 - globalOpacity ;
+  float glai = - log( porosity );
+  float vol = getVolume();
+  float my_glad = glai * getProjSurface(v) / vol;
+  vector<float> ldis = getLengthDistrib(v);
+
+  for (vector<float>::const_iterator beaml = ldis.begin(); beaml != ldis.end(); ++beaml)
+  {
+    sum_p0 += exp( - my_glad * (*beaml) );
+  }
+  p0 = sum_p0 / ldis.size();
+  //cout<<"init p0 : "<< p0 <<endl;
+  
+  bool sup = p0 > porosity;
+  float step = my_glad/20;
+  while( fabs(p0 - porosity) > error && cvg < 1000 && my_glad < 0)
+  {
+    if (p0 > porosity)
+    {
+      if( sup )
+        step *= 2 ;
+      else
+        step /= 2 ;
+      sup = true;
+      my_glad += step ;
+    }
+    else
+    {
+      if( sup )
+        step /= 2;
+      else
+        step *= 2 ;
+      sup = false;
+      my_glad -= step ;
+    }
+    sum_p0 = 0;
+    for (vector<float>::const_iterator beaml = ldis.begin(); beaml != ldis.end(); ++beaml)
+    {
+      sum_p0 += exp( - my_glad * (*beaml) );
+    }
+    p0 = sum_p0 / ldis.size();
+    //cout<<"p0 : "<< p0 <<endl;
+    cvg++;
+  }
+  //cout<<"final p0 : "<< p0 <<endl;
+  //cout<< "nbr de boucle pour convergence : "<<cvg<<endl ;
+  if( cvg > 999 )
+    cout<<"pb de convergence..."<<endl ;
+  return my_glad;
 }
 
 /******************* scaledStruct *********************************/
@@ -526,7 +620,7 @@ Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<d
   Array2<float> picture(width, height, 0);
   msNode * node = getNode(node_id);
   direction.normalize();
-  assert(scales.size() - node->getScale() == distribution.size() && 
+  assert((scales.size() - node->getScale()) == distribution.size() && 
           "Distribution size must be scales size - 1");
   assert(node->getComponents().size() > 0);
   
@@ -556,8 +650,8 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
 {
   msNode * node = getNode(node_id);
   direction.normalize();
-  assert(scales.size() - node->getScale() == distribution.size() && 
-          "Distribution size must be scales size - 1");
+  assert(scales.size() - node->getScale() == distribution.size()) ;
+          //&& "Distribution size must be scales size - 1");
   if(node->getComponents().size() == 0)
     { 
       if(node->getGlobalOpacity() != -1)
@@ -608,11 +702,26 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
   assert(scales.size() - node->getScale() == distribution.size() && 
           "Distribution size must be scales size - 1");
   distrib local_distrib;
-  if(distribution.size() == 0 )
+  if(distribution.size() == 0 ) //should be leaf case
     {
       assert(node->getComponents().size() == 0 && "leaf don't have components or distrib too short"); //leaf case
       if(node->getGlobalOpacity() != -1)
-        return node->getGlobalOpacity();
+        {
+          if(node->getOpak())
+            return node->getGlobalOpacity();
+          else
+            {
+              //cout<<"Node "<<node->getId()<<endl;
+              float beam_length = node->getBeamLength(direction, x_beamId, y_beamId);
+              //cout<<"beam length : "<<beam_length<<endl;
+              float est_glad = node->getGlad(direction);
+              //cout<<"glad is estimated : "<<est_glad<<endl;
+              float val = 1 - exp(- est_glad * beam_length);
+              if( val < 0 )
+                cout<<"val : "<<val<<endl;
+              return val ;
+            }
+        }
       else
         {
           //cout<<"\x0d"<<"that is a leaf : "<<node->getId()<<" scale "<<node->getScale()<<flush;
@@ -635,7 +744,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
     {
       msNode * x = getNode(compo[c]);
       float beam_length =x->getBeamLength(direction, x_beamId, y_beamId);
-      if( beam_length >= 0)
+      if( beam_length >= 0) //test pour savoir si intercepte par rayon ? a revoir
       {
         intercept = true;
         prod *= (1 - probaBeamIntercept(x->getId(), direction, distribution, x_beamId, y_beamId));
@@ -693,7 +802,7 @@ float scaledStruct::starClassic(int node_id, Vector3 direction)
     computeProjections(direction);
     somega = node->getProjSurface(direction);
   }
-  surfaceFoliaire = totalLA(node_id);
+  surfaceFoliaire = totalLA(node_id); //totalLA doit faire attention si les elements sont des volumes --> /2
   pomega = probaClassic(node_id, direction);
 
   t.stop();

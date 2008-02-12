@@ -3,6 +3,7 @@
 
 build_prefix="build_scons"
 EXTRA_CPPPATH = "/usr/local/openalea/include/plantgl/"
+debug = "yes"
 
 import sys
 if('win' in sys.platform):

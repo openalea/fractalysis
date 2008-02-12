@@ -56,13 +56,22 @@ FrPointList * pointDiscretize(const ScenePtr& scene) //prend une scene et rend l
 		{
 			for(uint32_t itTriangle = 0; itTriangle < triangulation->getIndexList()->getSize(); ++itTriangle)
 			{
-				result.push_back(pair<Vector3,float>(getCenter(triangulation->getPointAt(itTriangle,0),triangulation->getPointAt(itTriangle,1),triangulation->getPointAt(itTriangle,2)),
-													   surface(triangulation->getPointAt(itTriangle,0),triangulation->getPointAt(itTriangle,1),triangulation->getPointAt(itTriangle,2))));
+				result.push_back(pair<Vector3,float>(getCenter( triangulation->getFacePointAt(itTriangle,0),
+                                                                                triangulation->getFacePointAt(itTriangle,1),
+                                                                                triangulation->getFacePointAt(itTriangle,2)
+                                                                              ),
+								    surface(triangulation->getFacePointAt(itTriangle,0),
+                                                                            triangulation->getFacePointAt(itTriangle,1),
+                                                                            triangulation->getFacePointAt(itTriangle,2)
+                                                                          )
+                                                                    )
+                                              );
 			}
 		}
 	}
 	return &result;
 }
+
 pair<Vector3,Vector3> bbox(const FrPointList& points) //retourne les points min et max formant la bbox d'une liste de points
 {
 	Vector3 min = points[0].first , max = points[0].first;
