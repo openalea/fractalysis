@@ -189,7 +189,6 @@ float msNode::getGlad( Vector3 v ) //return 0 if problem
   {
     float gl = estimateGlad(v);
     setGlad(v, gl);
-    cout<<"\x0d"<<"Estimated GLAD, nodeId : "<<getId()<<" direction : "<<v<<" glad : "<<gl<<flush;
   }
   return glad[ v ];
 }
@@ -278,13 +277,11 @@ float msNode::estimateGlad(Vector3 v)
   
   bool sup = p0 > porosity;
   float step = my_glad/20;
-  while( fabs(p0 - porosity) > error && cvg < 1000 && my_glad < 0)
+  while( fabs(p0 - porosity) > error && cvg < 1000 )
   {
     if (p0 > porosity)
     {
-      if( sup )
-        step *= 2 ;
-      else
+      if( !sup )
         step /= 2 ;
       sup = true;
       my_glad += step ;
@@ -293,10 +290,14 @@ float msNode::estimateGlad(Vector3 v)
     {
       if( sup )
         step /= 2;
-      else
-        step *= 2 ;
       sup = false;
       my_glad -= step ;
+      if( my_glad < 0)
+        {
+        sup = true;
+        my_glad += step ;
+        cout<<"Pb de passage dans le negatif"<<endl;
+        }
     }
     sum_p0 = 0;
     for (vector<float>::const_iterator beaml = ldis.begin(); beaml != ldis.end(); ++beaml)
@@ -311,6 +312,7 @@ float msNode::estimateGlad(Vector3 v)
   //cout<< "nbr de boucle pour convergence : "<<cvg<<endl ;
   if( cvg > 999 )
     cout<<"pb de convergence..."<<endl ;
+  cout<<"\x0d"<<cvg<<" round to estimate GLAD for node "<<getId()<<" in direction "<<v<<" : "<<my_glad<<flush;
   return my_glad;
 }
 
