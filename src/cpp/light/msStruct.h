@@ -149,10 +149,12 @@ public:
   ScenePtr genNodeScene(int);
   ScenePtr genSelectScene() ;
   ScenePtr genScaleScene( int );
+  ScenePtr genGlobalScene();
   float totalLA( int );
   vector< pair<uint32_t,double> >   computeProjections( Vector3 );
   void sprojToNodes(Vector3, vector< pair<uint32_t,double> > );
 
+  ViewRayPointHitBuffer * computeBeams(Vector3, int, int, float);
   void beamsToNodes( Vector3, ViewRayPointHitBuffer * );
   float probaClassic(int, Vector3);
   Array2<float> probaImage( int, Vector3, vector<distrib>, uint32_t, uint32_t );

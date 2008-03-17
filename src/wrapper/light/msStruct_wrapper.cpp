@@ -243,9 +243,11 @@ vector<distrib> list2distrib( boost::python::list l ) //list describing organisa
     catch( error_already_set ){ PyErr_Clear(); break; }
     string val = boost::python::extract<string>( obj );
     distrib d;
-    if(val=="U")
+    //if(val=="U")
+    if(val=="R")
       d = Turbid;
-    else if(val =="R")
+    //else if(val =="R")
+    else if(val =="A")
       d = Real;
     else
     {
@@ -350,6 +352,9 @@ boost::python::object pyComputeProjections(scaledStruct * ss, Vector3 v)
 void pySprojToNodes(scaledStruct * ss, Vector3 v, boost::python::list sproj)
 { ss->sprojToNodes(v, list_to_sproj(sproj));}
 
+boost::python::object pyComputeBeams(scaledStruct * ss, Vector3 v, int width, int height, float d_factor)
+{ return raybuf_to_list(ss->computeBeams(v, width, height, d_factor));}
+
 void pyBeamsToNodes( scaledStruct * ss, Vector3 v, boost::python::list l)
 { ss->beamsToNodes(v, list_to_raybuf(l)); }
 
@@ -382,10 +387,12 @@ void classScaledStruct()
         .def( "genNodeScene", &scaledStruct::genNodeScene )
         .def( "genSelectScene", &scaledStruct::genSelectScene )
         .def( "genScaleScene", &scaledStruct::genScaleScene )
+        .def( "genGlobalScene", &scaledStruct::genGlobalScene )
         .def( "computeProjections", &pyComputeProjections )
         .def( "sprojToNodes", &pySprojToNodes )
-        .def( "totalLA", &scaledStruct::totalLA )
+        .def( "computeBeams", &pyComputeBeams )
         .def( "beamsToNodes", &pyBeamsToNodes )
+        .def( "totalLA", &scaledStruct::totalLA )
         .def( "probaClassic", &scaledStruct::probaClassic )
         .def( "probaImage", &pyProbaImage )
         .def( "probaIntercept", &pyProbaIntercep )

@@ -472,6 +472,17 @@ ScenePtr scaledStruct::genScaleScene( int sc)
   return scene;
 }
 
+ScenePtr scaledStruct::genGlobalScene()
+{
+
+  ScenePtr scene = new Scene();
+  for(int i=0; i<depth(); i++)
+  {
+    scene->merge(genScaleScene(i+1));
+  }
+  return scene;
+}
+
 float scaledStruct::totalLA( int id )
 {
   vector<int> leaves = getAtoms( id );
@@ -513,8 +524,8 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
       bbox = new BoundingBox( Vector3( -500,-500,-500 ), Vector3( 500,500,500 ) ); //default bbox
       }
     bb_center = bbox->getCenter();
-    float d_factor = ( bbox->getXRange()+bbox->getYRange()+bbox->getZRange() );
-    cam_pos = bb_center + v*-3*d_factor;
+    float bb_factor = max( max(bbox->getXRange(), bbox->getYRange()), bbox->getZRange() );
+    cam_pos = bb_center + v*-3*bb_factor;
     //cout<<"Camera pos : "<<cam_pos<<"  looking at : "<<bb_center<<endl;
     PGLViewerApplication::lookAt(cam_pos, bb_center );
     PGLViewerApplication::display( sc );
@@ -545,6 +556,33 @@ void scaledStruct::sprojToNodes(Vector3 v, vector< pair<uint32_t,double> > sproj
   }
   node = NULL;
   delete node;
+}
+
+ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, int width, int height, float d_factor)
+{
+
+  Timer t;
+  t.start();
+  direction.normalize();
+  ScenePtr globalScene = genGlobalScene();
+  BoundingBoxPtr bbox = getBBox(globalScene);
+  Vector3 bb_center, cam_pos;
+
+  bb_center = bbox->getCenter();
+  float bb_factor = max( max(bbox->getXRange(), bbox->getYRange()), bbox->getZRange() );
+  cam_pos = bb_center + direction*(-bb_factor)*d_factor;
+
+  PGLViewerApplication::display( globalScene );
+  PGLViewerApplication::animation( true );
+  PGLViewerApplication::setOrthographicCamera ();
+  PGLViewerApplication::setGrid (false, false, false, false);
+  PGLViewerApplication::lookAt(cam_pos, bb_center );
+  PGLViewerApplication::glFrameSize( width, height ); //size can be changed...
+  ViewRayPointHitBuffer * beams = PGLViewerApplication::castRays2( globalScene, true);
+  t.stop();
+  cout<<"Beams computed in "<<t.elapsedTime()<<"s"<<endl;
+  beamsToNodes( direction, beams);
+  return beams;
 }
 
 void scaledStruct::beamsToNodes( Vector3 direction, ViewRayPointHitBuffer * beams )
@@ -784,7 +822,12 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       px = probaIntercept(x->getId(), direction, distribution);
       prod *= (1 - ( ( sproj * length * px) / node->getVolume()));
     }
-    assert(1-prod >= 0);
+    //assert(1-prod >= 0);
+    if(1-prod < 0)
+      {
+        cout<<"p0 problem for node "<<node_id<<" : "<<prod<<endl;
+        return 1;
+      }
     return 1-prod;
   }
   node = NULL;
@@ -879,7 +922,7 @@ BoundingBoxPtr getBBox( const ScenePtr& scene )
   Discretizer d;
   BBoxComputer bbc( d );
 
-  if( scene->apply( bbc ) )//true means bboxcomputer went ok
+  if( bbc.process(scene) )//true means bboxcomputer went ok
     return bbc.getBoundingBox ( );
   else
     return NULL;
