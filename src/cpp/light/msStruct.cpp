@@ -666,6 +666,8 @@ Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<d
   
   vector<iBeam> * interBeams = node->getIBeams(direction);
   int beta = interBeams->size();
+  if(! beta > 0)
+    cout<<"No beams for node "<<node->getId()<<" at scale "<<node->getScale()<<endl; 
   assert(beta>0 && "intercepted beam list must not be empty");
   float som=0;
   float pixOmega;

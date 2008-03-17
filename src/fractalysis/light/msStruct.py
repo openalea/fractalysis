@@ -40,13 +40,12 @@ def loadBeams(self, az, el, pth=os.path.abspath(os.curdir)):
   if os.path.isfile( file ):
     f = open( file, 'r' )
     try:
-      while( 1 ):
-        res = cPickle.load( f )
-        if res.testParamEq( "dir", ( dir.x,dir.y,dir.z ) ):
-          beams = res.getResult( 'beams' )
-          return beams
+      res = cPickle.load( f )
+      beams = res.getResult( 'beams' )
+      return beams
     except EOFError:
       f.close()
+      return None
   else :
     print"file does not exist"
     return None
@@ -74,13 +73,12 @@ def loadSproj(self,az, el, pth=os.path.abspath(os.curdir)):
   if os.path.isfile( file ):
     f = open( file, 'r' )
     try:
-      while( 1 ):
-        res = cPickle.load( f )
-        if res.testParamEq( "dir", ( dir.x,dir.y,dir.z ) ):
-          sproj = res.getResult( 'sproj' )
-          return sproj
+      res = cPickle.load( f )
+      sproj = res.getResult( 'sproj' )
+      return sproj
     except EOFError:
       f.close()
+      return None
   else :
     print"file does not exist"
     return None
