@@ -303,12 +303,13 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
       while pla == 0 and essai < 500:
         prepareScene(sc, 300, 300, 155, 90)
         prepareScene(sc, 300, 300, az, el)
-        print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
+        #print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
         pla = pgl.Viewer.frameGL.getProjectionSize()[0]
         essai += 1
       if essai < 500 :
         res['pla'] = pla
-      else : 
+      else :
+        print "pla problem for component : ", id
         res['pla'] = 0.001
 
       star_turbid = self.starClassic(id, dir)    
