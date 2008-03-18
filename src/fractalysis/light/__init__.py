@@ -9,6 +9,7 @@ scaledStruct.loadSproj = msStruct.loadSproj
 scaledStruct.removeScale = msStruct.removeScale
 scaledStruct.directionalG = msStruct.directionalG
 scaledStruct.computeDir = msStruct.computeDir
+scaledStruct.compute4Errors = msStruct.compute4Errors
 scaledStruct.checkFactor = msStruct.checkFactor
 scaledStruct.makePict = msStruct.makePict
 scaledStruct.vgStar = msStruct.vgStar

@@ -106,13 +106,14 @@ def prepareScene(scene, width, height, az, el, dist_factor=4):
     dir = pgl.Viewer.camera.getPosition()[1]
     dir.normalize()
   pgl.Viewer.start()
+  pgl.Viewer.animation( True )
   pgl.Viewer.display(scene)
   bbox=pgl.BoundingBox( scene )
-  pgl.Viewer.animation( True )
   pgl.Viewer.grids.set(False,False,False,False)
   pgl.Viewer.camera.setOrthographic()
   d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
   pgl.Viewer.camera.lookAt(bbox.getCenter() + dir*(-dist_factor)*d_factor, bbox.getCenter())
+  pgl.Viewer.frameGL.setSize(width,height)
   pgl.Viewer.frameGL.setSize(width,height)
   return dir
 
@@ -149,12 +150,6 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
 
   dir = azel2vect(az, el)
 
-  globScene = self.genScaleScene(1)
-  for i in range(1,self.depth):
-    globScene.add(self.genScaleScene(i+1))
-
-  #prepareScene(globScene, width, height, az, el, dist_factor=d_factor)
-  
   n = self.getNode(self.get1Scale(1)[0])
   if (n.getProjSurface(dir) == 0 ):
     b=self.loadBeams(az, el, pth)
@@ -207,6 +202,125 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
   writer.writerow(row)
   
   return res
+
+
+def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
+
+  if(skt_idx) :
+    az,el,wg = sd.getSkyTurtleAt(skt_idx)
+
+  dir = azel2vect(az, el)
+
+  results={}
+
+  root_id = self.get1Scale(1)[0]
+  n = self.getNode(root_id)
+
+  if (n.getProjSurface(dir) == 0 ):
+    b=self.loadBeams(az, el, pth)
+    if b != None:
+      print "beams loaded..."
+      self.beamsToNodes(dir, b)
+    else :
+      print "computing beams..."
+      b=self.computeBeams(dir, width, height, d_factor)
+      self.saveBeams(az, el,b, pth)
+  
+    sproj=self.loadSproj(az, el, pth)
+    if sproj != None:
+      print "projected surface loaded..."
+      self.sprojToNodes(dir, sproj)
+    else :
+      print "computing projections..."
+      sproj=self.computeProjections( dir )
+      self.saveSproj(az, el, sproj, pth)
+
+  if(peach):
+    distrib = [['R','R','R','R'], ['R','R','A','A'], ['R','R','R','A']]
+  else:
+    distrib = [['R','R','R'], ['R','R','A']]
+
+  results['az'] = az
+  results['el'] = el
+  results['wg'] = wg
+
+  res = {}
+ 
+  pea = n.getProjSurface(dir)
+  tla = self.totalLA(root_id)
+  res['pea'] = pea
+  res['tla'] = tla
+
+  sc = self.genNodeScene(root_id)
+  sc.remove(n.shape)
+  prepareScene(sc, 300, 300, az, el)
+  pla = pgl.Viewer.frameGL.getProjectionSize()[0]
+  while pla == 0 :
+    prepareScene(sc, 300, 300, 155, 90)
+    prepareScene(sc, 300, 300, az, el)
+    print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
+    pla = pgl.Viewer.frameGL.getProjectionSize()[0]
+  res['pla'] = pla
+
+  star_turbid = self.starClassic(root_id, dir)    
+  res['turbid'] = star_turbid
+
+  for d in distrib:
+    print "computing ",d,"..."
+    s=self.star(root_id, dir, d)    
+    po = n.getPOmega(dir,d)
+    res[tuple(d)] = (s, po)
+ 
+  results[root_id] = res
+  #root is done now doing the same for all components of all scales except last one
+  for scale in range(2, self.depth):
+    compo = self.get1Scale(scale)
+    
+    print "new scale distrib : "
+    for d in distrib:
+      d.pop(0)
+      print d
+
+    for id in compo:
+      res = {}
+      n = self.getNode(id)
+   
+      pea = n.getProjSurface(dir)
+      tla = self.totalLA(id)
+      res['pea'] = pea
+      res['tla'] = tla
+
+      sc = self.genNodeScene(id)
+      sc.remove(n.shape)
+      prepareScene(sc, 300, 300, az, el)
+      pla = pgl.Viewer.frameGL.getProjectionSize()[0]
+      while pla == 0 :
+        prepareScene(sc, 300, 300, 155, 90)
+        prepareScene(sc, 300, 300, az, el)
+        print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
+        pla = pgl.Viewer.frameGL.getProjectionSize()[0]
+      res['pla'] = pla
+
+      star_turbid = self.starClassic(id, dir)    
+      res['turbid'] = star_turbid
+      for d in distrib:
+        s = self.star(id, dir, d)    
+        po = n.getPOmega(dir,d)
+        res[tuple(d)] = (s, po)
+   
+      results[id] = res
+
+  savedir = os.path.join(pth, self.name)
+  sproj_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".err"
+  if not os.path.isdir(savedir):
+    os.mkdir(savedir) 
+  file = os.path.join(savedir, sproj_file)
+  f = open(file, 'w')
+  cPickle.dump(results, f, protocol=cPickle.HIGHEST_PROTOCOL)
+  f.close()
+
+  return results
+
 
 #####################extra functions not mandatory to light interception###############################
 
