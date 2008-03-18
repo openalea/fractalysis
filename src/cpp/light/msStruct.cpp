@@ -734,7 +734,7 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
       {
         cout<<"node "<<node_id<<" not intercepted by any beam -_-"<<endl;
         node->setPOmega(direction, distribution, 0);
-        return 0;
+        return 0; //not intercepted, thus opacity = 0
       }
     }
   }

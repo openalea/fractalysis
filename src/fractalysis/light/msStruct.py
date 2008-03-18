@@ -255,12 +255,17 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
   sc.remove(n.shape)
   prepareScene(sc, 300, 300, az, el)
   pla = pgl.Viewer.frameGL.getProjectionSize()[0]
-  while pla == 0 :
+  essai = 0
+  while pla == 0 and essai < 500:
     prepareScene(sc, 300, 300, 155, 90)
     prepareScene(sc, 300, 300, az, el)
     print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
     pla = pgl.Viewer.frameGL.getProjectionSize()[0]
-  res['pla'] = pla
+    essai += 1
+  if essai < 500 :
+    res['pla'] = pla
+  else : 
+    res['pla'] = 0.001
 
   star_turbid = self.starClassic(root_id, dir)    
   res['turbid'] = star_turbid
@@ -294,12 +299,17 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
       sc.remove(n.shape)
       prepareScene(sc, 300, 300, az, el)
       pla = pgl.Viewer.frameGL.getProjectionSize()[0]
-      while pla == 0 :
+      essai = 0
+      while pla == 0 and essai < 500:
         prepareScene(sc, 300, 300, 155, 90)
         prepareScene(sc, 300, 300, az, el)
         print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
         pla = pgl.Viewer.frameGL.getProjectionSize()[0]
-      res['pla'] = pla
+        essai += 1
+      if essai < 500 :
+        res['pla'] = pla
+      else : 
+        res['pla'] = 0.001
 
       star_turbid = self.starClassic(id, dir)    
       res['turbid'] = star_turbid
