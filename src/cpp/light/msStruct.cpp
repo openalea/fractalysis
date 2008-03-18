@@ -620,37 +620,44 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
   direction.normalize();
   vector<iBeam> * interBeams = node->getIBeams(direction);
   int beta = interBeams->size();
-  assert(beta>0 && "intercepted beam list must not be empty");
-  float som=0;
-  vector<int> leaves_id = getAtoms(node_id);
-  vector<float> leaves_sproj;
-  for(int i=0; i<leaves_id.size(); ++i)
+  if (beta>0)
   {
-    leaves_sproj.push_back(getNode(leaves_id[i]) -> getProjSurface(direction));
-  }
-  /*
-  Recuperer le vecteur de toutes les feuilles : getAtoms
-  faire pour chq rayon une boucle sur ces feuilles en faisant le produit des
-  1-sproj(feuille) x (*ibeams_it).length/node->getVolume
-  sommer tous les 1-produit
-  renvoyer le tout pour le calcul du starClassic
-  faire la fonction starClassic
-  */
-  float l, prod;
-  vector<iBeam>::const_iterator ibeams_it ;
-  for(ibeams_it = interBeams->begin(); ibeams_it != interBeams->end(); ++ibeams_it)
-  {
-    l = (*ibeams_it).length;
-    prod=1;
-    for(int s=0; s<leaves_sproj.size(); ++s)
-    { 
-      prod*=(1-l*leaves_sproj[s]/vol); //assuming that leaves are opaque thus pOmega=1
+    float som=0;
+    vector<int> leaves_id = getAtoms(node_id);
+    vector<float> leaves_sproj;
+    for(int i=0; i<leaves_id.size(); ++i)
+    {
+      leaves_sproj.push_back(getNode(leaves_id[i]) -> getProjSurface(direction));
     }
-    som += (1-prod);
+    /*
+    Recuperer le vecteur de toutes les feuilles : getAtoms
+    faire pour chq rayon une boucle sur ces feuilles en faisant le produit des
+    1-sproj(feuille) x (*ibeams_it).length/node->getVolume
+    sommer tous les 1-produit
+    renvoyer le tout pour le calcul du starClassic
+    faire la fonction starClassic
+    */
+    float l, prod;
+    vector<iBeam>::const_iterator ibeams_it ;
+    for(ibeams_it = interBeams->begin(); ibeams_it != interBeams->end(); ++ibeams_it)
+    {
+      l = (*ibeams_it).length;
+      prod=1;
+      for(int s=0; s<leaves_sproj.size(); ++s)
+      { 
+        prod*=(1-l*leaves_sproj[s]/vol); //assuming that leaves are opaque thus pOmega=1
+      }
+      som += (1-prod);
+    }
+    node = NULL;
+    delete node;
+    return som/beta;
   }
-  node = NULL;
-  delete node;
-  return som/beta;
+  else
+  {
+    cout<<"node "<<node_id<<" not intercepted by any beam -_-"<<endl;
+    return 0;
+  }
 }
 
 Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<distrib> distribution, uint32_t width, uint32_t height )
