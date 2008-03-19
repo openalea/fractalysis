@@ -30,6 +30,7 @@ def saveBeams(self,az, el, beams, pth=os.path.abspath(os.curdir)):
   f = open(file, 'a')
   cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
   f.close()
+  print "beams saved"
 
 def loadBeams(self, az, el, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
@@ -63,6 +64,7 @@ def saveSproj(self, az, el, sproj, pth=os.path.abspath(os.curdir)):
   f = open(file, 'a')
   cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
   f.close()
+  print "sproj saved"
 
 def loadSproj(self,az, el, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
