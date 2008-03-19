@@ -226,6 +226,7 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
     else :
       print "computing beams..."
       b=self.computeBeams(dir, width, height, d_factor)
+      print "now saving..."
       self.saveBeams(az, el,b, pth)
   
     sproj=self.loadSproj(az, el, pth)
