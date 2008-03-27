@@ -101,11 +101,11 @@ def removeScale(self, sc):
       self.getNode( i ).scale = s-1
   self.countScale() 
 
-def prepareScene(scene, width, height, az, el, dist_factor=4):
-  if( az and el):
+def prepareScene(scene, width, height, az=None, el=None, dist_factor=4):
+  if( az != None and el != None):
     dir = azel2vect(az, el)
   else :
-    dir = pgl.Viewer.camera.getPosition()[1]
+    dir = -pgl.Viewer.camera.getPosition()[1]
     dir.normalize()
   pgl.Viewer.start()
   pgl.Viewer.animation( True )
