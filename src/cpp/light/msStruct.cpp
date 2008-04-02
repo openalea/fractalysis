@@ -843,7 +843,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
   delete node;
 }
 
-float scaledStruct::starClassic(int node_id, Vector3 direction)
+float scaledStruct::starClassic(int node_id, Vector3 direction) //needs to be called after having computed the intercepted beams
 {
   Timer t;
   t.start();

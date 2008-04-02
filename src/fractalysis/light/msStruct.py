@@ -8,7 +8,7 @@ fruti = openalea.fractalysis.fractutils
 import cPickle
 import csv
 from PIL import Image
-from time import sleep
+from time import sleep, time
 from math import radians, pi
 
 
@@ -401,6 +401,7 @@ def getPEA(self, **kwds):
   return PEA
 
 def vgStar(self, **kwds):
+  start = time()
   width = kwds.get('width', 300)
   height = kwds.get('height', 300)
   d_factor = kwds.get('d_factor', 4)
@@ -409,12 +410,16 @@ def vgStar(self, **kwds):
   root_id = self.get1Scale(1)[0]
   tla = self.totalLA(root_id)
   rstar = []
-  for p in pos:
-    dir = azel2vect(p[0], p[1])
+  for s,p in enumerate(pos):
+    deb = time()
+    az = p[0]
+    el = p[1]
+    dir = azel2vect(az, el)
     prepareScene(self.genScaleScene(self.depth), width, height, az, el, dist_factor=d_factor)
     sproj = pgl.Viewer.frameGL.getProjectionSize()[0]
     real_star = sproj / tla
     rstar.append(real_star)
+    fin = time()
     #writing result to file
     row=[] #line to write in csv file
     row.append(s)   #skyTurtle index
@@ -426,5 +431,7 @@ def vgStar(self, **kwds):
     file = os.path.join(savedir, csv_file)
     writer = csv.writer(open(file, 'ab'), dialect='excel')
     writer.writerow(row)
-
+    print "computation for az %f and elevation %f is : %f s" % (az,el,fin-deb)
+  stop = time()
+  print "total computation time : ", stop-start, " s."
 
