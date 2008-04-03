@@ -407,10 +407,17 @@ void classScaledStruct()
 ***                                External methods                                     ***
 ******************************************************************************************/
 
-scaledStruct * pySsFromDict( string scn, ScenePtr& sc, boost::python::list l )
+scaledStruct * pySsFromDict( string scn, ScenePtr& sc, boost::python::list l, string h_choice  )
 {
   dicoTable * dico = pySc2Cpp( l );
-  scaledStruct * res = ssFromDict( scn, sc, *dico );
+  hull_choice hc ;
+  if( h_choice == "Box")
+    hc = BdgBox;
+  else if ( h_choice == "Sphere")
+    hc = BdgSphere;
+  else
+    hc = CvxHull;
+  scaledStruct * res = ssFromDict( scn, sc, *dico, hc );
   delete dico;
   return res;
 }

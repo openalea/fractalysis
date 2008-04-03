@@ -938,7 +938,7 @@ BoundingBoxPtr getBBox( const ScenePtr& scene )
 }
 
 
-scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& dt )
+scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& dt, hull_choice h_choice )
 {
   Timer t;
   t.start();
@@ -1019,7 +1019,21 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
         }
       Fit f;
       f.setPoints( pointList );
-      GeometryPtr hull = f.convexHull();
+      GeometryPtr hull ;
+      switch( h_choice )
+      {
+        case CvxHull:
+          hull = f.convexHull();
+          break;
+        case BdgSphere :
+          hull = f.bsphere();
+          break;
+        case BdgBox :
+          hull = f.balignedbox();
+          break;
+        default:
+          cout << "Sorry, '" << h_choice << "' does not correspond to an existing option. Please try again with either CvxHull, Sphere or Box.\n\n";
+      }
       if( !hull.isNull() )
       {
         if ( !hull.isValid() )

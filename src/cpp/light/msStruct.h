@@ -48,6 +48,7 @@ float length;
 };
 
 LGT_API enum distrib {Turbid, Real};
+LGT_API enum hull_choice {CvxHull, BdgSphere, BdgBox };
 
 typedef vector<distrib> DistribVect;
 typedef map<Vector3, map< DistribVect, float> > DirectionalDistribPMap;
@@ -170,6 +171,6 @@ typedef vector<decompoMap> dicoTable ;
 LGT_API ScenePtr centerShapes( const ScenePtr& );
 LGT_API BoundingBoxPtr getBBox( const ShapePtr& );
 LGT_API BoundingBoxPtr getBBox( const ScenePtr& );
-LGT_API scaledStruct * ssFromDict( string, ScenePtr&, const dicoTable& );
+LGT_API scaledStruct * ssFromDict( string, ScenePtr&, const dicoTable&, hull_choice );
 
 #endif
