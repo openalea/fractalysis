@@ -423,12 +423,13 @@ def vgStar(self, **kwds):
     fin = time()
     #writing result to file
     row=[] #line to write in csv file
-    row.append(s)   #skyTurtle index
     row.append(az)
     row.append(el)
     row.append(wg)
     row.append(real_star)
     savedir = os.path.join(pth, self.name)
+    if not os.path.isdir(savedir):
+      os.mkdir(savedir) 
     csv_file = self.name + "_vgstar.csv"
     file = os.path.join(savedir, csv_file)
     writer = csv.writer(open(file, 'ab'), dialect='excel')
