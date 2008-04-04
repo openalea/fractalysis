@@ -423,6 +423,7 @@ def vgStar(self, **kwds):
     fin = time()
     #writing result to file
     row=[] #line to write in csv file
+    row.append(s+1)
     row.append(az)
     row.append(el)
     row.append(wg)
