@@ -414,6 +414,7 @@ def vgStar(self, **kwds):
     deb = time()
     az = p[0]
     el = p[1]
+    wg = p[2]
     dir = azel2vect(az, el)
     prepareScene(self.genScaleScene(self.depth), width, height, az, el, dist_factor=d_factor)
     sproj = pgl.Viewer.frameGL.getProjectionSize()[0]
@@ -425,13 +426,13 @@ def vgStar(self, **kwds):
     row.append(s)   #skyTurtle index
     row.append(az)
     row.append(el)
+    row.append(wg)
     row.append(real_star)
     savedir = os.path.join(pth, self.name)
     csv_file = self.name + "_vgstar.csv"
     file = os.path.join(savedir, csv_file)
     writer = csv.writer(open(file, 'ab'), dialect='excel')
     writer.writerow(row)
-    print "computation for az %f and elevation %f is : %f s" % (az,el,fin-deb)
   stop = time()
   print "total computation time : ", stop-start, " s."
 
