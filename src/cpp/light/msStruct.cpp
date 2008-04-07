@@ -815,7 +815,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
     if(length <= 0)
       length = 0;
     float prod=1;
-    float px, sproj ;
+    float px, sproj, opac ;
     vector<int> compo =node->getComponents(); 
     for(int c=0; c<compo.size(); ++c)
     {
@@ -829,14 +829,19 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
         //sproj = x->getProjSurface(direction);
       }
       px = probaIntercept(x->getId(), direction, distribution);
-      prod *= (1 - ( ( sproj * length * px) / node->getVolume()));
+      opac =  ( sproj * length * px) / node->getVolume() ;
+      if(opac > 1)
+        opac = 1;
+      prod *= (1 - opac);
     }
-    //assert(1-prod >= 0);
+    assert(1-prod >= 0);
+    /*
     if(1-prod < 0)
       {
         cout<<"p0 problem for node "<<node_id<<" : "<<prod<<endl;
-        return 1;
+        return 0;
       }
+    */
     return 1-prod;
   }
   node = NULL;
