@@ -145,7 +145,7 @@ def makePict(self, az, el, distrib, matrix, width, height, pth=os.path.abspath(o
 
 def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
   if distrib== None:
-    distrib=[['R']*(self.depth - 1)]
+    distrib=[['A']*(self.depth - 1)]
 
   if(skt_idx) :
     az,el,wg = sd.getSkyTurtleAt(skt_idx)
