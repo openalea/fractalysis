@@ -47,7 +47,6 @@ void msNode::setCplx( int c ) {cplx = c; }
 void msNode::addComponent( int c )
 { 
   components.push_back( c ); 
-  //cout<<"compo size is : "<<components.size()<<endl;
 }
 void msNode::setComponents( const vector<int>& v ) { components = v; }
 void msNode::setSurface( float s ) { surface = s;}
@@ -617,6 +616,7 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
   
   msNode * node = getNode(node_id);
   float vol = node->getVolume();
+  float opac;
   direction.normalize();
   vector<iBeam> * interBeams = node->getIBeams(direction);
   int beta = interBeams->size();
@@ -638,19 +638,27 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
     faire la fonction starClassic
     */
     float l, prod;
+    int s;
     vector<iBeam>::const_iterator ibeams_it ;
     for(ibeams_it = interBeams->begin(); ibeams_it != interBeams->end(); ++ibeams_it)
     {
       l = (*ibeams_it).length;
       prod=1;
-      for(int s=0; s<leaves_sproj.size(); ++s)
+      s = 0;
+      //for(int s=0; s<leaves_sproj.size(); ++s)
+      while( s < leaves_sproj.size() && prod > 0.0001)
       { 
-        prod*=(1-l*leaves_sproj[s]/vol); //assuming that leaves are opaque thus pOmega=1
+        opac = l*leaves_sproj[s]/vol;
+        if( opac > 1)
+          opac = 1;
+        prod*=(1 - opac); //assuming that leaves are opaque thus pOmega=1
+        ++s;
       }
       som += (1-prod);
     }
     node = NULL;
     delete node;
+    assert(som/beta <= 1);
     return som/beta;
   }
   else
@@ -727,6 +735,7 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
           som += probaBeamIntercept( node_id, direction, distribution, (*ibeams_it).id_x, (*ibeams_it).id_y);
         }
         //cout<<node_id<<"  som : "<<som<<"   beta : "<<beta<<endl;
+        assert(som/beta < 1);
         node->setPOmega(direction, distribution, som/beta);
         return som/beta;
       }
@@ -747,18 +756,16 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
 {
   msNode * node = getNode(node_id);
   direction.normalize();
-  //cout<<"Beamintercep :node id/scale/distrib"<<node_id<<" / "<<node->getScale()<<" / "<<distribution.size()<<endl;  
-  assert(scales.size() - node->getScale() == distribution.size() && 
-          "Distribution size must be scales size - 1");
+  assert(scales.size() - node->getScale() == distribution.size() && "Distribution size must be scales size - 1");
   distrib local_distrib;
-  if(distribution.size() == 0 ) //should be leaf case
+  if(distribution.size() == 0 ) //should be leaf case or last scale
     {
-      assert(node->getComponents().size() == 0 && "leaf don't have components or distrib too short"); //leaf case
+      assert(node->getComponents().size() == 0 && "last scale can't have components or distrib too short"); //leaf case
       if(node->getGlobalOpacity() != -1)
         {
           if(node->getOpak())
             return node->getGlobalOpacity();
-          else
+          else //beam travel distance taken into account
             {
               //cout<<"Node "<<node->getId()<<endl;
               float beam_length = node->getBeamLength(direction, x_beamId, y_beamId);
@@ -789,7 +796,9 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
     bool intercept = false;
     float prod =1;
     vector<int> compo =node->getComponents(); 
-    for(int c=0; c<compo.size(); ++c)
+    int c = 0;
+    //for(int c=0; c<compo.size(); ++c)
+    while( c < compo.size() && prod > 0.0001)
     {
       msNode * x = getNode(compo[c]);
       float beam_length =x->getBeamLength(direction, x_beamId, y_beamId);
@@ -798,6 +807,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
         intercept = true;
         prod *= (1 - probaBeamIntercept(x->getId(), direction, distribution, x_beamId, y_beamId));
       }
+      ++c ;
     }
     if(intercept)
       {
@@ -816,8 +826,10 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       length = 0;
     float prod=1;
     float px, sproj, opac ;
-    vector<int> compo =node->getComponents(); 
-    for(int c=0; c<compo.size(); ++c)
+    vector<int> compo =node->getComponents();
+    int c = 0;
+    //for(int c=0; c<compo.size(); ++c)
+    while( c < compo.size() && prod > 0.0001)
     {
       msNode * x = getNode(compo[c]);
       sproj = x->getProjSurface(direction);
@@ -833,6 +845,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       if(opac > 1)
         opac = 1;
       prod *= (1 - opac);
+      ++c ;
     }
     assert(1-prod >= 0);
     /*
@@ -865,7 +878,7 @@ float scaledStruct::starClassic(int node_id, Vector3 direction) //needs to be ca
   pomega = probaClassic(node_id, direction);
 
   t.stop();
-  cout<<"Classic star computed in "<<t.elapsedTime()<<"s"<<endl;
+  cout<<"\x0d"<<"Classic star computed in "<<t.elapsedTime()<<"s"<<flush;
   node = NULL;
   delete node;
   return somega * pomega / surfaceFoliaire;
