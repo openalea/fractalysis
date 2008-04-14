@@ -736,7 +736,7 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
           som += probaBeamIntercept( node_id, direction, distribution, (*ibeams_it).id_x, (*ibeams_it).id_y);
         }
         //cout<<node_id<<"  som : "<<som<<"   beta : "<<beta<<endl;
-        assert(som/beta < 1);
+        assert(som/beta <= 1);
         node->setPOmega(direction, distribution, som/beta);
         return som/beta;
       }
