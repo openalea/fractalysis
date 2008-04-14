@@ -10,7 +10,7 @@ import csv
 from PIL import Image
 from time import sleep, time
 from math import radians, pi
-
+from scipy import array, sum
 
 def azel2vect(az, el):
   v = -pgl.Vector3(pgl.Vector3.Spherical( 1, radians( az ), radians( 90 - el ) ) )
@@ -407,11 +407,12 @@ def vgStar(self, **kwds):
   d_factor = kwds.get('d_factor', 4)
   pth = kwds.get('pth', os.path.abspath(os.curdir))
   pos = kwds.get('pos', sd.skyTurtle() )
+  write = kwds.get('write', True )
   root_id = self.get1Scale(1)[0]
   tla = self.totalLA(root_id)
   rstar = []
+  soc = []
   for s,p in enumerate(pos):
-    deb = time()
     az = p[0]
     el = p[1]
     wg = p[2]
@@ -420,21 +421,23 @@ def vgStar(self, **kwds):
     sproj = pgl.Viewer.frameGL.getProjectionSize()[0]
     real_star = sproj / tla
     rstar.append(real_star)
-    fin = time()
+    soc.append(wg)
     #writing result to file
-    row=[] #line to write in csv file
-    row.append(s+1)
-    row.append(az)
-    row.append(el)
-    row.append(wg)
-    row.append(real_star)
-    savedir = os.path.join(pth, self.name)
-    if not os.path.isdir(savedir):
-      os.mkdir(savedir) 
-    csv_file = self.name + "_vgstar.csv"
-    file = os.path.join(savedir, csv_file)
-    writer = csv.writer(open(file, 'ab'), dialect='excel')
-    writer.writerow(row)
+    if write :
+      row=[] #line to write in csv file
+      row.append(s+1)
+      row.append(az)
+      row.append(el)
+      row.append(wg)
+      row.append(real_star)
+      savedir = os.path.join(pth, self.name)
+      if not os.path.isdir(savedir):
+        os.mkdir(savedir) 
+      csv_file = self.name + "_vgstar.csv"
+      file = os.path.join(savedir, csv_file)
+      writer = csv.writer(open(file, 'ab'), dialect='excel')
+      writer.writerow(row)
   stop = time()
   print "total computation time : ", stop-start, " s."
+  return sum(array(rstar) * array(soc))
 

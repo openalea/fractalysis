@@ -477,7 +477,8 @@ ScenePtr scaledStruct::genGlobalScene()
   ScenePtr scene = new Scene();
   for(int i=0; i<depth(); i++)
   {
-    scene->merge(genScaleScene(i+1));
+    //scene->merge(genScaleScene(i+1));
+    scene->merge(genScaleScene(depth() - i));
   }
   return scene;
 }
@@ -1048,6 +1049,9 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
           break;
         case BdgBox :
           hull = f.balignedbox();
+          break;
+        case BdgEllipse :
+          hull = f.bellipsoid();
           break;
         default:
           cout << "Sorry, '" << h_choice << "' does not correspond to an existing option. Please try again with either CvxHull, Sphere or Box.\n\n";

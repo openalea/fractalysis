@@ -48,7 +48,7 @@ float length;
 };
 
 LGT_API enum distrib {Turbid, Real};
-LGT_API enum hull_choice {CvxHull, BdgSphere, BdgBox };
+LGT_API enum hull_choice {CvxHull, BdgSphere, BdgBox, BdgEllipse };
 
 typedef vector<distrib> DistribVect;
 typedef map<Vector3, map< DistribVect, float> > DirectionalDistribPMap;

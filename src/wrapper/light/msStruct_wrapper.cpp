@@ -415,6 +415,8 @@ scaledStruct * pySsFromDict( string scn, ScenePtr& sc, boost::python::list l, st
     hc = BdgBox;
   else if ( h_choice == "Sphere")
     hc = BdgSphere;
+  else if ( h_choice == "Ellipse")
+    hc = BdgEllipse;
   else
     hc = CvxHull;
   scaledStruct * res = ssFromDict( scn, sc, *dico, hc );
