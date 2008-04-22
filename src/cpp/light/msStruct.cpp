@@ -646,14 +646,14 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
       l = (*ibeams_it).length;
       prod=1;
       s = 0;
-      //while( s < leaves_sproj.size() && prod > 0.0001)
-      for(int s=0; s<leaves_sproj.size(); ++s)
+      //for(int s=0; s<leaves_sproj.size(); ++s)
+      while( s < leaves_sproj.size() && prod > 0.)
       { 
         opac = l*leaves_sproj[s]/vol;
         if( opac > 1)
           opac = 1;
         prod*=(1 - opac); //assuming that leaves are opaque thus pOmega=1
-        //++s;
+        ++s;
       }
       som += (1-prod);
     }
@@ -798,8 +798,8 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
     float prod =1;
     vector<int> compo =node->getComponents(); 
     int c = 0;
-    //while( c < compo.size() && prod > 0.0001)
-    for(int c=0; c<compo.size(); ++c)
+    //for(int c=0; c<compo.size(); ++c)
+    while( c < compo.size() && prod > 0.)
     {
       msNode * x = getNode(compo[c]);
       float beam_length =x->getBeamLength(direction, x_beamId, y_beamId);
@@ -808,7 +808,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
         intercept = true;
         prod *= (1 - probaBeamIntercept(x->getId(), direction, distribution, x_beamId, y_beamId));
       }
-      //++c ;
+      ++c ;
     }
     if(intercept)
       {
@@ -829,8 +829,8 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
     float px, sproj, opac ;
     vector<int> compo =node->getComponents();
     int c = 0;
-    //while( c < compo.size() && prod > 0.0001)
-    for(int c=0; c<compo.size(); ++c)
+    //for(int c=0; c<compo.size(); ++c)
+    while( c < compo.size() && prod > 0.)
     {
       msNode * x = getNode(compo[c]);
       sproj = x->getProjSurface(direction);
@@ -846,7 +846,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       if(opac > 1)
         opac = 1;
       prod *= (1 - opac);
-      //++c ;
+      ++c ;
     }
     assert(1-prod >= 0);
     /*
