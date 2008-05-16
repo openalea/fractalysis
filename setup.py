@@ -92,7 +92,7 @@ setup(
 
     # entry_points
     entry_points = {
-            "wralea": ["aml = openalea.fractalysis",]
+            "wralea": ["fractalysis = openalea.fractalysis",]
             },
 
     )

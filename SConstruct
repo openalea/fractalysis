@@ -32,10 +32,10 @@ Help(options.GenerateHelpText(opt_env))
 prefix= opt_env['build_prefix']
 BuildDir( prefix, '.' )
 
-cpp_env= ALEAEnvironment( cpp_conf, 'options.py', ARGUMENTS )
+cpp_env= ALEAEnvironment( cpp_conf, ['../options.py', 'options.py'], ARGUMENTS )
 cpp_env.Append( CPPPATH = pj( '$build_includedir','fractalysis' ) )
 #cpp_env.Append( EXTRA_CPPPATH = pj( '$build_includedir','plantgl' ) )
-wrapper_env= ALEAEnvironment( wrapper_conf, 'options.py', ARGUMENTS )
+wrapper_env= ALEAEnvironment( wrapper_conf, ['../options.py', 'options.py'], ARGUMENTS )
 wrapper_env.Append( CPPPATH = pj( '$build_includedir','fractalysis' ) )
 #wrapper_env.Append( EXTRA_CPPPATH = pj( '$build_includedir','plantgl' ) )
 
