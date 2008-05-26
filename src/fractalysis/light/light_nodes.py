@@ -27,12 +27,14 @@ import openalea.plantgl.all as pgl
 
 from openalea.fractalysis.fractutils.pgl_utils import centerScene
 
-def create_MSS( name, scene, scale_table ):
+def create_MSS( name, scene, scale_table, hull_type ):
   scc = centerScene( scene )
-  return lit.ssFromDict( name, scc, scale_table)
+  if scale_table==None:
+    scale_table=[{1:[sh.id for sh in scc]}]
+  return lit.ssFromDict( name, scc, scale_table, hull_type)
 
-def generate_pix(mss, light_direction, distrib, img_size, save_path, distfactor):
-  
+def generate_pix(mss, light_direction, distrib, img_size, save_path):
+  distSize = {"100x100":(100,12), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
   globScene = mss.genScaleScene(1)
   for i in range(1,mss.depth):
     globScene.add(mss.genScaleScene(i+1))
@@ -42,8 +44,14 @@ def generate_pix(mss, light_direction, distrib, img_size, save_path, distfactor)
   dir = lit.azel2vect(az, el)
 
 
-  width = img_size[0]
-  height = img_size[1]
+  if img_size in distSize.keys():
+    width = distSize[img_size][0]
+    height = distSize[img_size][0]
+    distfactor=distSize[img_size][1]
+  else:
+    width=300
+    height=300
+    distfactor=4
 
   lit.prepareScene(globScene, width, height, az, el, distfactor)
   
