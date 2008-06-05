@@ -818,7 +818,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
         else
           {
             cout<< "bad value : "<< 1-prod << endl;
-            return 0;
+            return 1;
           }
       }
     else
