@@ -812,8 +812,14 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
     }
     if(intercept)
       {
-        assert(1-prod >= 0);
-        return 1-prod;
+        //assert(1-prod >= 0);
+        if(1-prod >= 0)
+          return 1-prod;
+        else
+          {
+            cout<< "bad value : "<< 1-prod << endl;
+            return 0;
+          }
       }
     else
       return 0;
