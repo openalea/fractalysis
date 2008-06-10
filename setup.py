@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-15 -*-
 
-import sys,os
+import sys, os
+from setuptools import setup, find_packages
 from os.path import join as pj
-from setuptools import setup
 
 # Package name
 name= 'fractalysis'
@@ -25,8 +25,9 @@ author= 'Da SILVA David'
 author_email= 'david.da_silva@cirad.fr'
 url= 'http://openalea.gforge.inria.fr'
 
-# LGPL compatible INRIA license
-license= 'Cecill-C' 
+# License: License for the template package.
+# Please, choose an OpenSource license for distribution of your package.
+license= 'Cecill-C' # or 'GPL' or 'Cecill' or  'LGPL'
 
 # Scons build directory
 build_prefix= "build_scons"
@@ -67,10 +68,12 @@ setup(
     # pure python  packages
     packages= [ pkg_name, pkg_name+'.light', pkg_name+'.engine', pkg_name+'.fractutils' ],
     # python packages directory
+
     package_dir= {  pkg_name : pj('src',name),
                     pkg_name+'.light' :pj('src', name, 'light'),
                     pkg_name+'.engine' :pj('src', name, 'engine'),
                     pkg_name+'.fractutils' :pj('src', name, 'fractutils'),
+                    '' : 'src',
                   },
 
     # add package platform libraries if any
@@ -91,10 +94,17 @@ setup(
     dependency_links = ['http://openalea.gforge.inria.fr/pi'],
 
     # entry_points
-    entry_points = {
-            "wralea": ["fractalysis = openalea.fractalysis",]
-            },
+    entry_points = {"wralea": [
+                              "fractalysis = openalea.fractalysis",
+                              ]
+                    },
+    #entry_points = {"wralea": [
+    #                          "fractalysis = openalea.fractalysis",
+    #                          "fractalysis.light = openalea.fractalysis.light",
+    #                          "fractalysis.engine = openalea.fractalysis.engine",
+    #                          ]
+    #                },
 
-    )
+  )
 
 

@@ -13,6 +13,22 @@
 # 
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
+"""
+:Authors:
+  - Da SILVA David
+:Organization: Virtual Plants
+:Contact: david.da_silva:cirad.fr
+:Version: 1.0
+:Date: December 2005
+:requires:
+  - pylab
+
+Module for computing n-dimensional lacunarity using n-dimensional matrix. The non-zero values of the matrix representing either the presence (binary 0/1 matrix) or a quantity/density.
+
+"""
+
+__docformat__ = "restructuredtext en"
+
 
 
 __doc__="""
@@ -32,20 +48,34 @@ from openalea.fractalysis.engine.lac_engine import MatrixLac
 from openalea.fractalysis.fractutils.pgl_utils import surfPerTriangle, gridIndex, color, scene2grid, toPglScene
 
 class BCM( Node ):
-    """Box Method a.k.a counting intercepted voxel at each scale
-    Input 0 : PlantGL scene
-    Input 1 : final subdivision factor > 2
-    Output 1 : array of voxels size
-    Output 2 : array of intercepted voxels"""
+  """
+  Box Method a.k.a counting intercepted voxel at each scale
 
-    def __init__( self, inputs, outputs ):
+  :Parameters:
+    - `Scene` : PlantGL scene
+    - `Stop Factor` : final subdivision factor > 2
 
-        Node.__init__( self, inputs, outputs )
+  :Types:
+    - `Scene` : Pgl scene
+    - `Stop Factor` : int
 
-    def __call__( self, inputs ):
+  :returns:
+    - `Scales` : array of voxels size
+    - `Intercepted Voxels` : array of number of intercepted voxels
+
+  :returntype: 
+    - `Scale` : [ float ]
+    - `Intercepted Voxels` : [ int ]
+  """
+
+  def __init__( self, inputs, outputs ):
+
+    Node.__init__( self, inputs, outputs )
+
+  def __call__( self, inputs ):
         #scene = pgl.Scene(self.get_input( 'scene' ))
-        scene = self.get_input( 'scene' ) 
-        res = computeGrids( scene , self.get_input( 'stopFactor' ) )
+        scene = self.get_input( 'Scene' ) 
+        res = computeGrids( scene , self.get_input( 'Stop Factor' ) )
         
         sc=[]
         iv = []
@@ -72,7 +102,32 @@ class Voxels(object):
 
 
 def voxelize(scene, gridSize, density=True ):
-  """generate the scene resulting of grid discretization"""
+  """
+  Generate the scene resulting of grid discretization
+  
+  :Parameters:
+    - `Scene` : PlantGL scene
+    - `Division Factor` : Division factor of the bounding box
+    - `Density` : Taking density into account
+
+  :Types:
+    - `Scene` : Pgl scene
+    - `Division Factor` : int 
+    - `Density` : boolean
+
+  :returns:
+    - `Voxel size` : List of intercepted voxels size
+    - `Centers` : List of intercepted voxels centers
+    - `Densities` : List of intercepted voxels densities
+    - `VoxScene` : Scene of intercepted voxels
+
+  :returntype:
+    - `Voxel size` : [ float ] 
+    - `Centers` : [ ( float ) ]
+    - `Densities` :  [ float ]
+    - `VoxScene` : Plg scene
+  """
+
   #scene = pgl.Scene(sceneFile)
   bbox = pgl.BoundingBox(scene)
   epsilon = pgl.Vector3( 0.01, 0.01, 0.01 )
@@ -172,6 +227,26 @@ def lactrix_fromScene( scene, file_name, gridSize, spath, density):
 class lacunarity( Node ):
   """
   Compute the lacunarity of a n-dimensional matrix
+   
+  :Parameters:
+    - `Matrix` : matrix for lacunarity computation
+    - `Type` : type of lacunarity
+    - `Start` : starting subdivision factor
+    - `Stop` : ending subdivision factor
+
+  :Types:
+     - `Matrix`: `MatrixLac`
+     - `Type` : string
+     - `Start` : int
+     - `Stop` : int
+     
+  :returns:
+    - `Lacunarity` : List of lacunarity values as a function of subvoxel sizes
+    - `Box sizes` : List of subvoxel sizes
+
+  :returntype:
+    - `Lacunarity` : [ float ] 
+    - `Box sizes` :  [ float ]
   """
 
   lac_func =  { "Centered" : "_ctrdlac",
