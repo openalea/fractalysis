@@ -67,12 +67,21 @@ setup(
     create_namespaces = True,
 
     # pure python  packages
-    packages= [ pkg_name, pkg_name+'.light', pkg_name+'.engine', pkg_name+'.fractutils' ],
-    # python packages directory
+    packages= [ pkg_name, 
+                pkg_name+'.light', 
+                pkg_name+'.light.castshadow', 
+                pkg_name+'.engine', 
+                pkg_name+'.engine.boxcouting', 
+                pkg_name+'.engine.twosurfaces', 
+                pkg_name+'.fractutils' ],
 
+    # python packages directory
     package_dir= {  pkg_name : pj('src',name),
                     pkg_name+'.light' :pj('src', name, 'light'),
+                    pkg_name+'.light.castshadow' :pj('src', name, 'light', 'castshadow'),
                     pkg_name+'.engine' :pj('src', name, 'engine'),
+                    pkg_name+'.engine.boxcounting' :pj('src', name, 'engine', 'boxcounting'),
+                    pkg_name+'.engine.twosurfaces' :pj('src', name, 'engine', 'twosurfaces'),
                     pkg_name+'.fractutils' :pj('src', name, 'fractutils'),
                     '' : 'src',
                   },
@@ -96,15 +105,12 @@ setup(
 
     # entry_points
     entry_points = {"wralea": [
-                              "fractalysis = openalea.fractalysis",
-                              ]
+            "fractalysis = openalea.fractalysis",
+            "castshadow = openalea.fractalysis.light.castshadow",
+            "twosurfaces = openalea.fractalysis.engine.twosurfaces",
+            "boxcounting = openalea.fractalysis.engine.boxcounting",
+            ]
                     },
-    #entry_points = {"wralea": [
-    #                          "fractalysis = openalea.fractalysis",
-    #                          "fractalysis.light = openalea.fractalysis.light",
-    #                          "fractalysis.engine = openalea.fractalysis.engine",
-    #                          ]
-    #                },
 
   )
 
