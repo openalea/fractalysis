@@ -94,11 +94,12 @@ pair<Vector3,Vector3> bbox2(const ScenePtr& sc) // que fait cette bbox ?
     Discretizer d;
     BBoxComputer bbc( d );
     bbc.process(sc);
+    Vector3 epsilon(0.01,0.01,0.01);
 	if(bbc.getBoundingBox().isNull())
 	{
 		std::cerr << "Error while computing bounding box." << std::endl;
 	}
-	return pair<Vector3,Vector3>(bbc.getBoundingBox()->getLowerLeftCorner(),bbc.getBoundingBox()->getUpperRightCorner());
+	return pair<Vector3,Vector3>(bbc.getBoundingBox()->getLowerLeftCorner()-epsilon,bbc.getBoundingBox()->getUpperRightCorner()+epsilon);
 
 }
 

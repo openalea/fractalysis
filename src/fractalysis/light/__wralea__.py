@@ -13,38 +13,23 @@
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
 
-
-__doc__="""
-Wralea for Fractalysis.Library 
-"""
-
-__license__= "Cecill-C"
-__revision__=" $Id$ "
-
-__editable__ = 'False' 
-
 from openalea.core import *
 
-def register_packages(pkgmanager):
-    """ Initialisation function
-    Return a list of package to include in the package manager.
-    This function is called by the package manager when it is updated
-    """
-
-
-    metainfo={ 'version' : '0.0.1',
-               'license' : 'CECILL-C',
-               'authors' : 'DDS',
-               'institutes' : 'INRIA/CIRAD',
-               'description' : 'fractalysis.light nodes.',
-               }
-
-
-    package = Package("fractalysis.light", metainfo)
+__name__ = "fractalysis.light"
+__version__ = '0.0.1'
+__license__ = 'CeCILL-C'
+__authors__ = 'OpenAlea consortium'
+__institutes__ = 'INRIA/CIRAD'
+__description__ = 'Fractalysis light nodes.'
+__url__ = 'http://openalea.gforge.inria.fr'
+__icon__= 'light_icon.png' 
+__editable__ = 'False' 
+ 
+__all__ = ['MSS', 'genPix', 'lightDir', ]
 
 ###### begin nodes definitions #############
 
-    nf = Factory( name="create MSS",
+    MSS = Factory( name="create MSS",
                   description="Generates a multi scale structure",
                   category="Light",
                   nodemodule="light_nodes",
@@ -58,9 +43,7 @@ def register_packages(pkgmanager):
                           ),
                   )
 
-    package.add_factory( nf )
-
-    nf = Factory( name="generatePix",
+    genPix = Factory( name="generatePix",
                   description="Generates directional shadow picture",
                   category="Light",
                   nodemodule="light_nodes",
@@ -75,10 +58,7 @@ def register_packages(pkgmanager):
                           ),
                   )
 
-    package.add_factory( nf )
-
-
-    nf = Factory( name="Light direction",
+    lightDir = Factory( name="Light direction",
                   description="Defines the direction of incident light",
                   category="Light",
                   nodemodule="light_nodes",
@@ -90,10 +70,7 @@ def register_packages(pkgmanager):
                           ),
                   )
 
-    package.add_factory( nf )
-
 ###### end nodes definitions ###############
 
-    pkgmanager.add_package(package)
 
 

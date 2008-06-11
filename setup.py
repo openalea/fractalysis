@@ -13,6 +13,7 @@ pkg_name= namespace + '.' + name
 version= '0.0.2'
 
 # Description of the package
+name= 'fractalysis'
 
 description= '3D Fractal analysis package.' 
 
@@ -30,7 +31,7 @@ url= 'http://openalea.gforge.inria.fr'
 license= 'Cecill-C' # or 'GPL' or 'Cecill' or  'LGPL'
 
 # Scons build directory
-build_prefix= "build_scons"
+build_prefix= "build-scons"
 
 # platform dependencies
 install_requires = ['plantgl',]
@@ -44,7 +45,7 @@ setup_requires = install_requires + ['openalea.deploy']
 # Main setup
 setup(
     # Meta data
-    name=name,
+    name='VPlants.Fractalysis',
     version=version,
     description=description,
     long_description=long_description,
@@ -77,7 +78,7 @@ setup(
                   },
 
     # add package platform libraries if any
-    package_data= { '' : ['*.so', '*.dll', '*.pyd']},
+    package_data= { '' : ['*.so', '*.dll', '*.pyd', '*.png']},
     include_package_data=True,
     zip_safe = False,
                      
