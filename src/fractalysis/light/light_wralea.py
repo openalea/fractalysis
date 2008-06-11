@@ -21,6 +21,8 @@ Wralea for Fractalysis.Library
 __license__= "Cecill-C"
 __revision__=" $Id$ "
 
+__editable__ = 'False' 
+
 from openalea.core import *
 
 def register_packages(pkgmanager):
