@@ -71,7 +71,7 @@ setup(
                 pkg_name+'.light', 
                 pkg_name+'.light.castshadow', 
                 pkg_name+'.engine', 
-                pkg_name+'.engine.boxcouting', 
+                pkg_name+'.engine.boxcounting', 
                 pkg_name+'.engine.two_surfaces', 
                 pkg_name+'.fractutils' ],
 
