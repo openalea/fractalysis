@@ -72,7 +72,7 @@ setup(
                 pkg_name+'.light.castshadow', 
                 pkg_name+'.engine', 
                 pkg_name+'.engine.boxcouting', 
-                pkg_name+'.engine.twosurfaces', 
+                pkg_name+'.engine.two_surfaces', 
                 pkg_name+'.fractutils' ],
 
     # python packages directory
@@ -81,7 +81,7 @@ setup(
                     pkg_name+'.light.castshadow' :pj('src', name, 'light', 'castshadow'),
                     pkg_name+'.engine' :pj('src', name, 'engine'),
                     pkg_name+'.engine.boxcounting' :pj('src', name, 'engine', 'boxcounting'),
-                    pkg_name+'.engine.twosurfaces' :pj('src', name, 'engine', 'twosurfaces'),
+                    pkg_name+'.engine.two_surfaces' :pj('src', name, 'engine', 'two_surfaces'),
                     pkg_name+'.fractutils' :pj('src', name, 'fractutils'),
                     '' : 'src',
                   },
@@ -107,7 +107,7 @@ setup(
     entry_points = {"wralea": [
             "fractalysis = openalea.fractalysis",
             "castshadow = openalea.fractalysis.light.castshadow",
-            "twosurfaces = openalea.fractalysis.engine.twosurfaces",
+            "two_surfaces = openalea.fractalysis.engine.two_surfaces",
             "boxcounting = openalea.fractalysis.engine.boxcounting",
             ]
                     },
