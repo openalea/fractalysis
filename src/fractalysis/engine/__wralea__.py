@@ -24,7 +24,7 @@ __authors__ = 'OpenAlea consortium'
 __institutes__ = 'INRIA/CIRAD'
 __description__ = 'Fractalysis engine nodes.'
 __url__ = 'http://openalea.gforge.inria.fr'
- 
+__icon__= 'engine_icon.png' 
 __editable__ = 'False' 
  
 __all__ = ['BCM', 'Voxelize', 'TwoSurfaces', 'Scene2MatrixLac', 'Lacunarity', ]
