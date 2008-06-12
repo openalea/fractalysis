@@ -13,7 +13,7 @@ __license__ = 'CeCIL'
 __authors__ = 'DDS'
 __url__ = ''
 __institutes__ = 'VirtualPlants'
-__icon__ = ''
+__icon__ = 'light_icon.png'
  
 
 __all__ = ['_143835372', 'MuSLIM', 'scalesTable']

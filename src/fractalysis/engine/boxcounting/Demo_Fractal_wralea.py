@@ -1,5 +1,5 @@
 
-# This file has been generated at Tue May 20 18:49:54 2008
+# This file has been generated at Thu Jun 12 12:15:13 2008
 
 from openalea.core import *
 
@@ -13,10 +13,17 @@ __license__ = 'Cecill-C'
 __authors__ = 'DDS'
 __url__ = ''
 __institutes__ = 'INRIA - CIRAD - UM2'
-__icon__ = 'icon.png'
+__icon__ = 'boxcounting_icon.png'
  
 
-__all__ = ['BoxCountingMethod', '_143787020', '_143787052']
+__all__ = ['_143329580', 'BoxCountingMethod', '_143329612']
+
+
+_143329580 = DataFactory(name='AC3-4.geom', 
+                    description='', 
+                    editors=None,
+                    includes=None,
+                    )
 
 
 
@@ -304,14 +311,7 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
 
 
 
-_143787020 = DataFactory(name='AC3-4.geom', 
-                    description='', 
-                    editors=None,
-                    includes=None,
-                    )
-
-
-_143787052 = DataFactory(name='AC2-4.geom', 
+_143329612 = DataFactory(name='AC2-4.geom', 
                     description='', 
                     editors=None,
                     includes=None,
