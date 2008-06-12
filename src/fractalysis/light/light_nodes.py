@@ -34,10 +34,10 @@ def create_MSS( name, scene, scale_table, hull_type ):
   return lit.ssFromDict( name, scc, scale_table, hull_type)
 
 def generate_pix(mss, light_direction, distrib, img_size, save_path):
-  distSize = {"100x100":(100,12), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
-  globScene = mss.genScaleScene(1)
-  for i in range(1,mss.depth):
-    globScene.add(mss.genScaleScene(i+1))
+  distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
+  globScene = mss.genGlobalScene()
+  #for i in range(1,mss.depth):
+  #  globScene.add(mss.genScaleScene(i+1))
 
   az = light_direction[0]
   el = light_direction[1]
