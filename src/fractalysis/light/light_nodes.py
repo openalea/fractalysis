@@ -27,11 +27,30 @@ import openalea.plantgl.all as pgl
 
 from openalea.fractalysis.fractutils.pgl_utils import centerScene
 
-def create_MSS( name, scene, scale_table, hull_type ):
+opacities = {'Pinus':0.89, 'Sorbus':0.88, 'Betula':0.89, 'Carpinus':0.967, 'Quercus':0.967, 'Malus':0.948, 'Misc':0.85, 'Populus':0.918, 'trunk_mat':1, 'houppier_mat':0.935, 'Wall':0.8
+            }
+
+def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull' ):
   scc = centerScene( scene )
   if scale_table==None:
-    scale_table=[{1:[sh.id for sh in scc]}]
-  return lit.ssFromDict( name, scc, scale_table, hull_type)
+    scale_table=[{1:[long(sh.id) for sh in scc]}]
+    ss = lit.ssFromDict( name, scc, scale_table, hull_type)
+    l=ss.get1Scale(2)
+    for i in l:
+      n = ss.getNode(i)
+      specie = n.shape.appearance.name
+      n.globalOpacity = opacities.get(specie, 0.935)
+      g = n.shape.geometry
+      try:
+        while (not isinstance(g, pgl.Cylinder)):
+          g =g.geometry
+        n.opak=True
+      except AttributeError :
+        pass
+  else:
+    ss = lit.ssFromDict( name, scc, scale_table, hull_type)
+
+  return ss
 
 def generate_pix(mss, light_direction, distrib, img_size, save_path):
   distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 

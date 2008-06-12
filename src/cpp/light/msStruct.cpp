@@ -19,7 +19,7 @@ using namespace std;
 
 #include "fractalysis/light/msStruct.h"
 
-msNode::msNode( int s ):
+msNode::msNode( long int s ):
  scale( s ),
  id( 0 ),
  cplx( 0 ),
@@ -31,7 +31,7 @@ msNode::msNode( int s ):
   scale = s;
   id = 0;
   cplx = 0;
-  components = vector<int>();
+  components = vector< long int>();
   surface = 0;
   volume = 0;
   interceptedBeams = DirectionalHitBeamsMap();
@@ -41,14 +41,14 @@ msNode::msNode( int s ):
 
 msNode::~msNode() {}
 
-void msNode::setId( int i) {id = i;}
-void msNode::setScale( int s) {scale = s;}
-void msNode::setCplx( int c ) {cplx = c; }
-void msNode::addComponent( int c )
+void msNode::setId( long int i) {id = i;}
+void msNode::setScale( long int s) {scale = s;}
+void msNode::setCplx( long int c ) {cplx = c; }
+void msNode::addComponent( long int c )
 { 
   components.push_back( c ); 
 }
-void msNode::setComponents( const vector<int>& v ) { components = v; }
+void msNode::setComponents( const vector< long int>& v ) { components = v; }
 void msNode::setSurface( float s ) { surface = s;}
 void msNode::setVolume( float v ) { volume = v;}
 void msNode::setShape( ShapePtr sh ) 
@@ -107,10 +107,10 @@ void msNode::setPOmega( Vector3 v, DistribVect d, float po )
   //cout<<"POmega for node "<<getId()<<" is "<<po<<endl;
 }
 
-int msNode::getId() { return id;}
-int msNode::getScale() {return scale;}
-int msNode::getCplx() {return cplx;}
-vector<int> msNode::getComponents() { return components; }
+long int msNode::getId() { return id;}
+long int msNode::getScale() {return scale;}
+long int msNode::getCplx() {return cplx;}
+vector< long int> msNode::getComponents() { return components; }
 float msNode::getSurface() {return surface;}
 float msNode::getVolume() {return volume;}
 ShapePtr msNode::getShape() {return shape;}
@@ -129,7 +129,7 @@ vector<iBeam> * msNode::getIBeams(Vector3 v)
   }
 }
 
-float msNode::getBeamLength( Vector3 v, int x, int y )
+float msNode::getBeamLength( Vector3 v, long int x, long int y )
 {
   v.normalize();
   if( interceptedBeams.find( v ) == interceptedBeams.end() )
@@ -239,8 +239,8 @@ void msNode::afficheInfo()
   cout<<"Scale : "<<getScale()<<endl;
   cout<<"Complex : "<<getCplx()<<endl;
   cout<<endl<<"Components : ";
-  vector<int> v = getComponents();
-  for( vector<int>::const_iterator vit = v.begin(); vit != v.end(); ++vit )
+  vector< long int> v = getComponents();
+  for( vector< long int>::const_iterator vit = v.begin(); vit != v.end(); ++vit )
   {
     cout<< *vit<<" ";
   }
@@ -331,23 +331,23 @@ scaledStruct::~scaledStruct()
 
 string scaledStruct::getName() {return plantName;}
 void scaledStruct::setName(string pln) {plantName = pln;}
-int scaledStruct::depth() {return scales.size();}
+long int scaledStruct::depth() {return scales.size();}
 
 void scaledStruct::addNode( msNode * n ) { nodeList.push_back( n ); }
 void scaledStruct::setNodeList(const vector<msNode *>& v ) { nodeList = v; }
 
-msNode * scaledStruct::getNode( int id )
+msNode * scaledStruct::getNode( long int id )
 {
   id--;
   if( id >=0 && id< nodeList.size() )
     return nodeList[ id ];
 }
 
-vector<int> scaledStruct::getAtoms(int id )
+vector< long int> scaledStruct::getAtoms( long int id )
 {
   msNode * n = getNode( id );
-  vector<int> atoms;
-  vector<int> compo = n->getComponents();
+  vector< long int> atoms;
+  vector< long int> compo = n->getComponents();
   if( compo.size() == 0 )
   {
     atoms.push_back( n->getId() );
@@ -356,7 +356,7 @@ vector<int> scaledStruct::getAtoms(int id )
   {
     for( int i=0; i<compo.size(); i++ )
     {
-      vector<int> v = getAtoms( compo[ i ] );
+      vector< long int> v = getAtoms( compo[ i ] );
       for( int j = 0; j < v.size(); j++ )
         atoms.push_back( v[ j ] );
     }
@@ -365,9 +365,9 @@ vector<int> scaledStruct::getAtoms(int id )
   return atoms;
 }
 
-vector<int> scaledStruct::get1Scale( int sc )
+vector< long int> scaledStruct::get1Scale( long int sc )
 {
-  vector<int> v;
+  vector< long int> v;
   msNode * n;
   for( int i=0; i < nodeList.size(); i++ )
   {
@@ -379,9 +379,9 @@ vector<int> scaledStruct::get1Scale( int sc )
   return v;
 }
 
-int scaledStruct::countScale()
+long int scaledStruct::countScale()
 {
-  int nbSc = 0;
+  long int nbSc = 0;
   scales.clear();
   if( nodeList.size() > 0 )
   {
@@ -397,7 +397,7 @@ int scaledStruct::countScale()
       }
     }
 
-  hash_map<int, int>::iterator mit;
+  hash_map< long int, long int>::iterator mit;
   for( mit = scales.begin(); mit != scales.end(); mit++ )
     {
       cout<<"Scale "<<mit->first<<" : "<<mit->second<<endl;
@@ -411,7 +411,7 @@ int scaledStruct::countScale()
   return nbSc;
 }
 
-void scaledStruct::sonOf( int comp, int cplx )
+void scaledStruct::sonOf( long int comp, long int cplx )
 {
   getNode( comp )->setCplx( cplx );
   getNode( cplx )->addComponent( comp );
@@ -425,10 +425,10 @@ void scaledStruct::cleanNodes()
   }
 }
 
-ScenePtr scaledStruct::genNodeScene( int id )
+ScenePtr scaledStruct::genNodeScene( long int id )
 {
   ScenePtr scene = new Scene();
-  vector<int> list = getAtoms( id );
+  vector< long int> list = getAtoms( id );
   msNode * n;
   for( int i=0; i<list.size(); ++i )
   {
@@ -456,10 +456,10 @@ ScenePtr scaledStruct::genSelectScene()
   return scene;
 }
 
-ScenePtr scaledStruct::genScaleScene( int sc)
+ScenePtr scaledStruct::genScaleScene( long int sc)
 {
   ScenePtr scene = new Scene();
-  vector<int> vect = get1Scale( sc );
+  vector< long int> vect = get1Scale( sc );
   msNode * node;
   for( int i=0; i<vect.size(); ++i )
   {
@@ -483,9 +483,9 @@ ScenePtr scaledStruct::genGlobalScene()
   return scene;
 }
 
-float scaledStruct::totalLA( int id )
+float scaledStruct::totalLA( long int id )
 {
-  vector<int> leaves = getAtoms( id );
+  vector< long int> leaves = getAtoms( id );
   float leafArea = 0;
   for( int i=0 ; i<leaves.size(); ++i )
     leafArea += getNode( leaves[ i ] )->getSurface();
@@ -511,7 +511,7 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
   ScenePtr sc ;
   BoundingBoxPtr bbox;
   Vector3 bb_center, cam_pos;
-  hash_map<int, int>::iterator mit;
+  hash_map< long int, long int>::iterator mit;
   msNode * node;
   for( mit = scales.begin(); mit != scales.end(); mit++ )
   {
@@ -558,7 +558,7 @@ void scaledStruct::sprojToNodes(Vector3 v, vector< pair<uint32_t,double> > sproj
   delete node;
 }
 
-ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, int width, int height, float d_factor)
+ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, long int width, long int height, float d_factor)
 {
 
   Timer t;
@@ -588,8 +588,8 @@ ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, int width,
 void scaledStruct::beamsToNodes( Vector3 direction, ViewRayPointHitBuffer * beams )
 {
   direction.normalize();
-  int nbLign = beams->getColsSize();
-  int nbCol = beams->getRowsSize();
+  long int nbLign = beams->getColsSize();
+  long int nbCol = beams->getRowsSize();
   RayPointHitList::iterator raypointhit_it;
   msNode * node;
   iBeam ib ;
@@ -612,7 +612,7 @@ void scaledStruct::beamsToNodes( Vector3 direction, ViewRayPointHitBuffer * beam
   delete node;
 }
 
-float scaledStruct::probaClassic(int node_id, Vector3 direction)
+float scaledStruct::probaClassic( long int node_id, Vector3 direction)
 {
   
   msNode * node = getNode(node_id);
@@ -620,11 +620,11 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
   float opac;
   direction.normalize();
   vector<iBeam> * interBeams = node->getIBeams(direction);
-  int beta = interBeams->size();
+  long int beta = interBeams->size();
   if (beta>0)
   {
     float som=0;
-    vector<int> leaves_id = getAtoms(node_id);
+    vector< long int> leaves_id = getAtoms(node_id);
     vector<float> leaves_sproj;
     for(int i=0; i<leaves_id.size(); ++i)
     {
@@ -639,7 +639,7 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
     faire la fonction starClassic
     */
     float l, prod;
-    int s;
+    long int s;
     vector<iBeam>::const_iterator ibeams_it ;
     for(ibeams_it = interBeams->begin(); ibeams_it != interBeams->end(); ++ibeams_it)
     {
@@ -669,7 +669,7 @@ float scaledStruct::probaClassic(int node_id, Vector3 direction)
   }
 }
 
-Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<distrib> distribution, uint32_t width, uint32_t height )
+Array2<float> scaledStruct::probaImage( long int node_id, Vector3 direction, vector<distrib> distribution, uint32_t width, uint32_t height )
 {
   Timer t;
   t.start();
@@ -681,7 +681,7 @@ Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<d
   assert(node->getComponents().size() > 0);
   
   vector<iBeam> * interBeams = node->getIBeams(direction);
-  int beta = interBeams->size();
+  long int beta = interBeams->size();
   if(! beta > 0)
     cout<<"No beams for node "<<node->getId()<<" at scale "<<node->getScale()<<endl; 
   assert(beta>0 && "intercepted beam list must not be empty");
@@ -704,7 +704,7 @@ Array2<float> scaledStruct::probaImage( int node_id, Vector3 direction, vector<d
 }
 
 
-float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distrib> distribution )
+float scaledStruct::probaIntercept( long int node_id, Vector3 direction, vector<distrib> distribution )
 {
   msNode * node = getNode(node_id);
   direction.normalize();
@@ -725,7 +725,7 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
     else //distribution not computed
     {
       vector<iBeam> * interBeams = node->getIBeams(direction);
-      int beta = interBeams->size();
+      long int beta = interBeams->size();
       //assert(beta>0 && "intercepted beam list must not be empty");
       if(beta > 0)
       {
@@ -753,7 +753,7 @@ float scaledStruct::probaIntercept( int node_id, Vector3 direction, vector<distr
 }
 
 
-float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<distrib> distribution, int x_beamId, int y_beamId)
+float scaledStruct::probaBeamIntercept( long int node_id , Vector3 direction, vector<distrib> distribution, long int x_beamId, long int y_beamId)
 {
   msNode * node = getNode(node_id);
   direction.normalize();
@@ -796,8 +796,8 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
   {
     bool intercept = false;
     float prod =1;
-    vector<int> compo =node->getComponents(); 
-    int c = 0;
+    vector< long int> compo =node->getComponents(); 
+    long int c = 0;
     //for(int c=0; c<compo.size(); ++c)
     while( c < compo.size() && prod > 0.)
     {
@@ -833,8 +833,8 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
       length = 0;
     float prod=1;
     float px, sproj, opac ;
-    vector<int> compo =node->getComponents();
-    int c = 0;
+    vector< long int> compo =node->getComponents();
+    long int c = 0;
     //for(int c=0; c<compo.size(); ++c)
     while( c < compo.size() && prod > 0.)
     {
@@ -868,7 +868,7 @@ float scaledStruct::probaBeamIntercept( int node_id , Vector3 direction, vector<
   delete node;
 }
 
-float scaledStruct::starClassic(int node_id, Vector3 direction) //needs to be called after having computed the intercepted beams
+float scaledStruct::starClassic( long int node_id, Vector3 direction) //needs to be called after having computed the intercepted beams
 {
   Timer t;
   t.start();
@@ -892,7 +892,7 @@ float scaledStruct::starClassic(int node_id, Vector3 direction) //needs to be ca
 
 }
 
-float scaledStruct::star(int node_id, Vector3 direction, vector<distrib> distribution)
+float scaledStruct::star( long int node_id, Vector3 direction, vector<distrib> distribution)
 {
   //Timer t;
   //t.start();
@@ -967,19 +967,19 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
 {
   Timer t;
   t.start();
-  hash_map<int, int> idList; // contains all scene ids, id shape are uint32, does it matter ?
-  int pos =0; //position de la shape dans la scene
+  hash_map< long int, long int> idList; // contains all scene ids, id shape are uint32, does it matter ?
+  long int pos =0; //position de la shape dans la scene
   for( Scene::iterator sc_it = scene->getBegin(); sc_it != scene->getEnd(); ++sc_it )
   {
     idList[ ( *sc_it )->getId() ]= pos++ ;
   }
-  hash_map<int, int> old2new;
+  hash_map< long int, long int> old2new;
   vector<msNode *> nodeList;
-  int nodeListCount =0;
+  long int nodeListCount =0;
   msNode * node;
   for( int i=0; i<dt.size(); i++ ) //for each scale
   {
-    int s = dt.size() - i; //scale from smallest (dt.size()) to largest (1)
+    long int s = dt.size() - i; //scale from smallest (dt.size()) to largest (1)
     decompoMap scaleMap = dt[ s-1 ];
     for( decompoMap::iterator dcm_it = scaleMap.begin(); dcm_it!=scaleMap.end(); dcm_it++ ) // for each component
     {
@@ -990,13 +990,13 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
       if( s == 1 ) //the root, should be unique
         node->setCplx( -1 ); //-1 mean no Cplx
 
-      vector<int> subelmt = dcm_it -> second;
+      vector< long int> subelmt = dcm_it -> second;
       for( int sb=0; sb<subelmt.size(); ++sb ) //for each sub element
       {
         bool leaf = false;
-        int idx; //idList index of target id in case of leaf = shape index in scene
+        long int idx; //idList index of target id in case of leaf = shape index in scene
         //int idl =0;
-        hash_map<int,int>::const_iterator idl_it=idList.find( subelmt[ sb ] ) ;
+        hash_map< long int, long int>::const_iterator idl_it=idList.find( subelmt[ sb ] ) ;
         if( idl_it != idList.end() )
           {
             leaf =true;
@@ -1015,7 +1015,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
         }
         else  //it is not a leaf
         {
-          hash_map<int,int>::const_iterator o2n_it = old2new.find( subelmt[ sb ] );
+          hash_map< long int, long int>::const_iterator o2n_it = old2new.find( subelmt[ sb ] );
           if( o2n_it != old2new.end() )
           {
             node->addComponent( o2n_it->second );
@@ -1033,7 +1033,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
       */
       Point3ArrayPtr pointList = new Point3Array();
       Discretizer d;
-      vector<int> compo = node->getComponents();
+      vector< long int> compo = node->getComponents();
       for( int i=0; i<compo.size(); ++i )
         {
           if( nodeList[ compo[ i ] - 1 ]->getShape()->apply( d ) ) //true if discretization is ok

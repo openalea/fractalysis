@@ -71,9 +71,9 @@ dicoTable * pySc2Cpp( boost::python::list l ) //scale description as list of dic
           PyErr_Clear();
           break;
         }
-        int cplx = boost::python::extract<int>( obj_key );
+        long int cplx = boost::python::extract< long int>( obj_key );
         boost::python::list l2 = boost::python::extract<boost::python::list>( obj_val );
-        vector<int> components = list2vec<int>( l2 );
+        vector< long int> components = list2vec< long int>( l2 );
         oneScale[ cplx ] = components;
       }
       dt->push_back( oneScale );
@@ -140,7 +140,7 @@ ViewRayPointHitBuffer * list_to_raybuf(  boost::python::list l )//beams structur
                 break;
               }
             boost::python::tuple hit = boost::python::extract<boost::python::tuple>( obj_hit );
-            int id = boost::python::extract<int>( hit[ 0 ] );
+            long int id = boost::python::extract< long int>( hit[ 0 ] );
             Vector3 zmin = boost::python::extract<Vector3>( hit[ 1 ] );
             Vector3 zmax;
             try
@@ -163,10 +163,10 @@ ViewRayPointHitBuffer * list_to_raybuf(  boost::python::list l )//beams structur
     cout<<"there was a problem during python list iteration"<<endl;
   size_t nbCols = ray_array[ 0 ].size();
   ViewRayPointHitBuffer * all_beams = new ViewRayPointHitBuffer( nbLines ,  nbCols  );
-  for( int i=0; i<nbLines; ++i )
+  for( long int i=0; i<nbLines; ++i )
     {
       vector<RayPointHitList> array_line = ray_array[ i ]; //should test if nbCols == array_line.size()
-      for( int j=0; j<nbCols; ++j )
+      for( long int j=0; j<nbCols; ++j )
         {
           all_beams->getAt( i,j ) = array_line[ j ];
         }
@@ -278,10 +278,10 @@ boost::python::object pyGetComponents(msNode * node)
 
 void pySetComponents(msNode * node, boost::python::list l)
 {
- node->setComponents( list2vec<int>(l)); //ajouter dans msNode
+ node->setComponents( list2vec< long int>(l)); //ajouter dans msNode
 }
 
-void pyAddInterBeam( msNode * node, Vector3 dir,  int beam_x, int beam_y, float l )
+void pyAddInterBeam( msNode * node, Vector3 dir, long int beam_x, long int beam_y, float l )
 {
   iBeam ib;
   ib.id_x = beam_x;
@@ -306,7 +306,7 @@ float pyGetPOmega( msNode * node, Vector3 dir, boost::python::list l)
 }
 
 void classMsNode(){
-        class_<msNode>("msNode",init<int >("node for multiscaled structure",args( "scale" )))
+        class_<msNode>("msNode",init< long int >("node for multiscaled structure",args( "scale" )))
             .add_property("id", &msNode::getId, &msNode::setId)
             .add_property("scale", &msNode::getScale, &msNode::setScale)
             .add_property("cplx", &msNode::getCplx, &msNode::setCplx )
@@ -337,10 +337,10 @@ void classMsNode(){
 ***                      wrapping of scaledStruct                                       ***
 ******************************************************************************************/
 
-boost::python::object pyGetAtoms( scaledStruct * ss, int id )
+boost::python::object pyGetAtoms( scaledStruct * ss, long int id )
 { return vect2List( ss->getAtoms( id ) );}
 
-boost::python::object pyGet1Scale( scaledStruct * ss, int sc )
+boost::python::object pyGet1Scale( scaledStruct * ss, long int sc )
 { return vect2List( ss->get1Scale( sc ) );}
 
 void pySetNodeList(scaledStruct * ss, boost::python::list l)
@@ -352,22 +352,22 @@ boost::python::object pyComputeProjections(scaledStruct * ss, Vector3 v)
 void pySprojToNodes(scaledStruct * ss, Vector3 v, boost::python::list sproj)
 { ss->sprojToNodes(v, list_to_sproj(sproj));}
 
-boost::python::object pyComputeBeams(scaledStruct * ss, Vector3 v, int width, int height, float d_factor)
+boost::python::object pyComputeBeams(scaledStruct * ss, Vector3 v, long int width, long int height, float d_factor)
 { return raybuf_to_list(ss->computeBeams(v, width, height, d_factor));}
 
 void pyBeamsToNodes( scaledStruct * ss, Vector3 v, boost::python::list l)
 { ss->beamsToNodes(v, list_to_raybuf(l)); }
 
-boost::python::object pyProbaImage(scaledStruct * ss, int nid, Vector3 direction, boost::python::list distribution, int width, int height)
+boost::python::object pyProbaImage(scaledStruct * ss, long int nid, Vector3 direction, boost::python::list distribution, long int width, long int height)
 { return array2List(ss->probaImage(nid, direction, list2distrib(distribution), width, height));}
 
-float pyProbaIntercep(scaledStruct * ss, int nid, Vector3 direction, boost::python::list distribution)
+float pyProbaIntercep(scaledStruct * ss, long int nid, Vector3 direction, boost::python::list distribution)
 { return ss->probaIntercept(nid, direction, list2distrib(distribution));}
 
-float pyProbaBeamIntercep(scaledStruct * ss, int nid, Vector3 direction, boost::python::list distribution, int x, int y)
+float pyProbaBeamIntercep(scaledStruct * ss, long int nid, Vector3 direction, boost::python::list distribution, long int x, long int y)
 { return ss->probaBeamIntercept(nid, direction, list2distrib(distribution), x, y);}
 
-float pyStar(scaledStruct * ss, int nid, Vector3 direction, boost::python::list distribution)
+float pyStar(scaledStruct * ss, long int nid, Vector3 direction, boost::python::list distribution)
 { return ss->star(nid, direction, list2distrib(distribution));}
 
 

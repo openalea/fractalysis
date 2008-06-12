@@ -1,5 +1,5 @@
 
-# This file has been generated at Thu Jun 12 11:00:51 2008
+# This file has been generated at Thu Jun 12 12:52:00 2008
 
 from openalea.core import *
 
@@ -13,13 +13,13 @@ __license__ = 'CeCIL'
 __authors__ = 'DDS'
 __url__ = ''
 __institutes__ = 'VirtualPlants'
-__icon__ = 'light_icon.png'
+__icon__ = 'castshadow_icon.png'
  
 
-__all__ = ['_143835372', 'MuSLIM', 'scalesTable']
+__all__ = ['_144167212', 'MuSLIM', 'scalesTable']
 
 
-_143835372 = DataFactory(name='mango_f21_L.bgeom', 
+_144167212 = DataFactory(name='mango_f21_L.bgeom', 
                     description='Mango f21', 
                     editors=None,
                     includes=None,

@@ -42,8 +42,8 @@ using namespace STDEXT;
 
 struct LGT_API iBeam //to ease the lenght retrival it was an dict{<x,y>:length}
 {
-int id_x;
-int id_y;
+long int id_x;
+long int id_y;
 float length;
 };
 
@@ -58,10 +58,10 @@ typedef map<Vector3, vector<iBeam> > DirectionalHitBeamsMap;
 class LGT_API msNode
 {
 private:
-  int id;
-  int scale;
-  int cplx;
-  vector<int>  components;
+  long int id;
+  long int scale;
+  long int cplx;
+  vector<long int>  components;
   float surface;
   float volume;
   ShapePtr shape;
@@ -78,14 +78,14 @@ private:
 public:
 
 
-  msNode(int);
+  msNode(long int);
   ~msNode();
 
-  void setId( int );
-  void setScale( int);
-  void setCplx( int );
-  void addComponent(int );
-  void setComponents( const vector<int>& );
+  void setId( long int );
+  void setScale( long int);
+  void setCplx( long int );
+  void addComponent(long int );
+  void setComponents( const vector<long int>& );
   void setSurface( float );
   void setVolume( float );
   void setShape( ShapePtr sh );
@@ -96,16 +96,16 @@ public:
   void setGlad( Vector3, float );
   void setPOmega( Vector3, DistribVect, float );
 
-  int getId();
-  int getScale();
-  int getCplx();
-  vector<int> getComponents();
+  long int getId();
+  long int getScale();
+  long int getCplx();
+  vector<long int> getComponents();
   float getSurface();
   float getVolume();
   ShapePtr getShape();
   float getGlobalOpacity();
   bool getOpak();
-  float getBeamLength( Vector3, int, int );
+  float getBeamLength( Vector3, long int, long int );
   vector<float> getLengthDistrib(Vector3);
   vector<iBeam> * getIBeams(Vector3);
   float getProjSurface( Vector3 );
@@ -127,7 +127,7 @@ class LGT_API scaledStruct
 private:
   string plantName;
   vector<msNode *> nodeList;
-  hash_map<int, int> scales;
+  hash_map<long int, long int> scales;
 
 public:
   scaledStruct(string);
@@ -135,37 +135,37 @@ public:
   
   string getName();
   void setName(string);
-  int depth();
+  long int depth();
 
   void addNode( msNode * );
   void setNodeList( const vector<msNode *>& );
-  msNode * getNode( int );
-  vector<int> getAtoms(int);
+  msNode * getNode( long int );
+  vector<long int> getAtoms(long int);
 
-  vector<int> get1Scale( int );
-  int countScale();
-  void sonOf( int, int );
+  vector<long int> get1Scale( long int );
+  long int countScale();
+  void sonOf( long int, long int );
   void cleanNodes();
 
-  ScenePtr genNodeScene(int);
+  ScenePtr genNodeScene(long int);
   ScenePtr genSelectScene() ;
-  ScenePtr genScaleScene( int );
+  ScenePtr genScaleScene( long int );
   ScenePtr genGlobalScene();
-  float totalLA( int );
+  float totalLA( long int );
   vector< pair<uint32_t,double> >   computeProjections( Vector3 );
   void sprojToNodes(Vector3, vector< pair<uint32_t,double> > );
 
-  ViewRayPointHitBuffer * computeBeams(Vector3, int, int, float);
+  ViewRayPointHitBuffer * computeBeams(Vector3, long int, long int, float);
   void beamsToNodes( Vector3, ViewRayPointHitBuffer * );
-  float probaClassic(int, Vector3);
-  Array2<float> probaImage( int, Vector3, vector<distrib>, uint32_t, uint32_t );
-  float probaIntercept( int, Vector3, vector<distrib> );
-  float probaBeamIntercept( int, Vector3, vector<distrib>, int, int );
-  float starClassic( int, Vector3);
-  float star( int, Vector3, vector<distrib>);
+  float probaClassic(long int, Vector3);
+  Array2<float> probaImage( long int, Vector3, vector<distrib>, uint32_t, uint32_t );
+  float probaIntercept( long int, Vector3, vector<distrib> );
+  float probaBeamIntercept( long int, Vector3, vector<distrib>, long int, long int );
+  float starClassic( long int, Vector3);
+  float star( long int, Vector3, vector<distrib>);
 };
 
-typedef hash_map< int, vector<int> > decompoMap;
+typedef hash_map< long int, vector<long int> > decompoMap;
 typedef vector<decompoMap> dicoTable ;
 
 LGT_API ScenePtr centerShapes( const ScenePtr& );
