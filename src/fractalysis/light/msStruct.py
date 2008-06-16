@@ -338,13 +338,13 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
 
 #####################extra functions not mandatory to light interception###############################
 
-def checkFactor(self, width, height, factor):
+def checkFactor(self, width, height, factor, pause=0.1):
   pix_width = 0
   for i in range(1,47):
     az, el, soc = sd.getSkyTurtleAt(i)
     prepareScene(self.genScaleScene(1), width, height, az, el, dist_factor=factor)
     pix_width += pgl.Viewer.frameGL.getProjectionSize()[2]
-    sleep(0.3)
+    sleep(pause)
   return pix_width / 46.
   
 def directionalG(self, az, el, **kwds):
