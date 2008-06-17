@@ -40,6 +40,9 @@ def getSkyTurtleSize():
   return len(azimuths)
 
 def getDirectLight( latitude, longitude, jourJul, startH, stopH, step=30, decalSun = 1, decalGMT = 0):
+  # startH and stopH represent starting and stoping hour for the light, given in hour
+  # step are time step, given in minute
+  # decalGMT give 'fuseau horaire' express in hour
   seq = sp.Sequence()
   hdeb = seq.heureTSV(jourJul, startH, decalSun, decalGMT, longitude)
   hfin = seq.heureTSV(jourJul, stopH, decalSun, decalGMT, longitude)
