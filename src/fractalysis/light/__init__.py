@@ -1,6 +1,5 @@
 from _light import *
 import msStruct
-import skyTurtle
 
 scaledStruct.saveBeams = msStruct.saveBeams
 scaledStruct.loadBeams = msStruct.loadBeams

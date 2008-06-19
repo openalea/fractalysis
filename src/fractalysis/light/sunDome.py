@@ -54,7 +54,7 @@ def getDirectLight( latitude, longitude, jourJul, startH, stopH, step=30, decalS
   tot = 0
   for s in w:
     tot+= s
-  if tot != 1:
+  if round(tot,1) != 1.0:
     print "sum weight : ", tot 
   return [ ( around(degrees(az[i]),2), around(degrees(el[i]), 2), w[i] ) for i in range(len(az)) ]
 

@@ -172,7 +172,7 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
       sproj=self.computeProjections( dir )
       self.saveSproj(az, el, sproj, pth)
   
-  res=[]
+  res={}
   row=[] #line to write in csv file
   #row.append(skt_idx)   #skyTurtle index
   row.append(az)        #azimut
@@ -182,16 +182,17 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
   root_id = self.get1Scale(1)[0]
   s_classic = self.starClassic(root_id, dir)
   row.append(s_classic) #star with uniform leaves distribution in root hull
-  res.append(('Beer', s_classic)) 
+  res['Star_turbid'] =  s_classic
   for d in distrib:
     print "computing ",d,"..."
     matrix = self.probaImage(root_id, dir, d, width, height)
-    self.makePict(az, el, d, matrix, width, height, pth)
+    img = self.makePict(az, el, d, matrix, width, height, pth)
     s=self.star(root_id, dir, d)
     po = self.getNode(root_id).getPOmega(dir,d)
-    res.append((d, s, po ))
+    res['Star_'+str(d)] = s
+    res['Pix_'+str(d)] = img
     row.append(s)
-    row.append(po)
+    #row.append(po)
 
   if (wg):
     row.append(wg)

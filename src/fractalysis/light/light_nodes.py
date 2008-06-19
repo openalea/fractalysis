@@ -49,8 +49,32 @@ def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull' ):
         pass
   else:
     ss = lit.ssFromDict( name, scc, scale_table, hull_type)
-
+  ss.checkFactor(150,150,8,0)
   return ss
+
+def light_intercept(mss, light_direction, distr, img_size, save_path):
+  distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
+  azimuth = light_direction[0]
+  elevation = light_direction[1]
+  weight = light_direction[2]
+  if img_size in distSize.keys():
+    wth = distSize[img_size][0]
+    hth = distSize[img_size][0]
+    distfactor = distSize[img_size][1]
+  else:
+    wth = 150
+    hth = 150
+    distfactor = 8
+
+  if distr != None:
+    cdist = [distr]
+  else:
+    distr = ['A']*(mss.depth - 1)
+    cdist = None
+
+  res = mss.computeDir(az=azimuth, el=elevation, wg=weight, distrib=cdist, width=wth, height=hth, d_factor=distfactor, pth=save_path)
+
+  return res['Star_turbid'], res['Star_'+str(distr)], res['Pix_'+str(distr)]
 
 def generate_pix(mss, light_direction, distrib, img_size, save_path):
   distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
@@ -98,8 +122,17 @@ def generate_pix(mss, light_direction, distrib, img_size, save_path):
  
   return pix,
  
-def light_direction(az, el):
-  return (az, el),
+def light_direction(direct=True, lat=43.3643, long=3.5238, day=172, hstart=7, hstop=19, hstep=30, turtle=True, sun_shift=1, GMT_shift=0):
+  sunlight = []
+  if direct:
+    sunlight += lit.sunDome.getDirectLight(lat, long, day, hstart, hstop, hstep, sun_shift, GMT_shift)
+
+  if turtle:
+    sunlight += lit.sunDome.skyTurtle()
+  
+  if not direct and not turtle:
+    sunlight += (45.,45.,0.1)
+  return sunlight
 
 
 
