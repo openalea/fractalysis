@@ -254,6 +254,7 @@ void msNode::cleanMaps()
 {
   interceptedBeams.clear();
   projSurface.clear();
+  glad.clear();
   pOmega.clear();
 }
 
@@ -704,7 +705,7 @@ Array2<float> scaledStruct::probaImage( long int node_id, Vector3 direction, vec
 }
 
 
-float scaledStruct::probaIntercept( long int node_id, Vector3 direction, vector<distrib> distribution )
+float scaledStruct::probaIntercept( long int node_id, Vector3 direction, DistribVect distribution )
 {
   msNode * node = getNode(node_id);
   direction.normalize();
@@ -919,6 +920,101 @@ float scaledStruct::star( long int node_id, Vector3 direction, vector<distrib> d
   return somega * pomega / surfaceFoliaire;
 }
 
+map<long int, float> scaledStruct::availight( long int scale, Vector3 direction, ViewRayPointHitBuffer * beams, DistribVect distrib)
+{
+  Timer t;
+  t.start();
+  map<long int, float> result;
+  vector<long int> nodes_id = get1Scale(scale); 
+  for(vector<long int>::const_iterator scit = nodes_id.begin(); scit != nodes_id.end(); ++scit)
+  {
+    long int node_id = *scit;
+    result[node_id] = availight_node( node_id, direction, beams, distrib);
+  }
+  t.stop();
+  cout<<"Available light computed in "<<t.elapsedTime()<<"s"<<endl;
+  return result;
+}
+
+float scaledStruct::availight_node( long int node_id, Vector3 direction, ViewRayPointHitBuffer * beams, DistribVect distrib)
+{
+  msNode * nother;
+  msNode * node = getNode(node_id);
+  RayPointHitList::iterator raypointhit_it;
+  long int x, y;
+  float beam_power, node_pos, nother_pos, vol, length, pom, pomega;
+  float totalight = 0;
+
+  direction.normalize();
+  vector<iBeam> * interBeams = node->getIBeams(direction);
+  long int beta = interBeams->size();
+  //cout<<"Nombre de rayon interceptes : "<<beta<<endl;
+  if (beta>0)
+  {
+    vector<iBeam>::const_iterator ibeams_it ;
+    for(ibeams_it = interBeams->begin(); ibeams_it != interBeams->end(); ++ibeams_it)
+    {
+      x = (*ibeams_it).id_x;
+      y = (*ibeams_it).id_y;
+
+      //cout<<"computing beam id ["<<x<<","<<y<<"]"<<endl;
+      beam_power = 1;
+      RayPointHitList oneBeam = beams->getAt( x, y );
+      raypointhit_it=oneBeam.begin();
+      while( raypointhit_it->id != node_id && raypointhit_it != oneBeam.end() )
+      {
+        ++raypointhit_it;
+      }
+      if( raypointhit_it != oneBeam.end() )
+      {
+        node_pos = raypointhit_it->zmax*direction ;
+
+        raypointhit_it=oneBeam.begin();
+        if(node->getScale() == depth()) //leaf scale case
+        {
+          while( raypointhit_it!=oneBeam.end() && beam_power > 0)
+          {
+            nother = getNode( raypointhit_it->id );
+            nother_pos = raypointhit_it->zmax*direction;
+            if( (nother->getScale() == node->getScale()) && (node_pos > nother_pos) )
+              beam_power = 0; //there is another leaf intercepting beam before
+            ++raypointhit_it;
+          }
+        }
+        else
+        {
+          while( raypointhit_it!=oneBeam.end() && beam_power > 0 )
+          {
+            nother = getNode( raypointhit_it->id );
+            nother_pos = raypointhit_it->zmax*direction;
+            if( (nother->getScale() == node->getScale()) && (node_pos > nother_pos) )
+            {
+              if (node_pos - nother_pos > nother->getBeamLength(direction, x, y))
+                length = nother->getBeamLength(direction, x, y);
+              else //intersection between the two enveloppes
+                length = node_pos - nother_pos;
+              vol = nother->getVolume();
+              assert(vol > 0);
+              pom =  nother->getPOmega(direction, distrib);
+              if( pom > 0 && pom <= 1)
+                pomega = pom * (length *nother->getProjSurface(direction))/vol; //distrib qui va bien, avoir
+              else
+                cout<<"problem with stored POmega : "<<pom<<endl;
+                pomega = 1;
+
+              beam_power *= (1 - pomega);
+            }
+            ++raypointhit_it;
+          }
+        }
+        totalight += beam_power;
+      }
+      else
+        cout<<"intercepted beam("<<x<<","<<y<<") does not intercept node ["<<node_id<<"] !!!"<<endl;
+    }
+  }
+  return totalight/beta;
+}
 
 /***************************************************************************************/
 /*                          End of classes definition                                  */

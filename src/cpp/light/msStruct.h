@@ -163,6 +163,8 @@ public:
   float probaBeamIntercept( long int, Vector3, vector<distrib>, long int, long int );
   float starClassic( long int, Vector3);
   float star( long int, Vector3, vector<distrib>);
+  float availight_node( long int, Vector3, ViewRayPointHitBuffer *, DistribVect );
+  map<long int, float> availight( long int, Vector3, ViewRayPointHitBuffer *, DistribVect );
 };
 
 typedef hash_map< long int, vector<long int> > decompoMap;

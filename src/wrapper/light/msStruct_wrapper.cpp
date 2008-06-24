@@ -19,6 +19,18 @@ boost::python::list vect2List( const T& vec )
   return l;
 }
 
+/*
+template<class K>
+template<class K,V>
+boost::python::dict map2dict( const map<const K&, const V&>& mymap)
+{
+  boost::python::dict dico;
+  for(map< K, V >::const_iterator mit = mymap.begin(); mit != mymap.end(); ++mit)
+    dico[mit->first] = mit->second;
+  return dico;
+}
+*/
+
 template<class T>
 vector<T> list2vec( boost::python::list l ){
   vector<T> array;
@@ -267,6 +279,13 @@ vector<distrib> list2distrib( boost::python::list l ) //list describing organisa
   return distribution;
 }
 
+boost::python::dict intFloatMap2dict( const map<long int, float>& mymap)
+{
+  boost::python::dict dico;
+  for(map< long int, float >::const_iterator mit = mymap.begin(); mit != mymap.end(); ++mit)
+    dico[mit->first] = mit->second;
+  return dico;
+}
 /******************************************************************************************
 ***                          wrapping of msNode                                         ***
 ******************************************************************************************/
@@ -370,6 +389,13 @@ float pyProbaBeamIntercep(scaledStruct * ss, long int nid, Vector3 direction, bo
 float pyStar(scaledStruct * ss, long int nid, Vector3 direction, boost::python::list distribution)
 { return ss->star(nid, direction, list2distrib(distribution));}
 
+float pyAvailightNode( scaledStruct * ss, long int nid, Vector3 direction, boost::python::list beams, boost::python::list distribution)
+{return ss->availight_node(nid, direction, list_to_raybuf(beams), list2distrib(distribution));}
+
+boost::python::object pyAvailight( scaledStruct * ss, long int scale, Vector3 direction, boost::python::list beams, boost::python::list distribution)
+{
+  return intFloatMap2dict( ss->availight(scale, direction, list_to_raybuf(beams), list2distrib(distribution)) );
+}
 
 void classScaledStruct()
 {
@@ -399,6 +425,8 @@ void classScaledStruct()
         .def( "probaBeamIntercept", &pyProbaBeamIntercep )
         .def( "star", &pyStar )
         .def( "starClassic", &scaledStruct::starClassic )
+        .def( "availightNode", &pyAvailightNode )
+        .def( "availight", &pyAvailight )
     ;
 }
 
