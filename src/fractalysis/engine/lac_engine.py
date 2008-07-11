@@ -18,7 +18,7 @@ __docformat__ = "restructuredtext en"
 import cPickle
 from scipy import zeros, ones, take, array
 from scipy.signal import convolve
-from os.path import join, isdir, isfile
+from os.path import join, isdir, isfile, basename 
 from os import makedirs, getcwd
 
 import openalea.fractalysis.fractutils.pgl_utils  as pgu
@@ -190,16 +190,22 @@ class MatrixLac:
     """
     for i in range(self.dim):
       weight = weight.take( range(gb_radius, weight.shape[i]-gb_radius), axis = i)
+    print "new shape : ", weight.shape
     nbBox=1.0
     for s in weight.shape:
       nbBox*=s
+    print "nb box : ", nbBox
 
     Z1=weight/nbBox
     Z2=( weight*weight )/nbBox
-    for i in range( self.dim ):
-      Z1=sum( Z1 )
-      Z2=sum( Z2 )
-    return ( nbBox, Z1, Z2 )
+    try :
+      for i in range( self.dim ):
+        Z1=sum( Z1 )
+        Z2=sum( Z2 )
+      return ( nbBox, Z1, Z2 )
+    except TypeError:
+      print "Error in Z1 and/or Z2 : ",Z1, Z2
+      return (None, None, None)
 
    
   def _lacac_ext( self, weight, gb_radius ):
@@ -222,10 +228,15 @@ class MatrixLac:
 
     Z1=weight/nbBox
     Z2=( weight*weight )/nbBox
-    for i in range( self.dim ):
-      Z1=sum( Z1 )
-      Z2=sum( Z2 )
-    return ( nbBox, Z1, Z2 )
+    try:
+      for i in range( self.dim ):
+        Z1=sum( Z1 )
+        Z2=sum( Z2 )
+      return ( nbBox, Z1, Z2 )
+
+    except TypeError:
+      print "Error in Z1 and/or Z2 : ",Z1, Z2
+      return (None, None, None)
 
 
   def _ctrdlac( self, weight, gb_radius ):
@@ -280,17 +291,21 @@ class MatrixLac:
     wght=self._get_convol( scale_radius )
     
     ( nbBox, Z1, Z2 ) = lac_type( wght, scale_radius )
-    lac=Z2/( Z1**2 )
-    
-    return ( lac, self.vox_size*gbSize )
+    if nbBox != None :
+      lac=Z2/( Z1**2 )
+      return ( lac, self.vox_size*gbSize )
+    else:
+      return (None, None)
    
-  def lacunarity( self, radius_stop, radius_start=0, radius_step=1, lac_type=None ):
+  def lacunarity( self, radius_stop, radius_start=1, radius_step=1, lac_type=None ):
     lac = []
     boxSize = []
     for sc in range( radius_start, radius_stop+1, radius_step ):
       ( l, s ) = self.one_scale_Lac( sc, lac_type )
-      lac.append( l )
-      boxSize.append( s )
+      
+      if l != None and s != None :
+        lac.append( l )
+        boxSize.append( s )
       
     return ( lac, boxSize )
  
@@ -332,4 +347,50 @@ def lactrix_fromScene( scene, file_name, gridSize, density=True, spath = getcwd(
     #pgu.viewScene( pgu.toPglScene( mat.points, m ) )
   return mat 
 
+try :
+  import Image
+
+  def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
+    """
+    Generate a `MatrixLac` instance from a square image.
+
+    :Parameters:
+      - `image_pth` : absolute path to the PNG image (temporary restriction)
+      - `pix_width` : pixel representing size defining the grid step
+      - `savpth` : path to directory to save convolution results
+      - `th` : threshold value to decide object pixels from void pixels
+
+    :Types:
+      - `image_pth` : string
+      - `pix_width` : float
+      - `savpth` : string
+      - `th` : int
+    
+    :returns: `MatrixLac` instance generated from the image
+    :returntype: `MatrixLac`
+
+    """
+
+    pts = []
+    name = basename(image_pth).replace('.png', '')
+    im = Image.open(image_pth).convert("L")
+    pix = im.load()
+    width, height = im.size
+    #finding points by inverting picture and removing grey levels
+    for i in range(width):
+      for j in range(height):
+        if pix[i,j] > th:
+          pix[i,j] = 0
+        else :
+          pts.append([i,j])
+          pix[i,j] = 255
+    try:
+      im.show()
+    except:
+      pass
+    mat = MatrixLac(name=name, points=pts, size=width, vox_size=pix_width, mass=None, spath=savpth) 
+    return mat
+
+except ImportError:
+  print "Image module not found, MatrixLac generation from image unavailable"
 

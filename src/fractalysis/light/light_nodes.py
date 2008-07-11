@@ -76,6 +76,23 @@ def light_intercept(mss, light_direction, distr, img_size, save_path):
 
   return res['Star_turbid'], res['Star_'+str(distr)], res['Pix_'+str(distr)]
 
+def light_recieved(mss, scl, light_direction, mod, img_size, save_path):
+  distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
+  azimuth = light_direction[0]
+  elevation = light_direction[1]
+  weight = light_direction[2]
+  if img_size in distSize.keys():
+    wth = distSize[img_size][0]
+    hth = distSize[img_size][0]
+    distfactor = distSize[img_size][1]
+  else:
+    wth = 150
+    hth = 150
+    distfactor = 8
+
+  res, sc = mss.recieved_light(scale=scl, az=azimuth, el=elevation, wg=weight, mode=mod, width=wth, height=hth, d_factor=distfactor, pth=save_path)
+  return res, sc
+
 def generate_pix(mss, light_direction, distrib, img_size, save_path):
   distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
   globScene = mss.genGlobalScene()

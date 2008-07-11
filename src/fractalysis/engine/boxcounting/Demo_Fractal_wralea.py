@@ -1,5 +1,5 @@
 
-# This file has been generated at Fri Jun 20 18:10:11 2008
+# This file has been generated at Fri Jul  4 09:31:58 2008
 
 from openalea.core import *
 
@@ -16,21 +16,7 @@ __institutes__ = 'INRIA - CIRAD - UM2'
 __icon__ = 'boxcounting_icon.png'
  
 
-__all__ = ['_145764844', '_145765836', 'BoxCountingMethod']
-
-
-_145764844 = DataFactory(name='AC2-4.geom', 
-                    description='', 
-                    editors=None,
-                    includes=None,
-                    )
-
-
-_145765836 = DataFactory(name='AC3-4.geom', 
-                    description='', 
-                    editors=None,
-                    includes=None,
-                    )
+__all__ = ['BoxCountingMethod', '_145671340', '_145671308']
 
 
 
@@ -58,7 +44,6 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
    18: ('Demo.Fractal', 'AC2-4.geom'),
    19: ('stat.descriptive', 'log'),
    20: ('plottools', 'VS Plot'),
-   21: ('plottools', 'PointLine Style'),
    22: ('stat.descriptive', 'log'),
    23: ('system', 'annotation'),
    24: ('system', 'annotation'),
@@ -67,25 +52,24 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
    27: ('system', 'annotation'),
    28: ('system', 'annotation'),
    29: ('system', 'annotation')},
-                             elt_connections={  135712452: (3, 0, 6, 0),
-   135712464: (2, 1, 5, 1),
-   135712476: (8, 0, 2, 1),
-   135712488: (12, 0, 11, 0),
-   135712500: (8, 0, 9, 1),
-   135712512: (9, 3, 10, 0),
-   135712524: (21, 0, 20, 0),
-   135712536: (5, 0, 3, 0),
-   135712548: (4, 0, 7, 0),
-   135712560: (11, 1, 21, 0),
-   135712572: (22, 0, 12, 0),
-   135712584: (18, 0, 4, 0),
-   135712596: (2, 0, 22, 0),
-   135712608: (2, 0, 5, 0),
-   135712620: (19, 0, 12, 1),
-   135712632: (7, 0, 2, 0),
-   135712644: (7, 0, 9, 0),
-   135712656: (11, 0, 20, 0),
-   135712668: (2, 1, 19, 0)},
+                             elt_connections={  135712452: (8, 0, 2, 1),
+   135712464: (7, 0, 2, 0),
+   135712476: (7, 0, 9, 0),
+   135712488: (4, 0, 7, 0),
+   135712500: (5, 0, 3, 0),
+   135712512: (8, 0, 9, 1),
+   135712524: (19, 0, 12, 1),
+   135712536: (18, 0, 4, 0),
+   135712548: (2, 1, 5, 1),
+   135712560: (11, 1, 20, 0),
+   135712572: (2, 0, 5, 0),
+   135712584: (2, 0, 22, 0),
+   135712596: (22, 0, 12, 0),
+   135712608: (12, 0, 11, 0),
+   135712620: (2, 1, 19, 0),
+   135712632: (3, 0, 6, 0),
+   135712644: (11, 0, 20, 0),
+   135712668: (9, 3, 10, 0)},
                              elt_data={  2: {  'caption': 'BCM',
          'hide': True,
          'lazy': True,
@@ -140,7 +124,7 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
          'posy': 138.75,
          'priority': 0,
          'user_application': None},
-   8: {  'caption': '9',
+   8: {  'caption': '25',
          'hide': True,
          'lazy': True,
          'minimal': False,
@@ -199,8 +183,8 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
           'hide': True,
           'lazy': True,
           'port_hide_changed': set([2]),
-          'posx': 112.5,
-          'posy': 11.25,
+          'posx': 158.75,
+          'posy': -25.0,
           'priority': 0,
           'user_application': None},
    19: {  'caption': 'log',
@@ -220,15 +204,6 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
           'posy': 708.3226616029616,
           'priority': 0,
           'user_application': True},
-   21: {  'caption': 'PointLine Style',
-          'hide': True,
-          'lazy': True,
-          'minimal': False,
-          'port_hide_changed': set([]),
-          'posx': 472.12056654251541,
-          'posy': 631.36850983547663,
-          'priority': 0,
-          'user_application': None},
    22: {  'caption': 'log',
           'hide': True,
           'lazy': True,
@@ -284,7 +259,7 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
          (4, "'$N_{\\\\delta}$'"),
          (5, '0')],
    7: [],
-   8: [(0, '9')],
+   8: [(0, '25')],
    9: [(2, 'True')],
    10: [],
    11: [],
@@ -299,10 +274,9 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
    19: [],
    20: [  (1, "'PointLine'"),
           (2, "'Box Counting Method'"),
-          (3, "'log(delta)'"),
-          (4, "'log(N_delta)'"),
+          (3, "'$\\\\log(\\\\delta)$'"),
+          (4, "'$log(N_{\\\\delta})$'"),
           (5, '1')],
-   21: [(1, "'Mango a19'"), (2, "'--'"), (3, "'^'"), (4, "'Default'")],
    22: [],
    23: [],
    24: [],
@@ -316,6 +290,20 @@ BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod',
                              lazy=True,
                              )
 
+
+
+_145671340 = DataFactory(name='AC3-4.geom', 
+                    description='', 
+                    editors=None,
+                    includes=None,
+                    )
+
+
+_145671308 = DataFactory(name='AC2-4.geom', 
+                    description='', 
+                    editors=None,
+                    includes=None,
+                    )
 
 
 

@@ -1,7 +1,6 @@
 #from _light import *
 import os
 import openalea.plantgl.all as pgl
-#import skyTurtle as skt
 import sunDome as sd
 import openalea.fractalysis.fractutils
 fruti = openalea.fractalysis.fractutils
@@ -11,6 +10,7 @@ from PIL import Image
 from time import sleep, time
 from math import radians, pi
 from scipy import array, sum
+from openalea.catalog.color.py_color import rgb_color_map
 
 def azel2vect(az, el):
   v = -pgl.Vector3(pgl.Vector3.Spherical( 1, radians( az ), radians( 90 - el ) ) )
@@ -101,7 +101,7 @@ def removeScale(self, sc):
       self.getNode( i ).scale = s-1
   self.countScale() 
 
-def prepareScene(scene, width, height, az=None, el=None, dist_factor=4):
+def prepareScene(scene, width=150, height=150, az=None, el=None, dist_factor=8):
   if( az != None and el != None):
     dir = azel2vect(az, el)
   else :
@@ -143,7 +143,7 @@ def makePict(self, az, el, distrib, matrix, width, height, pth=os.path.abspath(o
   out.save(file, "JPEG")
   return out
 
-def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
+def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
   if distrib== None:
     distrib=[['A']*(self.depth - 1)]
 
@@ -206,8 +206,35 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
   
   return res
 
+def recieved_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
+  v = azel2vect(az,el)
 
-def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False, width=300, height=300, d_factor=4, pth=os.path.abspath(os.curdir)):
+  if mode == "Multiscale":
+    distrib=[['R']*(self.depth - 1)]
+    if(self.getNode(self.get1Scale(1)[0]).getPOmega(v,distrib[0]) == -1):
+      self.computeDir(az=az, el=el, wg=wg, distrib=distrib, width=width, height=height, d_factor=d_factor, pth=pth)
+    beams = self.loadBeams(az, el, pth)
+    sc_distrib = ['R']*(self.depth - scale)
+    res = self.availight(scale, v, beams, sc_distrib)
+
+    scene = self.genScaleScene(scale)
+    vals = [res[id] for id in res.keys()]
+    m = min(vals)
+    M = max(vals)
+    for id in res.keys():
+      sh = scene.find(id)
+      r,g,b = rgb_color_map(value=(M-res[id]), minval=m, maxval=M, hue1=0, hue2=140)[0]
+      sh.appearance = fruti.color(r/3, g/3, b/3, diffu=3)
+    return res, scene
+    
+  elif mode == "Real":
+    print "atual mode"
+    return 1,1
+  elif mode == "Turbid":
+    print "turbid mode"
+    return 2,2
+
+def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False, width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
 
   if(skt_idx) :
     az,el,wg = sd.getSkyTurtleAt(skt_idx)
@@ -257,12 +284,12 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
 
   sc = self.genNodeScene(root_id)
   sc.remove(n.shape)
-  prepareScene(sc, 300, 300, az, el)
+  prepareScene(sc, 150, 150, az, el)
   pla = pgl.Viewer.frameGL.getProjectionSize()[0]
   essai = 0
   while pla == 0 and essai < 500:
-    prepareScene(sc, 300, 300, 155, 90)
-    prepareScene(sc, 300, 300, az, el)
+    prepareScene(sc, 150, 150, 155, 90)
+    prepareScene(sc, 150, 150, az, el)
     print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
     pla = pgl.Viewer.frameGL.getProjectionSize()[0]
     essai += 1
@@ -301,12 +328,12 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
 
       sc = self.genNodeScene(id)
       sc.remove(n.shape)
-      prepareScene(sc, 300, 300, az, el)
+      prepareScene(sc, 150, 150, az, el)
       pla = pgl.Viewer.frameGL.getProjectionSize()[0]
       essai = 0
       while pla == 0 and essai < 500:
-        prepareScene(sc, 300, 300, 155, 90)
-        prepareScene(sc, 300, 300, az, el)
+        prepareScene(sc, 150, 150, 155, 90)
+        prepareScene(sc, 150, 150, az, el)
         #print "getprojectionsize : ", pgl.Viewer.frameGL.getProjectionSize()
         pla = pgl.Viewer.frameGL.getProjectionSize()[0]
         essai += 1
@@ -351,8 +378,8 @@ def checkFactor(self, width, height, factor, pause=0.1):
 def directionalG(self, az, el, **kwds):
   dir = azel2vect(az, el)
   pth = kwds.get( 'pth', os.path.abspath(os.curdir) )
-  width = kwds.get('width', 300)
-  height = kwds.get('height', 300)
+  width = kwds.get('width', 150)
+  height = kwds.get('height', 150)
   scale = kwds.get('scale', self.depth)
 
   sproj=self.loadSproj(az, el, pth)
@@ -374,9 +401,9 @@ def directionalG(self, az, el, **kwds):
   
 
 def getPEA(self, **kwds):
-  width = kwds.get('width', 300)
-  height = kwds.get('height', 300)
-  d_factor = kwds.get('d_factor', 4)
+  width = kwds.get('width', 150)
+  height = kwds.get('height', 150)
+  d_factor = kwds.get('d_factor', 8)
   pth = kwds.get('pth', os.path.abspath(os.curdir))
   root_id = self.get1Scale(1)[0]
   az = kwds.get('az', 0)
@@ -403,9 +430,9 @@ def getPEA(self, **kwds):
 
 def vgStar(self, **kwds):
   start = time()
-  width = kwds.get('width', 300)
-  height = kwds.get('height', 300)
-  d_factor = kwds.get('d_factor', 4)
+  width = kwds.get('width', 150)
+  height = kwds.get('height', 150)
+  d_factor = kwds.get('d_factor', 8)
   pth = kwds.get('pth', os.path.abspath(os.curdir))
   pos = kwds.get('pos', sd.skyTurtle() )
   write = kwds.get('write', True )

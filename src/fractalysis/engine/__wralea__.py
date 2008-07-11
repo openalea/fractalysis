@@ -27,7 +27,7 @@ __url__ = 'http://openalea.gforge.inria.fr'
 __icon__= 'engine_icon.png' 
 __editable__ = 'False' 
  
-__all__ = ['BCM', 'Voxelize', 'TwoSurfaces', 'Scene2MatrixLac', 'Lacunarity', ]
+__all__ = ['BCM', 'Voxelize', 'TwoSurfaces', 'Scene2MatrixLac', 'Pix2MatrixLac', 'Lacunarity', ]
 
 ###### begin nodes definitions #############
 
@@ -85,6 +85,21 @@ Scene2MatrixLac = Factory( name="Scene2MatrixLac",
                       ),
               outputs=(dict(name="MatrixLac", interface = None,),
                        dict(name="Pgl scene", interface = None,),
+                      ),
+              )
+
+
+Pix2MatrixLac = Factory( name="Pix2MatrixLac",
+              description="Generate a MatrixLac from an Image",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="lactrix_fromPix",
+              inputs=(dict(name="Image path", interface=IFileStr,),
+                      dict(name="Pixel width", interface=IFloat),
+                      dict(name="Save Directory", interface=IDirStr, value='/tmp'),
+                      ),
+              outputs=(dict(name="MatrixLac", interface = None,),
+                       dict(name="Thresholded image", interface = None,),
                       ),
               )
 

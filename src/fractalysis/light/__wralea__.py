@@ -25,7 +25,7 @@ __url__ = 'http://openalea.gforge.inria.fr'
 __icon__= 'light_icon.png' 
 __editable__ = 'False' 
  
-__all__ = ['MSS', 'genPix', 'lightDir', 'lightInter', ]
+__all__ = ['MSS', 'genPix', 'lightDir', 'lightInter', 'lightReciev']
 
 ###### begin nodes definitions #############
 
@@ -95,6 +95,23 @@ lightDir = Factory( name="Light direction",
               outputs=( dict( name = "Sunlight directions", interface = ISequence),
                       ),
               )
+lightReciev = Factory( name="Recieved light",
+              description="Compute directional recieved light for one scale as relative ratio",
+              category="Light",
+              nodemodule="light_nodes",
+              nodeclass="light_recieved",
+              inputs=(dict(name="MSS", interface=None,),
+                      dict(name="Scale", interface=IInt(1), value=1),
+                      dict(name="Light direction", interface=ISequence, showwidget=False,),
+                      dict(name="Mode", interface=IEnumStr(("Multiscale", "Real", "Turbid")), value="Multiscale"),
+                      dict(name="Image size", interface=IEnumStr(("100x100", "150x150", "200x200", "300x300", "600x600")), value="150x150"),
+                      dict(name="Save path", interface=IDirStr,),
+                      ),
+              outputs=(dict(name="Recieved ratio", interface = IDict,),
+                       dict(name="PGL scene", interface = None,),
+                      ),
+              )
+
 
 ###### end nodes definitions ###############
 

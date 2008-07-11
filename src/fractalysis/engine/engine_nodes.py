@@ -40,6 +40,7 @@ __revision__=" $Id: engine_nodes.py $ "
 
 from copy import deepcopy
 from scipy import log, array
+from os.path import basename, splitext
 from openalea.core import *
 import openalea.plantgl.all as pgl
 #import openalea.fractalysis.engine as engine
@@ -171,7 +172,7 @@ def voxelize(scene, gridSize, density=True ):
 
   #sc = pgl.Scene()
   ctrs = []
-  for i in range( len( pts ) ):
+  for i in xrange( len( pts ) ):
     pt = pts[ i ]
     vect = pgl.Vector3( origin_center.x + ( pt[ 0 ] * step.x ) , origin_center.y + ( pt[ 1 ] * step.y ) ,origin_center.z + ( pt[ 2 ] * step.z ) )
     ctrs.append(vect)
@@ -224,6 +225,50 @@ def lactrix_fromScene( scene, file_name, gridSize, spath, density):
     visu = toPglScene( mat.points, m ) 
   return mat, visu 
 
+try :
+  import Image
+
+  def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
+    """
+    Generate a `MatrixLac` instance from a square image.
+
+    :Parameters:
+      - `image_pth` : absolute path to the PNG image (temporary restriction)
+      - `pix_width` : pixel representing size defining the grid step
+      - `savpth` : path to directory to save convolution results
+      - `th` : threshold value to decide object pixels from void pixels
+
+    :Types:
+      - `image_pth` : string
+      - `pix_width` : float
+      - `savpth` : string
+      - `th` : int
+    
+    :returns: `MatrixLac` instance generated from the image
+    :returntype: `MatrixLac`
+
+    """
+
+    pts = []
+    name = basename(splitext(image_pth)[0])
+    im = Image.open(image_pth).convert("L")
+    pix = im.load()
+    width, height = im.size
+    #finding points by inverting picture and removing grey levels
+    for i in xrange(width):
+      for j in xrange(height):
+        if pix[i,j] > th:
+          pix[i,j] = 0
+        else :
+          pts.append([i,j])
+          pix[i,j] = 255
+
+    mat = MatrixLac(name=name, points=pts, size=width, vox_size=pix_width, mass=None, spath=savpth) 
+    return mat, im
+
+except ImportError:
+  print "Image module not found, MatrixLac generation from image unavailable"
+
 class lacunarity( Node ):
   """
   Compute the lacunarity of a n-dimensional matrix
@@ -275,6 +320,8 @@ class lacunarity( Node ):
                                   radius_stop = self.get_input("Stop"),
                                   lac_type = getattr(mat,f),
                                 )
-    box_size = [pgl.norm(b) for b in boxes]
+    #if isinstance(boxes[0], pgl.Vector3):
+    #  box_size = [(b[0]*b[1]*b[2])**(1/3.) for b in boxes]
+    #else :
 
-    return lac, box_size
+    return lac, boxes

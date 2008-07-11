@@ -1,5 +1,5 @@
 
-# This file has been generated at Thu Jun 19 17:57:15 2008
+# This file has been generated at Fri Jul  4 09:33:37 2008
 
 from openalea.core import *
 
@@ -16,7 +16,14 @@ __institutes__ = 'VirtualPlants'
 __icon__ = 'castshadow_icon.png'
  
 
-__all__ = ['MuSLIM', 'scalesTable', '_147501868']
+__all__ = ['_147407180', 'MuSLIM', 'scalesTable']
+
+
+_147407180 = DataFactory(name='mango_f21_L.bgeom', 
+                    description='Mango f21', 
+                    editors=None,
+                    includes=None,
+                    )
 
 
 
@@ -52,20 +59,20 @@ MuSLIM = CompositeNodeFactory(name='MuSLIM',
    30: ('system', 'annotation'),
    31: ('system', 'annotation'),
    32: ('system', 'annotation')},
-                             elt_connections={  135712512: (25, 0, 8, 4),
-   135712524: (7, 0, 6, 0),
+                             elt_connections={  135712512: (20, 0, 4, 0),
+   135712524: (8, 2, 28, 0),
    135712536: (2, 0, 6, 2),
-   135712548: (5, 0, 14, 0),
-   135712560: (20, 0, 4, 0),
-   135712572: (10, 0, 24, 1),
-   135712584: (5, 0, 6, 1),
-   135712596: (26, 0, 8, 2),
-   135712608: (6, 0, 8, 0),
-   135712620: (3, 0, 2, 0),
-   135712632: (4, 0, 5, 0),
-   135712644: (29, 0, 8, 1),
-   135712656: (8, 2, 28, 0),
-   135712668: (28, 0, 24, 0)},
+   135712548: (28, 0, 24, 0),
+   135712560: (5, 0, 14, 0),
+   135712572: (4, 0, 5, 0),
+   135712584: (29, 0, 8, 1),
+   135712596: (25, 0, 8, 4),
+   135712608: (5, 0, 6, 1),
+   135712620: (7, 0, 6, 0),
+   135712632: (26, 0, 8, 2),
+   135712644: (6, 0, 8, 0),
+   135712656: (3, 0, 2, 0),
+   135712668: (10, 0, 24, 1)},
                              elt_data={  2: {  'caption': 'pickle load',
          'hide': True,
          'lazy': False,
@@ -110,7 +117,7 @@ MuSLIM = CompositeNodeFactory(name='MuSLIM',
          'posy': 543.75,
          'priority': 0,
          'user_application': None},
-   7: {  'caption': "'mango_a19'",
+   7: {  'caption': "'mango_f21'",
          'hide': True,
          'lazy': True,
          'minimal': False,
@@ -240,17 +247,17 @@ MuSLIM = CompositeNodeFactory(name='MuSLIM',
    4: [],
    5: [],
    6: [(3, "'Cvx Hull'")],
-   7: [(0, "'mango_a19'")],
+   7: [(0, "'mango_f21'")],
    8: [(3, "'150x150'")],
    9: [],
-   10: [  (0, 'False'),
+   10: [  (0, 'True'),
           (1, '43.3643'),
           (2, '3.5238'),
           (3, '172'),
           (4, '17.0'),
-          (5, '19'),
-          (6, '30'),
-          (7, 'True'),
+          (5, '18.0'),
+          (6, '60'),
+          (7, 'False'),
           (8, '1'),
           (9, '0')],
    14: [],
@@ -281,13 +288,6 @@ MuSLIM = CompositeNodeFactory(name='MuSLIM',
 
 scalesTable = DataFactory(name='scalesTable', 
                     description='Mango f21 scales description', 
-                    editors=None,
-                    includes=None,
-                    )
-
-
-_147501868 = DataFactory(name='mango_f21_L.bgeom', 
-                    description='Mango f21', 
                     editors=None,
                     includes=None,
                     )
