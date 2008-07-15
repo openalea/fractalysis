@@ -377,7 +377,8 @@ def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
     im = Image.open(image_pth).convert("L")
     pix = im.load()
     width, height = im.size
-    assert width == height && "Image must be square"
+    assert width == height, "Image must be square"
+    mat_size = width
     #finding points by inverting picture and removing grey levels
     for i in range(width):
       for j in range(height):
@@ -389,7 +390,7 @@ def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
   except ImportError:
     print "Image module not found, MatrixLac generation from image unavailable"
 
-  mat = MatrixLac(name=name, points=pts, size=width, vox_size=pix_width, mass=None, spath=savpth) 
+  mat = MatrixLac(name=name, points=pts, size=mat_size, vox_size=pix_width, mass=None, spath=savpth) 
   return mat
 
 
