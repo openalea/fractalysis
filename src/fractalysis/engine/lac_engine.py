@@ -347,35 +347,37 @@ def lactrix_fromScene( scene, file_name, gridSize, density=True, spath = getcwd(
     #pgu.viewScene( pgu.toPglScene( mat.points, m ) )
   return mat 
 
-try :
-  import Image
 
-  def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
-    """
-    Generate a `MatrixLac` instance from a square image.
+def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
+  """
+  Generate a `MatrixLac` instance from a square image.
 
-    :Parameters:
-      - `image_pth` : absolute path to the PNG image (temporary restriction)
-      - `pix_width` : pixel representing size defining the grid step
-      - `savpth` : path to directory to save convolution results
-      - `th` : threshold value to decide object pixels from void pixels
+  :Parameters:
+    - `image_pth` : absolute path to the PNG image (temporary restriction)
+    - `pix_width` : pixel representing size defining the grid step
+    - `savpth` : path to directory to save convolution results
+    - `th` : threshold value to decide object pixels from void pixels
 
-    :Types:
-      - `image_pth` : string
-      - `pix_width` : float
-      - `savpth` : string
-      - `th` : int
-    
-    :returns: `MatrixLac` instance generated from the image
-    :returntype: `MatrixLac`
+  :Types:
+    - `image_pth` : string
+    - `pix_width` : float
+    - `savpth` : string
+    - `th` : int
+  
+  :returns: `MatrixLac` instance generated from the image
+  :returntype: `MatrixLac`
 
-    """
+  """
 
-    pts = []
-    name = basename(image_pth).replace('.png', '')
+  pts = []
+  name = basename(image_pth).replace('.png', '')
+  mat_size = 0
+  try :
+    import Image
     im = Image.open(image_pth).convert("L")
     pix = im.load()
     width, height = im.size
+    assert width == height && "Image must be square"
     #finding points by inverting picture and removing grey levels
     for i in range(width):
       for j in range(height):
@@ -384,13 +386,10 @@ try :
         else :
           pts.append([i,j])
           pix[i,j] = 255
-    try:
-      im.show()
-    except:
-      pass
-    mat = MatrixLac(name=name, points=pts, size=width, vox_size=pix_width, mass=None, spath=savpth) 
-    return mat
+  except ImportError:
+    print "Image module not found, MatrixLac generation from image unavailable"
 
-except ImportError:
-  print "Image module not found, MatrixLac generation from image unavailable"
+  mat = MatrixLac(name=name, points=pts, size=width, vox_size=pix_width, mass=None, spath=savpth) 
+  return mat
+
 
