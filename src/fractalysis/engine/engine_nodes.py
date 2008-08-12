@@ -47,6 +47,22 @@ import openalea.plantgl.all as pgl
 from openalea.fractalysis.engine import computeGrids
 from openalea.fractalysis.engine.lac_engine import MatrixLac
 from openalea.fractalysis.fractutils.pgl_utils import surfPerTriangle, gridIndex, color, scene2grid, toPglScene
+from openalea.fractalysis.engine.MSTgenerator import MST
+
+def genMST(dim, depth, scale_gen, allScale=False):
+  if allScale:
+    return MST(dim=dim, depth=depth, all_scale=scale_gen)
+  else:
+    return MST(dim=dim, depth=depth, scales=scale_gen)
+
+def MSTfromDict(dico):
+  return MST(**dico)
+
+def MST2Pix(mst, pixname, savepth):
+  return mst.toImage(filename=pixname, pth=savepth)
+
+def MST2PglScene(mst, geometry=None):
+  return mst.toPglScene(geometry=geometry)
 
 class BCM( Node ):
   """
@@ -228,20 +244,22 @@ def lactrix_fromScene( scene, file_name, gridSize, spath, density):
 try :
   import Image
 
-  def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
+  def lactrix_fromPix(image_pth, pix_width, savpth, pixname, th=245):
     """
     Generate a `MatrixLac` instance from a square image.
 
     :Parameters:
-      - `image_pth` : absolute path to the PNG image (temporary restriction)
+      - `image_pth` : absolute path to the PNG image or PIL image (temporary restriction)
       - `pix_width` : pixel representing size defining the grid step
       - `savpth` : path to directory to save convolution results
+      - `pixname` : name of directory to be used to save convolution results
       - `th` : threshold value to decide object pixels from void pixels
 
     :Types:
       - `image_pth` : string
       - `pix_width` : float
       - `savpth` : string
+      - `pixname` : string
       - `th` : int
     
     :returns: `MatrixLac` instance generated from the image
@@ -250,8 +268,13 @@ try :
     """
 
     pts = []
-    name = basename(splitext(image_pth)[0])
-    im = Image.open(image_pth).convert("L")
+    if isinstance(image_pth, str):
+      name = basename(splitext(image_pth)[0])
+      im = Image.open(image_pth).convert("L")
+    else:
+      im = image_pth
+      name = pixname
+
     pix = im.load()
     width, height = im.size
     #finding points by inverting picture and removing grey levels

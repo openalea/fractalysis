@@ -17,8 +17,81 @@ __institutes__ = 'INRIA/CIRAD'
 __icon__ = 'engine_icon.png'
  
 
-__all__ = ['twosurfaces_TwoSurfaces', 'engine_nodes_BCM', 'engine_nodes_lactrix_fromPix', 'engine_nodes_lacunarity', 'engine_nodes_lactrix_fromScene', 'engine_nodes_voxelize']
 
+###### begin nodes definitions #############
+__all__ = ['twosurfaces_TwoSurfaces', 'engine_nodes_BCM', 'engine_nodes_lactrix_fromPix', 'engine_nodes_lacunarity', 'engine_nodes_lactrix_fromScene', 'engine_nodes_voxelize', 'engine_nodes_MST', 'engine_nodes_MST_fromDict', 'engine_nodes_MST_toPix', 'engine_nodes_MST2Pgl']
+
+engine_nodes_MST = Factory( name="genMST",
+              description="Generate a MultiScale Thing from the curdling and random trema generation",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="MST",
+              inputs=(dict(name="Dimension", interface=IInt(min=1), value=1),
+                      dict(name="Depth", interface=IInt(min=1), value=3),
+                      dict(name="Scale subdivision", interface=ISequence),
+                      dict(name="Scale similarity", interface=IBool, value=False),
+                      ),
+              outputs=(dict(name="MST", interface = None),
+                      ),
+              widgetmodule=None,
+              widgetclass=None,
+              )
+
+engine_nodes_MST_fromDict = Factory( name="MSTfromDict",
+              description="Generate a MultiScale Thing from the curdling and random trema generation",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="MSTfromDict",
+              inputs=(dict(name="Parameters", interface=IDict),
+                      ),
+              outputs=(dict(name="MST", interface = None),
+                      ),
+              widgetmodule=None,
+              widgetclass=None,
+              )
+
+engine_nodes_MST_toPix = Factory( name="MST2Pix",
+              description="Generate an image from a MST",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="MST2Pix",
+              inputs=(dict(name="MST", interface=None),
+                      dict(name="Image name", interface=IStr, value="Mst"),
+                      dict(name="Save directory", interface=IDirStr),
+                      ),
+              outputs=(dict(name="PIL image", interface = None),
+                      ),
+              widgetmodule=None,
+              widgetclass=None,
+              )
+
+engine_nodes_MST2Pgl = Factory( name="MST2Pgl",
+              description="Generate a PlantGL scene from a MST",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="MST2PglScene",
+              inputs=(dict(name="MST", interface=None),
+                      dict(name="Geometry", interface=None, value=None),
+                      ),
+              outputs=(dict(name="Pgl Scene", interface = None),
+                      ),
+              widgetmodule=None,
+              widgetclass=None,
+              )
+
+engine_nodes_BCM = Factory( name="BCM",
+              description="Apply box counting method on scene",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="BCM",
+              inputs=(dict(name="Scene", interface=None,),
+                      dict(name="Stop Factor", interface=IInt(min=3), value=10),
+                      ),
+              outputs=(dict(name="Scales", interface = ISequence),
+                       dict(name="Intercepted Voxels", interface = ISequence),),
+              widgetmodule=None,
+              widgetclass=None,
+              )
 
 
 twosurfaces_TwoSurfaces = Factory(name='TwoSurfaces', 
@@ -33,34 +106,22 @@ twosurfaces_TwoSurfaces = Factory(name='TwoSurfaces',
                 )
 
 
-
-
-engine_nodes_BCM = Factory(name='BCM', 
-                description='Apply box counting method on scene', 
-                category='Fractal Analysis', 
-                nodemodule='engine_nodes',
-                nodeclass='BCM',
-                inputs=({'interface': None, 'name': 'Scene'}, {'interface': IFloat(min=3, max=16777216, step=1.000000), 'name': 'Stop Factor', 'value': 10}),
-                outputs=({'interface': ISequence, 'name': 'Scales'}, {'interface': ISequence, 'name': 'Intercepted Voxels'}),
-                widgetmodule=None,
-                widgetclass=None,
-                )
-
-
-
-
-engine_nodes_lactrix_fromPix = Factory(name='Pix2MatrixLac', 
-                description='Generate a MatrixLac from an Image', 
-                category='Fractal Analysis', 
-                nodemodule='engine_nodes',
-                nodeclass='lactrix_fromPix',
-                inputs=({'interface': IFileStr, 'name': 'Image path'}, {'interface': IFloat, 'name': 'Pixel width'}, {'interface': IDirStr, 'name': 'Save Directory', 'value': '/tmp'}),
-                outputs=({'interface': None, 'name': 'MatrixLac'}, {'interface': None, 'name': 'Thresholded image'}),
-                widgetmodule=None,
-                widgetclass=None,
-                )
-
-
+engine_nodes_lactrix_fromPix = Factory( name="Pix2MatrixLac",
+              description="Generate a MatrixLac from an Image",
+              category="Fractal Analysis",
+              nodemodule="engine_nodes",
+              nodeclass="lactrix_fromPix",
+              inputs=(dict(name="Image", interface=None,),
+                      dict(name="Pixel width", interface=IFloat),
+                      dict(name="Save Directory", interface=IDirStr, value='/tmp'),
+                      dict(name="Name", interface=IStr,)
+                      ),
+              outputs=(dict(name="MatrixLac", interface = None,),
+                       dict(name="Thresholded image", interface = None,),
+                      ),
+              widgetmodule=None,
+              widgetclass=None,
+              )
 
 
 engine_nodes_lacunarity = Factory(name='Lacunarity', 
