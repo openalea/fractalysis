@@ -21,11 +21,11 @@ __icon__ = 'engine_icon.png'
 ###### begin nodes definitions #############
 __all__ = ['twosurfaces_TwoSurfaces', 'engine_nodes_BCM', 'engine_nodes_lactrix_fromPix', 'engine_nodes_lacunarity', 'engine_nodes_lactrix_fromScene', 'engine_nodes_voxelize', 'engine_nodes_MST', 'engine_nodes_MST_fromDict', 'engine_nodes_MST_toPix', 'engine_nodes_MST2Pgl']
 
-engine_nodes_MST = Factory( name="genMST",
+engine_nodes_MST = Factory( name="MST",
               description="Generate a MultiScale Thing from the curdling and random trema generation",
               category="Fractal Analysis",
               nodemodule="engine_nodes",
-              nodeclass="MST",
+              nodeclass="genMST",
               inputs=(dict(name="Dimension", interface=IInt(min=1), value=1),
                       dict(name="Depth", interface=IInt(min=1), value=3),
                       dict(name="Scale subdivision", interface=ISequence),
