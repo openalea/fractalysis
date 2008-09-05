@@ -5,7 +5,7 @@ Import( "env" )
 py_dir = '../../fractalysis/engine'
 
 # Build wrappers as shared libraries
-env1=env.Copy()
+env1=env.Clone()
 
 sources= ["bcmCompute_wrapper.cpp"]
 target= "_bcmcompute"
