@@ -34,7 +34,7 @@ license= 'Cecill-C' # or 'GPL' or 'Cecill' or  'LGPL'
 build_prefix= "build-scons"
 
 # platform dependencies
-install_requires = ['plantgl',]
+install_requires = ['vplants.plantgl',]
 
 if("win" in sys.platform):
     install_requires += ["boostpython",]
