@@ -10,7 +10,7 @@ pj= os.path.join
 name='fractalysis'
 
 options = Options(['../options.py', 'options.py'], ARGUMENTS )
-tools = ['boost_python', 'plantgl']
+tools = ['boost_python', 'vplants.plantgl']
 
 env = ALEASolution(options, tools)
 
