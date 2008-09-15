@@ -10,7 +10,7 @@ from PIL import Image
 from time import sleep, time
 from math import radians, pi
 from scipy import array, sum
-from openalea.catalog.color.py_color import rgb_color_map
+from openalea.color.py_color import rgb_color_map
 
 def azel2vect(az, el):
   v = -pgl.Vector3(pgl.Vector3.Spherical( 1, radians( az ), radians( 90 - el ) ) )
