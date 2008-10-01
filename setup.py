@@ -2,6 +2,7 @@
 
 import sys, os
 from setuptools import setup, find_packages
+from openalea.deploy.binary_deps import binary_deps
 from os.path import join as pj
 
 # Package name
@@ -34,10 +35,10 @@ license= 'Cecill-C' # or 'GPL' or 'Cecill' or  'LGPL'
 build_prefix= "build-scons"
 
 # platform dependencies
-install_requires = ['vplants.plantgl',]
+install_requires = [binary_deps('vplants.plantgl'),]
 
-if("win" in sys.platform):
-    install_requires += ["boostpython",]
+if sys.platform.startswith('win'):
+    install_requires += [binary_deps("boostpython"),]
 
 setup_requires = install_requires + ['openalea.deploy']
 
