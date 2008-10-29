@@ -95,7 +95,7 @@ pair<Vector3,Vector3> bbox2(const ScenePtr& sc) // que fait cette bbox ?
     BBoxComputer bbc( d );
     bbc.process(sc);
     Vector3 epsilon(0.01,0.01,0.01);
-	if(bbc.getBoundingBox().isNull())
+	if(!bbc.getBoundingBox())
 	{
 		std::cerr << "Error while computing bounding box." << std::endl;
 	}

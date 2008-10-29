@@ -1027,10 +1027,10 @@ ScenePtr centerShapes( const ScenePtr& scene )
   BoundingBoxPtr bbox;
   for( Scene::iterator sc_it = scene->getBegin(); sc_it != scene->getEnd(); ++sc_it )
   {
-    old_sh = ShapePtr::Cast( * sc_it );
+    old_sh = dynamic_pointer_cast<Shape>( * sc_it );
     bbox = getBBox( old_sh );
     tr = new Translated( bbox->getCenter()*-1, old_sh->getGeometry() );
-    new_sh = new Shape( GeometryPtr::Cast( tr ), old_sh->getAppearance(), old_sh->getId() );
+    new_sh = new Shape( GeometryPtr( tr ), old_sh->getAppearance(), old_sh->getId() );
     ctrd_sc->add( new_sh );
   }
   return ctrd_sc;
@@ -1103,7 +1103,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
           msNode * leaf = new msNode( s+1 );
           leaf->setId( ++nodeListCount );
           nodeList.push_back( leaf );
-          ShapePtr scShape = ShapePtr::Cast ( scene->getAt( idx ) );
+          ShapePtr scShape = dynamic_pointer_cast<Shape>( scene->getAt( idx ) );
           ShapePtr leafShape = new Shape( scShape->getGeometry(), scShape->getAppearance(), leaf->getId() );
           leaf->setShape( leafShape );
           leaf->setCplx( node->getId() ); //embeded in python addComponent method
@@ -1158,10 +1158,8 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
         default:
           cout << "Sorry, '" << h_choice << "' does not correspond to an existing option. Please try again with either CvxHull, Sphere or Box.\n\n";
       }
-      if( !hull.isNull() )
+      if( hull )
       {
-        if ( !hull.isValid() )
-          cout<<"Node "<<node->getId()<<" has invalid hull, need to be fixed"<<endl;
         cvxhull->getGeometry() = hull; 
         AppearancePtr ap = nodeList[ compo[ 0 ] -1 ]->getShape()->getAppearance();
         cvxhull->getAppearance() = ap;
