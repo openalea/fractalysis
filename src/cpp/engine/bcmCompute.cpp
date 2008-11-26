@@ -33,7 +33,7 @@
 
 #include "fractalysis/engine/bcmCompute.h"
 #include <cmath>
-
+#include <cstring> // for memset
 using namespace std;
 
 //typedef vector<pair<Vector3,float> > FrPointList;
