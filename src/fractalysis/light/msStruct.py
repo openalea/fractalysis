@@ -206,7 +206,7 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
   
   return res
 
-def recieved_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
+def received_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
   v = azel2vect(az,el)
 
   if mode == "Multiscale":
@@ -223,8 +223,13 @@ def recieved_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150
     M = max(vals)
     for id in res.keys():
       sh = scene.find(id)
-      r,g,b = rgb_color_map(value=(M-res[id]), minval=m, maxval=M, hue1=0, hue2=140)[0]
-      sh.appearance = fruti.color(r/3, g/3, b/3, diffu=3)
+      if res[id] >= 0:
+        r,g,b = rgb_color_map(value=res[id], minval=0, maxval=M, hue1=0, hue2=250)[0]
+        #r,g,b = rgb_color_map(value=(M-res[id]), minval=0, maxval=(M-m), hue1=0, hue2=140)[0]
+        #r,g,b = rgb_color_map(value=(M-res[id]), minval=0, maxval=1, hue1=0, hue2=140)[0]
+        sh.appearance = fruti.color(r/3, g/3, b/3, diffu=3)
+      else :
+        print "ID de merde : ", id
     return res, scene
     
   elif mode == "Real":

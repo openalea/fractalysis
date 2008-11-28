@@ -49,7 +49,7 @@ def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull' ):
         pass
   else:
     ss = lit.ssFromDict( name, scc, scale_table, hull_type)
-  ss.checkFactor(150,150,8,0)
+  #ss.checkFactor(150,150,8,0)
   return ss
 
 def light_intercept(mss, light_direction, distr, img_size, save_path):
@@ -76,7 +76,7 @@ def light_intercept(mss, light_direction, distr, img_size, save_path):
 
   return res['Star_turbid'], res['Star_'+str(distr)], res['Pix_'+str(distr)]
 
-def light_recieved(mss, scl, light_direction, mod, img_size, save_path):
+def light_received(mss, scl, light_direction, mod, img_size, save_path):
   distSize = {"100x100":(100,12), "150x150":(150,8), "200x200":(200,7), "300x300":(300,4), "600x600":(600,2.5)} 
   azimuth = light_direction[0]
   elevation = light_direction[1]
@@ -90,7 +90,8 @@ def light_recieved(mss, scl, light_direction, mod, img_size, save_path):
     hth = 150
     distfactor = 8
 
-  res, sc = mss.recieved_light(scale=scl, az=azimuth, el=elevation, wg=weight, mode=mod, width=wth, height=hth, d_factor=distfactor, pth=save_path)
+  res, sc = mss.received_light(scale=scl, az=azimuth, el=elevation, wg=weight, mode=mod, width=wth, height=hth, d_factor=distfactor, pth=save_path)
+  lit.prepareScene(sc, 300, 300, azimuth, elevation,4)
   return res, sc
 
 def generate_pix(mss, light_direction, distrib, img_size, save_path):

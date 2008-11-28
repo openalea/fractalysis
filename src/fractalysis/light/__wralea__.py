@@ -77,11 +77,11 @@ light_nodes_generate_pix = Factory(name='generatePix',
 
 
 
-light_nodes_light_recieved = Factory(name='Recieved light', 
+light_nodes_light_recieved = Factory(name='Received light', 
                 description='Compute directional recieved light for one scale as relative ratio', 
                 category='Light', 
                 nodemodule='light_nodes',
-                nodeclass='light_recieved',
+                nodeclass='light_received',
                 inputs=({'interface': None, 'name': 'MSS'}, {'interface': IFloat(min=1, max=16777216, step=1), 'name': 'Scale', 'value': 1}, {'interface': ISequence, 'showwidget': False, 'name': 'Light direction'}, {'interface': IEnumStr(enum=('Multiscale', 'Real', 'Turbid')), 'name': 'Mode', 'value': 'Multiscale'}, {'interface': IEnumStr(enum=('100x100', '150x150', '200x200', '300x300', '600x600')), 'name': 'Image size', 'value': '150x150'}, {'interface': IDirStr, 'name': 'Save path'}),
                 outputs=({'interface': IDict, 'name': 'Recieved ratio'}, {'interface': None, 'name': 'PGL scene'}),
                 widgetmodule=None,
