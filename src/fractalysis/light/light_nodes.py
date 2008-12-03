@@ -30,7 +30,7 @@ from openalea.fractalysis.fractutils.pgl_utils import centerScene
 opacities = {'Pinus':0.89, 'Sorbus':0.88, 'Betula':0.89, 'Carpinus':0.967, 'Quercus':0.967, 'Malus':0.948, 'Misc':0.85, 'Populus':0.918, 'trunk_mat':1, 'houppier_mat':0.935, 'Wall':0.8
             }
 
-def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull' ):
+def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull', opac={} ):
   scc = centerScene( scene )
   if scale_table==None:
     scale_table=[{1:[long(sh.id) for sh in scc]}]
@@ -39,6 +39,8 @@ def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull' ):
     for i in l:
       n = ss.getNode(i)
       specie = n.shape.appearance.name
+      for k in opac.keys():
+        opacities[k] = opac[k]
       n.globalOpacity = opacities.get(specie, 0.935)
       g = n.shape.geometry
       try:
