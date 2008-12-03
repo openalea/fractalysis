@@ -6,7 +6,10 @@ import openalea.fractalysis.fractutils
 fruti = openalea.fractalysis.fractutils
 import cPickle
 import csv
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    import Image
 from time import sleep, time
 from math import radians, pi
 from scipy import array, sum
