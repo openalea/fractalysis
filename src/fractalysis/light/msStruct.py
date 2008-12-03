@@ -12,7 +12,7 @@ except:
     import Image
 from time import sleep, time
 from math import radians, pi
-from scipy import array, sum
+from scipy import array, sum, mean
 from openalea.color.py_color import rgb_color_map
 
 def azel2vect(az, el):
@@ -213,26 +213,33 @@ def received_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150
   v = azel2vect(az,el)
 
   if mode == "Multiscale":
-    distrib=[['R']*(self.depth - 1)]
+    distrib=[['A']*(self.depth - 1)]
     if(self.getNode(self.get1Scale(1)[0]).getPOmega(v,distrib[0]) == -1):
       self.computeDir(az=az, el=el, wg=wg, distrib=distrib, width=width, height=height, d_factor=d_factor, pth=pth)
     beams = self.loadBeams(az, el, pth)
-    sc_distrib = ['R']*(self.depth - scale)
+    sc_distrib = ['A']*(self.depth - scale)
     res = self.availight(scale, v, beams, sc_distrib)
 
     scene = self.genScaleScene(scale)
     vals = [res[id] for id in res.keys()]
     m = min(vals)
     M = max(vals)
+    #color palette from red to botcolor
+    #botcolor = 140 #green
+    botcolor = 250 #blue
     for id in res.keys():
       sh = scene.find(id)
-      if res[id] >= 0:
-        r,g,b = rgb_color_map(value=res[id], minval=0, maxval=M, hue1=0, hue2=250)[0]
-        #r,g,b = rgb_color_map(value=(M-res[id]), minval=0, maxval=(M-m), hue1=0, hue2=140)[0]
+      if res[id] > 0:
+        #r,g,b = rgb_color_map(value=res[id], minval=0, maxval=M, hue1=0, hue2=250)[0]
+        r,g,b = rgb_color_map(value=(M - res[id]), minval=0, maxval=M, hue1=0, hue2=botcolor)[0]
         #r,g,b = rgb_color_map(value=(M-res[id]), minval=0, maxval=1, hue1=0, hue2=140)[0]
         sh.appearance = fruti.color(r/3, g/3, b/3, diffu=3)
+      elif res[id] == 0:
+        sh.appearance = fruti.color(0, 0, 0 , diffu=1)
       else :
-        print "ID de merde : ", id
+        print "ID de merde : ", id, " : ", res[id]
+        res[id]= 0
+        sh.appearance = fruti.color(255, 0, 255 , diffu=1)
     return res, scene
     
   elif mode == "Real":

@@ -1012,9 +1012,11 @@ float scaledStruct::availight_node( long int node_id, Vector3 direction, ViewRay
       else
         cout<<"intercepted beam("<<x<<","<<y<<") does not intercept node ["<<node_id<<"] !!!"<<endl;
     }
+    //return (totalight/beta); // ratio of received onto possible
+    return (totalight/beta)*node->getProjSurface(direction); //quantity of Energie
   }
-  //return (totalight/beta); // ratio of received onto possible
-  return (totalight/beta)*node->getProjSurface(direction); //quantity of Energie
+  else
+    return 0;
 }
 
 /***************************************************************************************/
