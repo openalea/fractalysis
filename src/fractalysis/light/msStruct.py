@@ -20,6 +20,26 @@ def azel2vect(az, el):
   v.normalize()
   return v
 
+def prepareScene(scene, width=150, height=150, az=None, el=None, dist_factor=8):
+  if( az != None and el != None):
+    dir = azel2vect(az, el)
+  else :
+    dir = -pgl.Viewer.camera.getPosition()[1]
+    dir.normalize()
+  pgl.Viewer.start()
+  pgl.Viewer.animation( True )
+  pgl.Viewer.frameGL.maximize(True)
+  pgl.Viewer.widgetGeometry.setSize(width, height)
+  pgl.Viewer.display(scene)
+  bbox=pgl.BoundingBox( scene )
+  pgl.Viewer.grids.set(False,False,False,False)
+  pgl.Viewer.camera.setOrthographic()
+  d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
+  pgl.Viewer.camera.lookAt(bbox.getCenter() + dir*(-dist_factor)*d_factor, bbox.getCenter())
+  pgl.Viewer.frameGL.setSize(width,height)
+  return dir
+
+
 def saveBeams(self,az, el, beams, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
   beam_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".bbeams"
@@ -128,25 +148,6 @@ def removeScale(self, sc):
       self.getNode( i ).scale = s-1
   self.countScale() 
 
-def prepareScene(scene, width=150, height=150, az=None, el=None, dist_factor=8):
-  if( az != None and el != None):
-    dir = azel2vect(az, el)
-  else :
-    dir = -pgl.Viewer.camera.getPosition()[1]
-    dir.normalize()
-  pgl.Viewer.start()
-  pgl.Viewer.animation( True )
-  pgl.Viewer.display(scene)
-  bbox=pgl.BoundingBox( scene )
-  pgl.Viewer.grids.set(False,False,False,False)
-  pgl.Viewer.camera.setOrthographic()
-  d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
-  pgl.Viewer.camera.lookAt(bbox.getCenter() + dir*(-dist_factor)*d_factor, bbox.getCenter())
-  pgl.Viewer.frameGL.setSize(width,height)
-  pgl.Viewer.frameGL.setSize(width,height)
-  return dir
-
-
 def makePict(self, az, el, distrib, matrix, width, height, pth=os.path.abspath(os.curdir)):
   dis=""
   for d in distrib:
@@ -170,7 +171,7 @@ def makePict(self, az, el, distrib, matrix, width, height, pth=os.path.abspath(o
   out.save(file, "JPEG")
   return out
 
-def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
+def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir), saveData=True):
   if distrib== None:
     distrib=[['A']*(self.depth - 1)]
 
@@ -188,7 +189,8 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
     else :
       print "computing beams..."
       b=self.computeBeams(dir, width, height, d_factor)
-      self.saveBeams(az, el,b, pth)
+      if saveData:
+        self.saveBeams(az, el,b, pth)
   
     sproj=self.loadSproj(az, el, pth)
     if sproj != None:
@@ -197,7 +199,8 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
     else :
       print "computing projections..."
       sproj=self.computeProjections( dir )
-      self.saveSproj(az, el, sproj, pth)
+      if saveData:
+        self.saveSproj(az, el, sproj, pth)
   
   res={}
   row=[] #line to write in csv file
