@@ -22,70 +22,94 @@ def azel2vect(az, el):
 
 def saveBeams(self,az, el, beams, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
-  beam_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".beams"
-  dir = azel2vect(az, el)
-  param = {'dir':(dir.x, dir.y, dir.z)}
-  result = {'beams':beams}
-  res = fruti.ParamRes(param, result)
+  beam_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".bbeams"
+  ####Old saving way####
+  #dir = azel2vect(az, el)
+  #param = {'dir':(dir.x, dir.y, dir.z)}
+  #result = {'beams':beams}
+  #res = fruti.ParamRes(param, result)
   if not os.path.isdir(savedir):
     os.mkdir(savedir) 
   file = os.path.join(savedir, beam_file)
-  f = open(file, 'a')
-  cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
+  f = open(file, 'wb')
+  cPickle.dump(beams, f, protocol=cPickle.HIGHEST_PROTOCOL)
+  #cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
   f.close()
   print "beams saved"
 
 def loadBeams(self, az, el, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
   beam_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".beams"
-  dir = azel2vect(az, el)
+  bbeam_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".bbeams"
   file = os.path.join(savedir, beam_file)
-  print "loading ", file
-  if os.path.isfile( file ):
+  bfile = os.path.join(savedir, bbeam_file)
+  print "trying to load ", bfile, '(or deprecated .beams file)'
+  if os.path.isfile( bfile ):
+    f = open( bfile, 'rb' )
+    try:
+      beams = cPickle.load( f )
+    except EOFError:
+      beams = None
+    f.close()
+    return beams
+  ####Old file compatibility####
+  elif os.path.isfile( file ):
     f = open( file, 'r' )
     try:
       res = cPickle.load( f )
       beams = res.getResult( 'beams' )
-      return beams
     except EOFError:
-      f.close()
-      return None
+      beams = None
+    f.close()
+    return beams
   else :
-    print"file does not exist"
+    print"Beams file does not exist"
     return None
 
 def saveSproj(self, az, el, sproj, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
-  sproj_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".sproj"
-  dir = azel2vect(az, el)
-  param = {'dir':(dir.x, dir.y, dir.z)}
-  result = {'sproj':sproj}
-  res = fruti.ParamRes(param, result)
+  sproj_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".bsproj"
+  ####Old saving way####
+  #dir = azel2vect(az, el)
+  #param = {'dir':(dir.x, dir.y, dir.z)}
+  #result = {'sproj':sproj}
+  #res = fruti.ParamRes(param, result)
   if not os.path.isdir(savedir):
     os.mkdir(savedir) 
   file = os.path.join(savedir, sproj_file)
-  f = open(file, 'a')
-  cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
+  f = open(file, 'wb')
+  cPickle.dump(sproj, f, protocol=cPickle.HIGHEST_PROTOCOL)
+  #cPickle.dump(res, f, protocol=cPickle.HIGHEST_PROTOCOL)
   f.close()
   print "sproj saved"
 
 def loadSproj(self,az, el, pth=os.path.abspath(os.curdir)):
   savedir = os.path.join(pth, self.name)
   sproj_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".sproj"
-  dir = azel2vect(az, el)
+  bsproj_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".bsproj"
   file = os.path.join(savedir, sproj_file)
-  print "loading ", file
-  if os.path.isfile( file ):
+  bfile = os.path.join(savedir, bsproj_file)
+  print "trying to load ", bfile, '(or deprecated .sproj file)'
+  if os.path.isfile( bfile):
+    f = open( bfile, 'rb' )
+    try:
+      sproj = cPickle.load( f )
+    except EOFError:
+      sproj = None
+    f.close()
+    return sproj
+  ####Old file compatibility####
+  elif os.path.isfile( file ):
     f = open( file, 'r' )
     try:
       res = cPickle.load( f )
       sproj = res.getResult( 'sproj' )
-      return sproj
     except EOFError:
-      f.close()
-      return None
+      sproj = None
+    f.close()
+    return sproj
   else :
-    print"file does not exist"
+    print"Projected surfaces file does not exist"
     return None
 
 

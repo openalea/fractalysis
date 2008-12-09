@@ -502,10 +502,11 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
   v.normalize();
   
   PGLViewerApplication::animation( true );
-  PGLViewerApplication::glFrameSize( 600,600 ); //size can be changed...
   PGLViewerApplication::setOrthographicCamera ();
   PGLViewerApplication::setGrid (false, false, false, false);
   PGLViewerApplication::display( genScaleScene( 1 ) );
+  //PGLViewerApplication::glFrameOnly( true );
+  PGLViewerApplication::glFrameSize( 600,600 ); //size can be changed...
   //camera is set, doing the projections
   vector< pair<uint32_t,double> > proj, total;
   vector< pair<uint32_t,double> >::const_iterator it_proj;
@@ -573,16 +574,18 @@ ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, long int w
   float bb_factor = max( max(bbox->getXRange(), bbox->getYRange()), bbox->getZRange() );
   cam_pos = bb_center + direction*(-bb_factor)*d_factor;
 
-  PGLViewerApplication::display( globalScene );
   PGLViewerApplication::animation( true );
   PGLViewerApplication::setOrthographicCamera ();
   PGLViewerApplication::setGrid (false, false, false, false);
+  PGLViewerApplication::display( globalScene );
   PGLViewerApplication::lookAt(cam_pos, bb_center );
+  //PGLViewerApplication::glFrameOnly( true );
   PGLViewerApplication::glFrameSize( width, height ); //size can be changed...
   ViewRayPointHitBuffer * beams = PGLViewerApplication::castRays2( globalScene, true);
   t.stop();
   cout<<"Beams computed in "<<t.elapsedTime()<<"s"<<endl;
   beamsToNodes( direction, beams);
+  //PGLViewerApplication::glFrameOnly( false );
   return beams;
 }
 
