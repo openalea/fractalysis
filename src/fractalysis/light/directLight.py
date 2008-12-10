@@ -1,0 +1,48 @@
+import sunDome as sd
+import openalea.plantgl.all as pgl
+
+from math import radians, pi
+from scipy import array, sum, mean
+
+def azel2vect(az, el):
+  v = -pgl.Vector3(pgl.Vector3.Spherical( 1., radians( az ), radians( 90 - el ) ) )
+  v.normalize()
+  return v
+
+
+def diffuseInterception(scene, directions = sd.skyTurtle()):
+  
+  pgl.Viewer.redrawPolicy = False
+  pgl.Viewer.frameGL.maximize(True)
+  pgl.Viewer.widgetGeometry.setSize(600, 600)
+  pgl.Viewer.frameGL.setSize(600,600)
+  
+  pgl.Viewer.camera.setOrthographic()
+  pgl.Viewer.grids.set(False,False,False,False)
+  bbox=pgl.BoundingBox( scene )
+  d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
+  cam_pos,cam_targ,cam_up = pgl.Viewer.camera.getPosition()
+  shapeLight = {}
+
+  for d in directions:
+    az,el,wg = d
+    if( az != None and el != None):
+      dir = azel2vect(az, el)
+    else :
+      dir = -pgl.Viewer.camera.getPosition()[1]
+
+    pgl.Viewer.camera.lookAt(bbox.getCenter() + dir*(-2.5)*d_factor, bbox.getCenter()) #2.5 is for a 600x600 GLframe
+
+    values = pgl.Viewer.frameGL.getProjectionPerShape()
+    if not values is None:
+      nbpixpershape, pixsize = values
+      for key,val in nbpixpershape:
+        if shapeLight.has_key(key):
+          shapeLight[key] += val*pixsize*wg
+        else:
+          shapeLight[key] = val*pixsize*wg
+
+  pgl.Viewer.camera.lookAt(cam_pos, cam_targ ) 
+  pgl.Viewer.redrawPolicy = True
+  return shapeLight
+

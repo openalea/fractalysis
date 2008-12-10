@@ -1,4 +1,5 @@
 #import openalea.fractalysis.light as lit
+from openalea.fractalysis.light.directLight import diffuseInterception
 import openalea.plantgl.all as pgl
 
 red = pgl.Material(ambient=pgl.Color3(60,10,30),diffuse=3)
@@ -7,12 +8,12 @@ blue = pgl.Material(ambient=pgl.Color3(10,30,60),diffuse=3)
 
 def setup_func():
   sc = pgl.Scene()
-  sc += pgl.Shape(pgl.Box(1,1,1), red)
-  sc+= pgl.Shape(pgl.Translated(4,4,6,pgl.Sphere(1)), blue)
-  sc+= pgl.Shape(pgl.Translated(2,3,-3,pgl.Cone(1,2)), green)
-  sc+= pgl.Shape(pgl.Translated(-8,3,-2,pgl.Box(4,2,0.5)), blue)
-  sc+= pgl.Shape(pgl.Translated(-4,-2,5,pgl.EulerRotated(3.14,2.7,0,pgl.Cone(2,5))), green)
-  sc+= pgl.Shape(pgl.Translated(4,-3,-3,pgl.Sphere(2)), red)
+  sc += pgl.Shape(pgl.Box(1,1,1), red, id=1)
+  sc+= pgl.Shape(pgl.Translated(4,4,6,pgl.Sphere(1)), blue, id=2)
+  sc+= pgl.Shape(pgl.Translated(2,3,-3,pgl.Cone(1,2)), green, id=3)
+  sc+= pgl.Shape(pgl.Translated(-8,3,-2,pgl.Box(4,2,0.5)), blue, id=4)
+  sc+= pgl.Shape(pgl.Translated(-4,-2,5,pgl.EulerRotated(3.14,2.7,0,pgl.Cone(2,5))), green, id=5)
+  sc+= pgl.Shape(pgl.Translated(4,-3,-3,pgl.Sphere(2)), red,id=6)
 
 
   return sc
@@ -37,6 +38,31 @@ def test_projectionPerShape():
   print idProj
   assert idScene == idProj
 
+def test_onedirectionIntercept():
+  sc = setup_func()
+  pgl.Viewer.display(sc)
+  sl = diffuseInterception(sc, [(0,90,1)])
+  #print sl
+  idScene = [sh.id for sh in sc]
+  idScene.sort()
+  idProj =  sl.keys()
+  idProj.sort()
+  assert idScene == idProj
+  
+def test_diffuseIntercept():
+  resTh = {1: 202.27221755458467, 2: 104.24717664386343, 3: 79.193779365397333, 4: 813.04898461736377, 5: 392.70741269083277, 6: 392.09196465811743}
+  sc = setup_func()
+  pgl.Viewer.display(sc)
+  sl = diffuseInterception(sc)
+  print resTh
+  print sl
+  for k in sl.keys():
+    assert sl[k] == resTh[k]
+
 if __name__ == "__main__":
   #test_setup()
-  test_projectionPerShape()
+  #test_projectionPerShape()
+  #test_onedirectionIntercept()
+  test_diffuseIntercept()
+
+
