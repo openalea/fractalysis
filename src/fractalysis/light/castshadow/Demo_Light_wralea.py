@@ -21,6 +21,7 @@ __all__ = ['_147407180', 'MuSLIM', 'scalesTable']
 
 _147407180 = DataFactory(name='mango_f21_L.bgeom', 
                     description='Mango f21', 
+                    category="data",
                     editors=None,
                     includes=None,
                     )
@@ -29,7 +30,7 @@ _147407180 = DataFactory(name='mango_f21_L.bgeom',
 
 MuSLIM = CompositeNodeFactory(name='MuSLIM', 
                              description='Generates MuSLIM images', 
-                             category='Light',
+                             category='Light,demo',
                              doc='',
                              inputs=[],
                              outputs=[],
