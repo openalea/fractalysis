@@ -23,7 +23,7 @@ __all__ = ['BoxCountingMethod', '_147493996', '_147493964']
 
 BoxCountingMethod = CompositeNodeFactory(name='BoxCountingMethod', 
                              description='Assessing fractal dimension using BCM', 
-                             category='compute engine,Fractal Analysis',
+                             category='composite, demo,scene',
                              doc='',
                              inputs=[],
                              outputs=[],
