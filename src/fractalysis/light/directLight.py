@@ -36,6 +36,7 @@ def diffuseInterception(scene, directions = sd.skyTurtle()):
     values = pgl.Viewer.frameGL.getProjectionPerShape()
     if not values is None:
       nbpixpershape, pixsize = values
+      pixsize = pixsize*pixsize
       for key,val in nbpixpershape:
         if shapeLight.has_key(key):
           shapeLight[key] += val*pixsize*wg
