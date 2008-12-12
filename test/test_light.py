@@ -57,7 +57,7 @@ def test_diffuseIntercept():
   print resTh
   print sl
   for k in sl.keys():
-    assert sl[k] == resTh[k]
+    assert abs(sl[k] - resTh[k]) < 1e-1
 
 if __name__ == "__main__":
   #test_setup()
