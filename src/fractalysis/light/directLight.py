@@ -10,7 +10,20 @@ def azel2vect(az, el):
   return v
 
 
-def diffuseInterception(scene, directions = sd.skyTurtle()):
+def diffuseInterception(scene):
+  return  directionalInterception(scene, directions = sd.skyTurtle())
+
+def directInterception(scene, lat=43.36, long=3.52, jj=221, start=7, stop=19, stp=30, dsun = 1, dGMT = 0):
+  direct = sd.getDirectLight( latitude=lat , longitude=long, jourJul=jj, startH=start, stopH=stop, step=stp, decalSun = dsun, decalGMT = dGMT)
+  return  directionalInterception(scene, directions = direct)
+
+def totalInterception(scene, lat=43.36, long=3.52, jj=221, start=7, stop=19, stp=30, dsun = 1, dGMT = 0):
+  diffu = sd.skyTurtle()
+  direct =  sd.getDirectLight( latitude=lat , longitude=long, jourJul=jj, startH=start, stopH=stop, step=stp, decalSun = dsun, decalGMT = dGMT)
+  all = direct + diffu
+  return directionalInterception(scene, directions = all)
+
+def directionalInterception(scene, directions):
   
   pgl.Viewer.redrawPolicy = False
   pgl.Viewer.frameGL.maximize(True)
@@ -42,7 +55,9 @@ def diffuseInterception(scene, directions = sd.skyTurtle()):
           shapeLight[key] += val*pixsize*wg
         else:
           shapeLight[key] = val*pixsize*wg
-
+  #valist = [shapeLight[key] for key in shapeLight.keys() ]
+  #print "Min value : ", min(valist)
+  #print "Max value : ", max(valist)
   pgl.Viewer.camera.lookAt(cam_pos, cam_targ ) 
   pgl.Viewer.redrawPolicy = True
   return shapeLight

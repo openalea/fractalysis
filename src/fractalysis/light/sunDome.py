@@ -17,6 +17,7 @@ def plotSkyTurtle():
     pos = pgl.Vector3(pgl.Vector3.Spherical(30,radians(azimuths[i]),radians(90-elevations[i])))
     sc += pgl.Shape(pgl.Translated(pos,pgl.Sphere(0.5)),pgl.Material(),i+1)
   pgl.Viewer.display(sc)
+  return sc
 
 def getSkyTurtleAt(i):
   return (azimuths[i-1],elevations[i-1],weights[i-1])
@@ -63,10 +64,11 @@ def plotDirect( latitude, longitude, jourJul, startH, stopH, step=30, decalSun =
   sunPos = getDirectLight( latitude, longitude, jourJul, startH, stopH, step, decalSun, decalGMT )
   sc = pgl.Scene()
   for i in range(len(sunPos)):
-    print sunPos[i][0],sunPos[i][1], sunPos[i][2]
+    #print sunPos[i][0],sunPos[i][1], sunPos[i][2]
     pos = pgl.Vector3(pgl.Vector3.Spherical(30,radians( sunPos[i][0] ), radians( 90 - sunPos[i][1] ) ))
     sc += pgl.Shape(pgl.Translated(pos,pgl.Sphere(1)),pgl.Material(),i+1)
   pgl.Viewer.display(sc)
+  return sc
 
 
 
