@@ -1,6 +1,11 @@
 #import openalea.fractalysis.light as lit
 from openalea.fractalysis.light.directLight import diffuseInterception
 import openalea.plantgl.all as pgl
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+
+app = QApplication([])
 
 red = pgl.Material(ambient=pgl.Color3(60,10,30),diffuse=3)
 green = pgl.Material(ambient=pgl.Color3(30,60,10),diffuse=3)
@@ -41,7 +46,8 @@ def test_projectionPerShape():
 def test_onedirectionIntercept():
   sc = setup_func()
   pgl.Viewer.display(sc)
-  sl = diffuseInterception(sc, [(0,90,1)])
+#  sl = diffuseInterception(sc, [(0,90,1)])
+  sl = diffuseInterception(sc)
   #print sl
   idScene = [sh.id for sh in sc]
   idScene.sort()
