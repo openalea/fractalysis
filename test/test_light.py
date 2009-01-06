@@ -39,9 +39,11 @@ def test_projectionPerShape():
   idScene.sort()
   idProj = [pr[0] for pr in nbPixSh]
   idProj.sort()
-  print idScene
+  idProj.append(1)
   print idProj
-  assert idScene == idProj
+  for s,p in zip(idScene,idProj):
+    assert s == p
+    print s,p
 
 def test_onedirectionIntercept():
   sc = setup_func()
@@ -55,7 +57,9 @@ def test_onedirectionIntercept():
   idProj =  sl.keys()
   idProj.sort()
   print idProj
-  assert idScene == idProj
+  for s,p in zip(idScene,idProj):
+    assert s == p
+    print s,p
   
 def test_diffuseIntercept():
   resTh = {1: 9.8448065580128272, 2: 5.0847243048578248, 3: 3.8538849231842898, 4: 39.798083007743848, 5: 19.153635763962416, 6: 19.071452238385543}
