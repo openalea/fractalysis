@@ -37,6 +37,7 @@ def test_projectionPerShape():
   nbPixSh, pixSize = pgl.Viewer.frameGL.getProjectionPerShape()
   idScene = [sh.id for sh in sc]
   idScene.sort()
+  print idProj
   idProj = [pr[0] for pr in nbPixSh]
   idProj.sort()
   print idScene
@@ -46,11 +47,14 @@ def test_projectionPerShape():
 def test_onedirectionIntercept():
   sc = setup_func()
   pgl.Viewer.display(sc)
-#  sl = diffuseInterception(sc, [(0,90,1)])
+  print sc
   sl = diffuseInterception(sc)
-  #print sl
+  print sl
+  
   idScene = [sh.id for sh in sc]
   idScene.sort()
+  print idScene
+  print idProj
   idProj =  sl.keys()
   idProj.sort()
   assert idScene == idProj
