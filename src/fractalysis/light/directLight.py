@@ -25,6 +25,7 @@ def totalInterception(scene, lat=43.36, long=3.52, jj=221, start=7, stop=19, stp
 
 def directionalInterception(scene, directions):
   
+  redrawPol = pgl.Viewer.redrawPolicy
   pgl.Viewer.redrawPolicy = False
   pgl.Viewer.frameGL.maximize(True)
   pgl.Viewer.widgetGeometry.setSize(600, 600)
@@ -59,6 +60,6 @@ def directionalInterception(scene, directions):
   #print "Min value : ", min(valist)
   #print "Max value : ", max(valist)
   pgl.Viewer.camera.lookAt(cam_pos, cam_targ ) 
-  pgl.Viewer.redrawPolicy = True
+  pgl.Viewer.redrawPolicy = redrawPol
   return shapeLight
 
