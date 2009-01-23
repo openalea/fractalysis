@@ -11,7 +11,7 @@ namespace="openalea"
 
 pkg_name= namespace + '.' + name
 
-version= '0.6.0'
+version= '0.6.2'
 
 # Description of the package
 name= 'fractalysis'

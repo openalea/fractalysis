@@ -2,7 +2,7 @@
 #
 #       OpenAlea.Fractalysis : OpenAlea fractal analysis library module
 #
-#       Copyright or (C) or Copr. 2006 INRIA - CIRAD - INRA  
+#       Copyright or (C) or Copr. 2006-2009 INRIA - CIRAD - INRA  
 #
 #       File author(s): Da SILVA David <david.da_silva@cirad.fr>
 #
