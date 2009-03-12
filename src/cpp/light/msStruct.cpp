@@ -398,7 +398,7 @@ long int scaledStruct::countScale()
       }
     }
 
-  hash_map< long int, long int>::iterator mit;
+  pgl_hash_map< long int, long int>::iterator mit;
   for( mit = scales.begin(); mit != scales.end(); mit++ )
     {
       cout<<"Scale "<<mit->first<<" : "<<mit->second<<endl;
@@ -514,7 +514,7 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
   ScenePtr sc ;
   BoundingBoxPtr bbox;
   Vector3 bb_center, cam_pos;
-  hash_map< long int, long int>::iterator mit;
+  pgl_hash_map< long int, long int>::iterator mit;
   msNode * node;
   for( mit = scales.begin(); mit != scales.end(); mit++ )
   {
@@ -1071,13 +1071,13 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
 {
   Timer t;
   t.start();
-  hash_map< long int, long int> idList; // contains all scene ids, id shape are uint32, does it matter ?
+  pgl_hash_map< long int, long int> idList; // contains all scene ids, id shape are uint32, does it matter ?
   long int pos =0; //position de la shape dans la scene
   for( Scene::iterator sc_it = scene->getBegin(); sc_it != scene->getEnd(); ++sc_it )
   {
     idList[ ( *sc_it )->getId() ]= pos++ ;
   }
-  hash_map< long int, long int> old2new;
+  pgl_hash_map< long int, long int> old2new;
   vector<msNode *> nodeList;
   long int nodeListCount =0;
   msNode * node;
@@ -1100,7 +1100,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
         bool leaf = false;
         long int idx; //idList index of target id in case of leaf = shape index in scene
         //int idl =0;
-        hash_map< long int, long int>::const_iterator idl_it=idList.find( subelmt[ sb ] ) ;
+        pgl_hash_map< long int, long int>::const_iterator idl_it=idList.find( subelmt[ sb ] ) ;
         if( idl_it != idList.end() )
           {
             leaf =true;
@@ -1119,7 +1119,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
         }
         else  //it is not a leaf
         {
-          hash_map< long int, long int>::const_iterator o2n_it = old2new.find( subelmt[ sb ] );
+          pgl_hash_map< long int, long int>::const_iterator o2n_it = old2new.find( subelmt[ sb ] );
           if( o2n_it != old2new.end() )
           {
             node->addComponent( o2n_it->second );

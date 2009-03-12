@@ -127,7 +127,7 @@ class LGT_API scaledStruct
 private:
   string plantName;
   vector<msNode *> nodeList;
-  hash_map<long int, long int> scales;
+  pgl_hash_map<long int, long int> scales;
 
 public:
   scaledStruct(string);
@@ -167,7 +167,7 @@ public:
   map<long int, float> availight( long int, Vector3, ViewRayPointHitBuffer *, DistribVect );
 };
 
-typedef hash_map< long int, vector<long int> > decompoMap;
+typedef pgl_hash_map< long int, vector<long int> > decompoMap;
 typedef vector<decompoMap> dicoTable ;
 
 LGT_API ScenePtr centerShapes( const ScenePtr& );
