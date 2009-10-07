@@ -48,6 +48,7 @@ from openalea.fractalysis.engine import computeGrids
 from openalea.fractalysis.engine.lac_engine import MatrixLac
 from openalea.fractalysis.fractutils.pgl_utils import surfPerTriangle, gridIndex, color, scene2grid, toPglScene
 from openalea.fractalysis.engine.MSTgenerator import MST
+from openalea.fractalysis.engine.twosurfaces import TwoSurfaces
 
 def genMST(dim, depth, scale_gen, allScale=False):
   if allScale:

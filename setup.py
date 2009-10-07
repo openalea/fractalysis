@@ -10,8 +10,9 @@ name= 'fractalysis'
 namespace="openalea"
 
 pkg_name= namespace + '.' + name
+wralea_name= namespace + '.' + name + '_wralea'
 
-version= '0.6.2'
+version= '0.7.0'
 
 # Description of the package
 name= 'fractalysis'
@@ -70,11 +71,16 @@ setup(
     # pure python  packages
     packages= [ pkg_name, 
                 pkg_name+'.light', 
-                pkg_name+'.light.castshadow', 
                 pkg_name+'.engine', 
-                pkg_name+'.engine.boxcounting', 
-                pkg_name+'.engine.two_surfaces', 
-                pkg_name+'.fractutils' ],
+                pkg_name+'.fractutils',
+                wralea_name, 
+                wralea_name+'.light', 
+                wralea_name+'.light.castshadow', 
+                wralea_name+'.engine', 
+                wralea_name+'.engine.boxcounting', 
+                wralea_name+'.engine.two_surfaces', 
+
+ ],
 
     # python packages directory
     package_dir= {  pkg_name : pj('src',name),
@@ -84,6 +90,7 @@ setup(
                     pkg_name+'.engine.boxcounting' :pj('src', name, 'engine', 'boxcounting'),
                     pkg_name+'.engine.two_surfaces' :pj('src', name, 'engine', 'two_surfaces'),
                     pkg_name+'.fractutils' :pj('src', name, 'fractutils'),
+                    wralea_name : pj('src',name+'_wralea'),
                     '' : 'src',
                   },
 
@@ -106,10 +113,10 @@ setup(
 
     # entry_points
     entry_points = {"wralea": [
-            "fractalysis = openalea.fractalysis",
-            "castshadow = openalea.fractalysis.light.castshadow",
-            "two_surfaces = openalea.fractalysis.engine.two_surfaces",
-            "boxcounting = openalea.fractalysis.engine.boxcounting",
+            "fractalysis = openalea.fractalysis_wralea",
+            "castshadow = openalea.fractalysis_wralea.light.castshadow",
+            "two_surfaces = openalea.fractalysis_wralea.engine.two_surfaces",
+            "boxcounting = openalea.fractalysis_wralea.engine.boxcounting",
             ]
                     },
 

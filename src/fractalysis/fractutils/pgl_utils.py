@@ -172,9 +172,14 @@ def mangoLeaf(length = 1, alpha=0, color = __niceGreen):
   fs = pgl.FaceSet(p3r, ir)
   return pgl.Shape(fs, color)
 
-__myLeaf = mangoLeaf(alpha = 20)
+__myLeaf = None
+#__myLeaf = mangoLeaf(alpha = 20)
 
 def leaf(**kwds):
+  global __myLeaf
+  if __myLeaf is None:
+    __myLeaf = mangoLeaf(alpha = 20)
+
   rp = rdm_pos((1,1,1))
   rx, ry, rz = rp.x, rp.y, rp.z
   az, el, rl = rdm_orientation()
@@ -194,6 +199,7 @@ def leaf(**kwds):
   #sx = pgl.Vector3(4,1,1) * size/40.
   #scaled_geometry = pgl.Scaled(sx, pgl.Translated(pgl.Vector3(0.5,0,0), pgl.Disc(0.5, 6)) )
   sx = pgl.Vector3(1,1,1) * size/10.
+
   scaled_geometry = pgl.Scaled(sx, __myLeaf.geometry)
   rotated_geometry= pgl.EulerRotated(delta, phi, psi, scaled_geometry)
   tr = pgl.Translated( v,rotated_geometry )
