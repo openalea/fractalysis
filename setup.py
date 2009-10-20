@@ -119,7 +119,7 @@ setup(
             "boxcounting = openalea.fractalysis_wralea.engine.boxcounting",
             ]
                     },
-
+   pylint_packages = ['src/fractalysis/engine','sec/fractalysis/light','src/fractalysis/fracutils']
   )
 
 
