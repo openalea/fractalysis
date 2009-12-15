@@ -1,6 +1,9 @@
 # -*-python-*-
 Import( "env" )
 
+env.EnableQt4Modules(['QtCore','QtOpenGL', 'QtGui', 'Qt3Support', 'QtNetwork', 'QtSql', 'QtXml'])
+
+
 # 1. Select and install the headers
 
 includes= env.ALEAGlob('*.h')
