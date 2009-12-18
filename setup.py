@@ -5,32 +5,10 @@ from setuptools import setup, find_packages
 from openalea.deploy.binary_deps import binary_deps
 from os.path import join as pj
 
-# Package name
-name= 'fractalysis'
-namespace="openalea"
-
-pkg_name= namespace + '.' + name
-wralea_name= namespace + '.' + name + '_wralea'
-
-version= '0.7.0'
-
-# Description of the package
-name= 'fractalysis'
-
-description= '3D Fractal analysis package.' 
-
-long_description= '''
-It contains code in C++, Python, as well as Boost.Python wrappers.
-The package can be installed on various platform.
-'''
-
-author= 'Da SILVA David'
-author_email= 'david.da_silva@cirad.fr'
-url= 'http://openalea.gforge.inria.fr'
-
-# License: License for the template package.
-# Please, choose an OpenSource license for distribution of your package.
-license= 'Cecill-C' # or 'GPL' or 'Cecill' or  'LGPL'
+from openalea.deploy.metainfo import read_metainfo
+metadata = read_metainfo('metainfo.ini', verbose=True)
+for key,value in zip(metadata.keys(), metadata.values()):
+    exec("%s = '%s'" % (key, value))
 
 # Scons build directory
 build_prefix= "build-scons"
@@ -43,16 +21,19 @@ if sys.platform.startswith('win'):
 
 setup_requires = install_requires + ['openalea.deploy']
 
+pkg_name= namespace + '.' + package
+wralea_name= namespace + '.' + package + '_wralea'
+
 
 # Main setup
 setup(
     # Meta data
-    name='VPlants.Fractalysis',
+    name=name,
     version=version,
     description=description,
     long_description=long_description,
-    author=author,
-    author_email=author_email,
+    author=authors,
+    author_email=authors_email,
     url=url,
     license=license,
     

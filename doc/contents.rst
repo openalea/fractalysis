@@ -29,8 +29,8 @@ Documentation
 .. toctree::
     :maxdepth: 1
 
-    User Guide<user/index.rst>   
-    Reference Guide<fractalysis/index.rst>
+    User Guide<user/index.rst>
+    Reference Guide<user/autosum.rst>
 
 - A `PDF <../latex/fractalysis.pdf>`_ version of |fractalysis| documentation is 
   available.
