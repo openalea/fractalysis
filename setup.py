@@ -5,10 +5,21 @@ from setuptools import setup, find_packages
 from openalea.deploy.binary_deps import binary_deps
 from os.path import join as pj
 
+
 from openalea.deploy.metainfo import read_metainfo
 metadata = read_metainfo('metainfo.ini', verbose=True)
 for key,value in zip(metadata.keys(), metadata.values()):
     exec("%s = '%s'" % (key, value))
+
+
+# Package name
+
+pkg_name= namespace + '.' + package
+wralea_name= namespace + '.' + package + '_wralea'
+
+
+# Description of the package
+
 
 # Scons build directory
 build_prefix= "build-scons"
@@ -20,9 +31,6 @@ if sys.platform.startswith('win'):
     install_requires += [binary_deps("boostpython"),]
 
 setup_requires = install_requires + ['openalea.deploy']
-
-pkg_name= namespace + '.' + package
-wralea_name= namespace + '.' + package + '_wralea'
 
 
 # Main setup
@@ -64,14 +72,14 @@ setup(
  ],
 
     # python packages directory
-    package_dir= {  pkg_name : pj('src',name),
-                    pkg_name+'.light' :pj('src', name, 'light'),
-                    pkg_name+'.light.castshadow' :pj('src', name, 'light', 'castshadow'),
-                    pkg_name+'.engine' :pj('src', name, 'engine'),
-                    pkg_name+'.engine.boxcounting' :pj('src', name, 'engine', 'boxcounting'),
-                    pkg_name+'.engine.two_surfaces' :pj('src', name, 'engine', 'two_surfaces'),
-                    pkg_name+'.fractutils' :pj('src', name, 'fractutils'),
-                    wralea_name : pj('src',name+'_wralea'),
+    package_dir= {  pkg_name : pj('src',package),
+                    pkg_name+'.light' :pj('src', package, 'light'),
+                    pkg_name+'.light.castshadow' :pj('src', package, 'light', 'castshadow'),
+                    pkg_name+'.engine' :pj('src', package, 'engine'),
+                    pkg_name+'.engine.boxcounting' :pj('src', package, 'engine', 'boxcounting'),
+                    pkg_name+'.engine.two_surfaces' :pj('src', package, 'engine', 'two_surfaces'),
+                    pkg_name+'.fractutils' :pj('src', package, 'fractutils'),
+                    wralea_name : pj('src',package+'_wralea'),
                     '' : 'src',
                   },
 
