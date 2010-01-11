@@ -32,7 +32,7 @@ Documentation
     User Guide<user/index.rst>
     Reference Guide<user/autosum.rst>
 
-- A `PDF <../latex/fractalysis.pdf>`_ version of |fractalysis| documentation is 
+- A `PDF <../latex/main.pdf>`_ version of |fractalysis| documentation is 
   available.
 
 .. seealso::
