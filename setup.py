@@ -54,7 +54,7 @@ setup(
     scons_parameters = ["build","build_prefix="+build_prefix],
 
     # Packages
-    namespace_packages = [namespace],
+    namespace_packages = [namespace,'openalea'],
     create_namespaces = True,
 
     # pure python  packages
@@ -62,6 +62,9 @@ setup(
                 pkg_name+'.light', 
                 pkg_name+'.engine', 
                 pkg_name+'.fractutils',
+                'openalea',
+                'openalea.'+package,
+                'openalea.'+package+'_wralea',
                 wralea_name, 
                 wralea_name+'.light', 
                 wralea_name+'.light.castshadow', 
@@ -102,10 +105,10 @@ setup(
 
     # entry_points
     entry_points = {"wralea": [
-            "fractalysis = openalea.fractalysis_wralea",
-            "castshadow = openalea.fractalysis_wralea.light.castshadow",
-            "two_surfaces = openalea.fractalysis_wralea.engine.two_surfaces",
-            "boxcounting = openalea.fractalysis_wralea.engine.boxcounting",
+            "fractalysis = "+wralea_name,
+            "castshadow = "+wralea_name+".light.castshadow",
+            "two_surfaces = "+wralea_name+".engine.two_surfaces",
+            "boxcounting = "+wralea_name+".engine.boxcounting",
             ]
                     },
    pylint_packages = ['src/fractalysis/engine','sec/fractalysis/light','src/fractalysis/fracutils']
