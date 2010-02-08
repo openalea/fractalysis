@@ -20,7 +20,7 @@ fractalysis.light nodes
 """
 
 __license__= "Cecill-C"
-__revision__=" $Id: light_nodes.py $ "
+__revision__=" $Id$ "
 
 import openalea.fractalysis.light as lit
 import openalea.plantgl.all as pgl

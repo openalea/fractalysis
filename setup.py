@@ -5,21 +5,14 @@ from setuptools import setup, find_packages
 from openalea.deploy.binary_deps import binary_deps
 from os.path import join as pj
 
-
 from openalea.deploy.metainfo import read_metainfo
 metadata = read_metainfo('metainfo.ini', verbose=True)
-for key,value in zip(metadata.keys(), metadata.values()):
+for key,value in metadata.iteritems():
     exec("%s = '%s'" % (key, value))
 
-
 # Package name
-
 pkg_name= namespace + '.' + package
 wralea_name= namespace + '.' + package + '_wralea'
-
-
-# Description of the package
-
 
 # Scons build directory
 build_prefix= "build-scons"
@@ -75,7 +68,7 @@ setup(
  ],
 
     # python packages directory
-    package_dir= {  pkg_name : pj('src',package),
+    package_dir= {  pkg_name : pj('src', package),
                     pkg_name+'.light' :pj('src', package, 'light'),
                     pkg_name+'.light.castshadow' :pj('src', package, 'light', 'castshadow'),
                     pkg_name+'.engine' :pj('src', package, 'engine'),
