@@ -1,7 +1,6 @@
 from openalea.core.alea import *
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
-from openalea.grapheditor import dataflowview
 pm = PackageManager()
 pm.init(verbose=False)
 
