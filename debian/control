@@ -1,0 +1,14 @@
+Source: vplants-fractalysis
+Maintainer: Christophe Pradal <christophe.pradal@cirad.fr>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 0.6b3), python-all-dev, debhelper (>= 7), python-support (>= 0.8.4), python-vplants.plantgl, python-openalea.deploy, python-openalea.sconsx, libqt4-dev, libqt4-opengl-dev, libboost-python-dev, libreadline-dev, pkg-config, libglut3-dev
+Standards-Version: 3.8.4
+
+Package: python-vplants.fractalysis
+Architecture: any
+Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}, python-vplants.plantgl, python-scipy, python-imaging, python-openalea
+XB-Python-Version: ${python:Versions}
+Provides: ${python:Provides}
+Description: 3D Fractal analysis package.
+ It contains code in C++, Python, as well as Boost.Python wrappers. The package can be installed on various platform.

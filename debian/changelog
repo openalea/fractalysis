@@ -1,0 +1,11 @@
+vplants-fractalysis (0.9.0-1~ppa2) lucid; urgency=low
+
+  * fix dependency from scipy to python-scipy 
+
+ -- Christophe Pradal <christophe.pradal@cirad.fr>  Tue, 28 Sep 2010 08:35:18 +0200
+
+vplants-fractalysis (0.9.0-1~ppa1) lucid; urgency=low
+
+  * source package automatically created by stdeb 0.6.0
+
+ -- Christophe Pradal <christophe.pradal@cirad.fr>  Thu, 23 Sep 2010 17:16:46 +0200
