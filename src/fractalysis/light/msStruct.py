@@ -12,7 +12,7 @@ except:
     import Image
 from time import sleep, time
 from math import radians, pi
-from scipy import array, sum, mean
+from numpy import array
 from openalea.color.py_color import rgb_color_map
 
 def azel2vect(az, el):
@@ -509,5 +509,5 @@ def vgStar(self, **kwds):
       writer.writerow(row)
   stop = time()
   print "total computation time : ", stop-start, " s."
-  return sum(array(rstar) * array(soc))
+  return (array(rstar) * array(soc)).sum()
 

@@ -30,7 +30,7 @@ _147407180 = DataFactory(name='mango_f21_L.bgeom',
 
 MuSLIM = CompositeNodeFactory(name='MuSLIM', 
                              description='Generates MuSLIM images', 
-                             category='Light,demo',
+                             category='demo',
                              doc='',
                              inputs=[],
                              outputs=[],
