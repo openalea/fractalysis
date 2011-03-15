@@ -21,7 +21,6 @@ __all__ = ['_147407180', 'MuSLIM', 'scalesTable']
 
 _147407180 = DataFactory(name='mango_f21_L.bgeom', 
                     description='Mango f21', 
-                    category="data",
                     editors=None,
                     includes=None,
                     )
