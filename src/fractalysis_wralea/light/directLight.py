@@ -2,7 +2,6 @@ import sunDome as sd
 import openalea.plantgl.all as pgl
 
 from math import radians, pi
-from scipy import array, sum, mean
 
 def azel2vect(az, el):
   v = -pgl.Vector3(pgl.Vector3.Spherical( 1., radians( az ), radians( 90 - el ) ) )
