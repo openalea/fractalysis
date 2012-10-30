@@ -132,11 +132,11 @@ def directionalInterception(scene, directions):
   pgl.Viewer.widgetGeometry.setSize(600, 600)
   pgl.Viewer.frameGL.setSize(600,600)
   
+  cam_pos,cam_targ,cam_up = pgl.Viewer.camera.getPosition()
   pgl.Viewer.camera.setOrthographic()
   pgl.Viewer.grids.set(False,False,False,False)
   bbox=pgl.BoundingBox( scene )
   d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
-  cam_pos,cam_targ,cam_up = pgl.Viewer.camera.getPosition()
   shapeLight = {}
 
   for d in directions:
