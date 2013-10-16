@@ -260,7 +260,8 @@ def received_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150
         #r,g,b = rgb_color_map(value=res[id], minval=0, maxval=M, hue1=0, hue2=250)[0]
         r,g,b = rgb_color_map(value=(M - res[id]), minval=0, maxval=M, hue1=0, hue2=botcolor)[0]
         #r,g,b = rgb_color_map(value=(M-res[id]), minval=0, maxval=1, hue1=0, hue2=140)[0]
-        sh.appearance = fruti.color(r/3, g/3, b/3, diffu=3)
+        #sh.appearance = fruti.color(r/3, g/3, b/3, diffu=3)
+        sh.appearance = fruti.color(r, g, b, diffu=3)
       elif res[id] == 0:
         sh.appearance = fruti.color(0, 0, 0 , diffu=1)
       else :

@@ -69,10 +69,10 @@ def diffuStar(scene, w=150, h=150, dfact=8):
  
   return myStar(scene, w=w, h=h, dfact=dfact)
 
-def myStar(scene, directions = sd.skyTurtle(), w=150, h=150, dfact=8):
+def myStar(scene, directions = sd.skyTurtle(), w=150, h=150, dfact=8, wr=False):
   tab=[{1:[sh.getId() for sh in scene]}]
   mss=ssFromDict('myTree', scene, tab, "Cvx Hull")
-  star = mss.vgStar(pos = directions, width=w, height=h, d_factor=dfact)
+  star = mss.vgStar(pos = directions, width=w, height=h, d_factor=dfact, write=wr)
   return star
 
   ###### myStar from scratch ##################

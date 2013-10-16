@@ -948,7 +948,7 @@ float scaledStruct::availight_node( long int node_id, Vector3 direction, ViewRay
   RayPointHitList::iterator raypointhit_it;
   long int x, y;
   float beam_power, node_pos, nother_pos, vol, length, pom, pomega;
-  float totalight = 0;
+  float totalight = 0.0;
 
   direction.normalize();
   vector<iBeam> * interBeams = node->getIBeams(direction);
