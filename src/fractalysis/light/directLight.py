@@ -75,6 +75,13 @@ def myStar(scene, directions = sd.skyTurtle(), w=150, h=150, dfact=8, wr=False):
   star = mss.vgStar(pos = directions, width=w, height=h, d_factor=dfact, write=wr)
   return star
 
+def decomposedSTAR(scene, directions = sd.skyTurtle(), w=150, h=150, dfact=8, wr=False):
+  tab=[{1:[sh.getId() for sh in scene]}]
+  mss=ssFromDict('myTree', scene, tab, "Cvx Hull")
+  iPEA, TLA = mss.vgStar(pos = directions, width=w, height=h, d_factor=dfact, write=wr, details=True)
+  return iPEA/TLA, iPEA, TLA
+
+
   ###### myStar from scratch ##################
   #pgl.Viewer.display(scene)
   #redrawPol = pgl.Viewer.redrawPolicy

@@ -1,5 +1,6 @@
 #from _light import *
 import os
+#from openalea.vpltk.qt import *
 import openalea.plantgl.all as pgl
 import sunDome as sd
 import openalea.fractalysis.fractutils
@@ -472,6 +473,9 @@ def getPEA(self, **kwds):
   return PEA
 
 def vgStar(self, **kwds):
+  """
+  If the details option is set to true, it return a couple (integrated PEA, TLA)
+  """
   start = time()
   width = kwds.get('width', 150)
   height = kwds.get('height', 150)
@@ -479,6 +483,7 @@ def vgStar(self, **kwds):
   pth = kwds.get('pth', os.path.abspath(os.curdir))
   pos = kwds.get('pos', sd.skyTurtle() )
   write = kwds.get('write', True )
+  details = kwds.get('details', False )
   root_id = self.get1Scale(1)[0]
   tla = self.totalLA(root_id)
   rstar = []
@@ -490,7 +495,8 @@ def vgStar(self, **kwds):
     dir = azel2vect(az, el)
     prepareScene(self.genScaleScene(self.depth), width, height, az, el, dist_factor=d_factor)
     sproj = pgl.Viewer.frameGL.getProjectionSize()[0]
-    real_star = sproj / tla
+    #real_star = sproj / tla
+    real_star = sproj
     rstar.append(real_star)
     soc.append(wg)
     #writing result to file
@@ -510,5 +516,8 @@ def vgStar(self, **kwds):
       writer.writerow(row)
   stop = time()
   print "total computation time : ", stop-start, " s."
-  return (array(rstar) * array(soc)).sum()
+  if details:
+    return ( (array(rstar) * array(soc)).sum(), tla )
+  else:
+    return (array(rstar) * array(soc)).sum() / tla
 
