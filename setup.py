@@ -18,9 +18,13 @@ wralea_name= namespace + '.' + package + '_wralea'
 build_prefix= "build-scons"
 
 # platform dependencies
+install_requires = []
+"""
 install_requires = [binary_deps('vplants.plantgl'),]
+"""
 
 if sys.platform.startswith('win'):
+    install_requires = [binary_deps('vplants.plantgl'),]
     install_requires += [binary_deps("boost"),]
 
 setup_requires = install_requires + ['openalea.deploy']
@@ -80,7 +84,7 @@ setup(
                   },
 
     # add package platform libraries if any
-    package_data= { '' : ['*.so', '*.dll', '*.pyd', '*.png', '*.dylib']},
+    package_data= { '' : ['*.so', '*.dll', '*.pyd', '*.png', '*.dylib', '*.geom', '*.bgeom', '*.drf', '*.mtg' ]},
     include_package_data=True,
     zip_safe = False,
                      
