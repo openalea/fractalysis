@@ -130,7 +130,7 @@ def totalInterception(scene, lat=43.36, long=3.52, jj=221, start=7, stop=19, stp
   all = direct + diffu
   return directionalInterception(scene, directions = all)
 
-def directionalInterception(scene, directions):
+def directionalInterception(scene, directions, azel2vect = azel2vect):
   
   pgl.Viewer.display(scene)
   redrawPol = pgl.Viewer.redrawPolicy

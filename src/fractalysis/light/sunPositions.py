@@ -65,6 +65,8 @@ class Sequence:
 
     def heureTSV(self, jour, heure, decalSoleil, decalGMT, longitude): #jour As Integer, heure As Double) As Integer
         #retourne des minutes
+        """ Compute solar time including time equation correction.
+            With decalSoleil=0 and decalGMT=0, hour correspond to Universal Time Coordinated """
         EQTPS = 0.0
         DPHI = 0.0
         DPH1 = 0.0
@@ -85,6 +87,27 @@ class Sequence:
         #'TimeZone = -val(frmPosition.CbHORRAIRE.Text)
         timeZone = -decalSoleil - decalGMT
         return round((heure + timeZone + longitude / 15. + EQTPS / 60.) * 60)
+
+
+    def relativeIntensity(self, jour, htsv, latitude):
+        declinaison = self.declinaison(jour)
+        anghoraire = (2 * math.pi) / (24 * (htsv - 12)) 
+        cosAz = (math.sin(latitude) * math.sin(declinaison) + math.cos(latitude) * math.cos(declinaison)) * math.cos(anghoraire)
+        return cosAz
+
+    def hourly_diffuse_global_ratio(self, globalirradiance, jour, heureUTC, latitude, longitude):
+        htsv = self.heureTSV(jour, heureUTC, 0, 0, longitude)
+        relintensity = self.relativeIntensity(jour, htsv, latitude)
+        I0 = 1370 * (1 + 0.033 *math.cos(2* math.pi * (jour -4) / 366))
+        S0 = I0 * relintensity
+        RsR0 = globalirradiance / S0 # ratio between irradiance of the sun at the top of atmosphere and irradiance receive at the soil.
+        R = 0.847 - 1.61 * relintensity + 1.04 * (relintensity ** 2)
+        K = (1.47 - R) / 1.66
+
+        if RsR0 <= 0.22    : return 1
+        elif RsR0 <=  0.35 : return (1- 6.4 * (RsR0 - 0.22) ** 2)
+        elif RsR0 <= K     : return 1.47 - 1.66 * RsR0
+        else: return R
 
 
     def positionSoleil(self, pasMinute, latitude, jour, mindeb, minfin) :
