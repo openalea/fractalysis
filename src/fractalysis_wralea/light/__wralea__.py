@@ -20,6 +20,20 @@ __icon__ = 'light_icon.png'
 __all__ = ['light_nodes_light_direction', 'light_nodes_light_intercept', 'light_nodes_create_MSS', 'light_nodes_generate_pix', 'light_nodes_light_recieved']
 
 
+light_nodes_directionalInterception = Factory(name='Muslim', 
+                description='Computes light interception with muslim model', 
+                category='Light,scene', 
+                nodemodule='light_nodes',
+                nodeclass='directionalInterception',
+                inputs=({'interface': None, 'name': 'PlantGL Scene'},
+                {'interface': ISequence, 'name': 'Energy', 'value': [1]},
+                {'interface': ISequence, 'name': 'azimuths', 'value': [0]},
+                {'interface': ISequence, 'name': 'elevations', 'value': [90]}),
+                outputs=({'interface': ISequence, 'name': 'Incidences'},),
+                widgetmodule=None,
+                widgetclass=None,
+                )
+__all__.append('light_nodes_directionalInterception')
 
 light_nodes_light_direction = Factory(name='Light direction', 
                 description='Defines the direction of incident light', 

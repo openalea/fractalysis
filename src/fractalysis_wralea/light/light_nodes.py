@@ -23,13 +23,22 @@ __license__= "Cecill-C"
 __revision__=" $Id$ "
 
 import openalea.fractalysis.light as lit
+import openalea.fractalysis.light.directLight as directLight
 import openalea.plantgl.all as pgl
 
 from openalea.fractalysis.fractutils.pgl_utils import centerScene
 
 opacities = {'Pinus':0.89, 'Sorbus':0.88, 'Betula':0.89, 'Carpinus':0.967, 'Quercus':0.967, 'Malus':0.948, 'Misc':0.85, 'Populus':0.918, 'trunk_mat':1, 'houppier_mat':0.935, 'Wall':0.8
             }
-
+          
+def directionalInterception(scene, energy, azimuths, elevations):
+    """ Compute Ligth incidences on surface of a PlantGL scene.
+    azimuths and elevation are positions of sources
+    energy is emitteed energy by the sources
+    """
+    directions = zip(azimuths, elevations, energy)
+    return directLight.directionalInterception(scene, directions)
+            
 def create_MSS( name, scene, scale_table=None, hull_type='Cvx Hull', opac={} ):
   scc = centerScene( scene )
   if scale_table==None:
