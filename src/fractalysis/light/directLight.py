@@ -2,7 +2,7 @@ import sunDome as sd
 from _light import ssFromDict
 import openalea.plantgl.all as pgl
 
-from math import radians, pi
+from math import radians, sin, pi
 
 
 
@@ -188,7 +188,7 @@ def directionalInterception(scene, directions, north = 0, horizontal = False):
   return shapeLight
 
 
-def sceneIrradiance(scene, directions, north = 0, horizontal = False, scene_unit = 'm'):
+def scene_irradiance(scene, directions, north = 0, horizontal = False, scene_unit = 'm'):
     """
     Compute the irradiance received by all the shapes of a given scene.
    :Parameters:
