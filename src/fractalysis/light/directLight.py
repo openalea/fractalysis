@@ -4,10 +4,7 @@ import openalea.plantgl.all as pgl
 
 from math import radians, pi
 
-def azel2vect(az, el):
-  v = -pgl.Vector3(pgl.Vector3.Spherical( 1., radians( az ), radians( 90 - el ) ) )
-  v.normalize()
-  return v
+
 
 def directStar(scene, lat=43.36, long=3.52, jj=221, start=7, stop=19, stp=30, dsun = 1, dGMT = 0, w=150, h=150, dfact=8):
   """
@@ -130,7 +127,21 @@ def totalInterception(scene, lat=43.36, long=3.52, jj=221, start=7, stop=19, stp
   all = direct + diffu
   return directionalInterception(scene, directions = all)
 
-def directionalInterception(scene, directions, azel2vect = azel2vect):
+
+# converter for azimuth elevation 
+# az,el are expected in degrees, in the North-clocwise convention
+# In the scene, positive rotations are counter-clockwise
+#north is the angle (degrees, positive counter_clockwise) between X+ and North
+def azel2vect(az, el, north=0):
+  azimuth = radians(north - az)
+  zenith = radians(90 - el)
+  v = -pgl.Vector3(pgl.Vector3.Spherical( 1., azimuth, zenith ) )
+  v.normalize()
+  return v
+
+
+
+def directionalInterception(scene, directions, north = 0, horizontal = False):
   
   pgl.Viewer.display(scene)
   redrawPol = pgl.Viewer.redrawPolicy
@@ -146,12 +157,15 @@ def directionalInterception(scene, directions, azel2vect = azel2vect):
   d_factor = max(bbox.getXRange() , bbox.getYRange() , bbox.getZRange())
   shapeLight = {}
 
-  for d in directions:
-    az,el,wg = d
+  for az, el, wg in directions:
     if( az != None and el != None):
-      dir = azel2vect(az, el)
+        dir = azel2vect(az, el, north)
+        if horizontal :
+            wg /= sin(radians(el))
+
     else :
       dir = -pgl.Viewer.camera.getPosition()[1]
+      assert not horizontal
 
     pgl.Viewer.camera.lookAt(bbox.getCenter() + dir*(-2.5)*d_factor, bbox.getCenter()) #2.5 is for a 600x600 GLframe
 
@@ -169,5 +183,7 @@ def directionalInterception(scene, directions, azel2vect = azel2vect):
   #print "Max value : ", max(valist)
   pgl.Viewer.camera.lookAt(cam_pos, cam_targ ) 
   pgl.Viewer.redrawPolicy = redrawPol
+
+  
   return shapeLight
 
