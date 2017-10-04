@@ -187,3 +187,35 @@ def directionalInterception(scene, directions, north = 0, horizontal = False):
   
   return shapeLight
 
+
+def sceneIrradiance(scene, directions, north = 0, horizontal = False, scene_unit = 'm'):
+    """
+    Compute the irradiance received by all the shapes of a given scene.
+   :Parameters:
+    - `scene` : scene for which the irradiance has to be computed
+    - `directions` : list of tuple composed of the an azimuth, an elevation and an irradiance (in J.s-1.m-2)
+    - `north` : the angle between the north direction of the azimuths (in degrees)
+    - `horizontal` : specify if the irradiance use an horizontal convention (True) or a normal direction (False)
+    - `scene_unit` : specify the units in which the scene is built. Convert then all the result in m.
+
+    :returns: the area of the shapes of the scene in m2 and the irradiance in J.s-1.m-2
+    :returntype: pandas.DataFrame
+    """
+
+    units = {'mm': 0.001, 'cm': 0.01, 'dm': 0.1, 'm': 1, 'dam': 10, 'hm': 100,
+             'km': 1000}
+
+    conv_unit = units[scene_unit]
+    conv_unit2 = conv_unit**2
+
+
+    res = directionalInterception(scene, directions, north, horizontal)
+    res = { sid : conv_unit2 * value for sid, value in res.iteritems() }
+
+    surfaces = dict([(sid, conv_unit2*sum([surface(sh.geometry) for sh in shapes])) for sid, shapes in scene.todict().iteritems()])
+
+
+    irradiance = { sid : value / surfaces[sid] for sid, value in res.iteritems() }
+
+    import pandas
+    return pandas.DataFrame( {'area' : surfaces, 'irradiance' : irradiance} )
