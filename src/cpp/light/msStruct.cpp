@@ -223,6 +223,8 @@ float msNode::computeSurface()
   SurfComputer surfc( d );
   if( shape->apply( surfc ) )
     return surfc.getSurface();
+  return 0;
+
 }
 
 float msNode::computeVolume()
@@ -231,6 +233,7 @@ float msNode::computeVolume()
   VolComputer volc( d );
   if( shape->apply( volc ) )
     return volc.getVolume();
+  return 0;
 }
 
 void msNode::afficheInfo()
@@ -340,7 +343,7 @@ void scaledStruct::setNodeList(const vector<msNode *>& v ) { nodeList = v; }
 msNode * scaledStruct::getNode( long int id )
 {
   id--;
-  if( id >=0 && id< nodeList.size() )
+  if( id >=0 && id < nodeList.size() )
     return nodeList[ id ];
 }
 
@@ -449,7 +452,7 @@ ScenePtr scaledStruct::genSelectScene()
   for ( int i=0; i<sel.size(); ++i )
   {
     ScenePtr sc = genNodeScene( sel[ i ] );
-    for( Scene::const_iterator sc_it = sc->getBegin(); sc_it != sc->getEnd(); ++sc_it )
+    for( Scene::const_iterator sc_it = sc->begin(); sc_it != sc->end(); ++sc_it )
     {
       scene->add( * sc_it );
     }
@@ -501,7 +504,7 @@ vector< pair<uint32_t,double> >  scaledStruct::computeProjections( Vector3 v )
   //setting the camera according to scene size
   v.normalize();
   
-  PGLViewerApplication::animation( true );
+  PGLViewerApplication::setAnimation( eAnimatedPrimitives );
   PGLViewerApplication::glFrameOnly( true );
   PGLViewerApplication::resize(600,600);
   PGLViewerApplication::setOrthographicCamera ();
@@ -575,7 +578,7 @@ ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, long int w
   float bb_factor = max( max(bbox->getXRange(), bbox->getYRange()), bbox->getZRange() );
   cam_pos = bb_center + direction*(-bb_factor)*d_factor;
 
-  PGLViewerApplication::animation( true );
+  PGLViewerApplication::setAnimation( eAnimatedPrimitives );
   PGLViewerApplication::glFrameOnly( true );
   PGLViewerApplication::resize(width,height);
   PGLViewerApplication::setOrthographicCamera ();
@@ -594,8 +597,8 @@ ViewRayPointHitBuffer * scaledStruct::computeBeams(Vector3 direction, long int w
 void scaledStruct::beamsToNodes( Vector3 direction, ViewRayPointHitBuffer * beams )
 {
   direction.normalize();
-  long int nbLign = beams->getColsSize();
-  long int nbCol = beams->getRowsSize();
+  long int nbLign = beams->getColumnSize();
+  long int nbCol = beams->getRowSize();
   RayPointHitList::iterator raypointhit_it;
   msNode * node;
   iBeam ib ;
@@ -688,7 +691,7 @@ Array2<float> scaledStruct::probaImage( long int node_id, Vector3 direction, vec
   
   vector<iBeam> * interBeams = node->getIBeams(direction);
   long int beta = interBeams->size();
-  if(! beta > 0)
+  if(! (beta > 0))
     cout<<"No beams for node "<<node->getId()<<" at scale "<<node->getScale()<<endl; 
   assert(beta>0 && "intercepted beam list must not be empty");
   float som=0;
@@ -704,8 +707,6 @@ Array2<float> scaledStruct::probaImage( long int node_id, Vector3 direction, vec
   node->setPOmega(direction, distribution, som/beta);
   t.stop();
   cout<<"image and star computed in "<<t.elapsedTime()<<"s"<<endl;
-  node = NULL;
-  delete node;
   return picture;
 }
 
@@ -754,8 +755,7 @@ float scaledStruct::probaIntercept( long int node_id, Vector3 direction, Distrib
       }
     }
   }
-  node = NULL;
-  delete node;
+
 }
 
 
@@ -868,10 +868,8 @@ float scaledStruct::probaBeamIntercept( long int node_id , Vector3 direction, ve
         return 0;
       }
     */
-    return 1-prod;
+    return (1-prod);
   }
-  node = NULL;
-  delete node;
 }
 
 float scaledStruct::starClassic( long int node_id, Vector3 direction) //needs to be called after having computed the intercepted beams
@@ -1033,7 +1031,7 @@ ScenePtr centerShapes( const ScenePtr& scene )
   ShapePtr old_sh, new_sh;
   TranslatedPtr tr;
   BoundingBoxPtr bbox;
-  for( Scene::iterator sc_it = scene->getBegin(); sc_it != scene->getEnd(); ++sc_it )
+  for( Scene::iterator sc_it = scene->begin(); sc_it != scene->end(); ++sc_it )
   {
     old_sh = dynamic_pointer_cast<Shape>( * sc_it );
     bbox = getBBox( old_sh );
@@ -1073,7 +1071,7 @@ scaledStruct * ssFromDict( string sceneName, ScenePtr& scene, const dicoTable& d
   t.start();
   pgl_hash_map< long int, long int> idList; // contains all scene ids, id shape are uint32, does it matter ?
   long int pos =0; //position de la shape dans la scene
-  for( Scene::iterator sc_it = scene->getBegin(); sc_it != scene->getEnd(); ++sc_it )
+  for( Scene::iterator sc_it = scene->begin(); sc_it != scene->end(); ++sc_it )
   {
     idList[ ( *sc_it )->getId() ]= pos++ ;
   }

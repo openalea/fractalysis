@@ -48,13 +48,13 @@ FrPointList * pointDiscretize(const ScenePtr& scene) //prend une scene et rend l
 
 	Tesselator t;
 	TriangleSetPtr triangulation;
-	for(Scene::const_iterator it = scene->getBegin(); it != scene->getEnd(); ++it) //pourquoi ++it ?
+	for(Scene::const_iterator it = scene->begin(); it != scene->end(); ++it) //pourquoi ++it ?
 	{
 		(*it)->apply(t);
 		triangulation = t.getTriangulation();
 		if (triangulation)
 		{
-			for(uint32_t itTriangle = 0; itTriangle < triangulation->getIndexList()->getSize(); ++itTriangle)
+			for(uint32_t itTriangle = 0; itTriangle < triangulation->getIndexList()->size(); ++itTriangle)
 			{
 				result.push_back(pair<Vector3,float>(getCenter( triangulation->getFacePointAt(itTriangle,0),
                                                                                 triangulation->getFacePointAt(itTriangle,1),

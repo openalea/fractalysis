@@ -53,25 +53,25 @@ boost::python::object FrPList_to_list(FrPointList * fpl)
 
 boost::python::object pyPointDiscretize(const ScenePtr& scene)
 {
-    if (!scene || scene->isEmpty() ) return boost::python::object();
+    if (!scene || scene->empty() ) return boost::python::object();
     return FrPList_to_list(pointDiscretize(scene));
 }
 
 boost::python::object pyComputeGrid(const ScenePtr& scene, int gridSize)
 {
-	if (!scene || scene->isEmpty() || gridSize < 2) return boost::python::object();
+	if (!scene || scene->empty() || gridSize < 2) return boost::python::object();
 	pair<int,double> cres =  computeGrid(scene, gridSize);
-	return make_tuple(cres.first,cres.second);
+	return boost::python::make_tuple(cres.first,cres.second);
 }
 
 boost::python::object pyComputeGrids(const ScenePtr& scene, int maxGridSize)
 {
-	if (!scene || scene->isEmpty() || maxGridSize < 2) return boost::python::object();
+	if (!scene || scene->empty() || maxGridSize < 2) return boost::python::object();
 	FrResult cres =  computeGrids(scene, maxGridSize);
 	boost::python::list pyres;
 	for(FrResult::const_iterator itRes = cres.begin(); itRes != cres.end(); ++itRes)
 	{
-		pyres.append(make_tuple(itRes->first,itRes->second));
+		pyres.append(boost::python::make_tuple(itRes->first,itRes->second));
 	}
 	return pyres;
 }

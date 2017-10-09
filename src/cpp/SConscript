@@ -1,7 +1,7 @@
 # -*-python-*-
 Import( "env" )
 
-env.EnableQt4Modules(['QtCore','QtOpenGL', 'QtGui', 'QtNetwork', 'QtSql', 'QtXml'])
+env.EnableQtModules(['QtCore','QtOpenGL', 'QtGui', 'QtNetwork', 'QtSql', 'QtXml'])
 
 
 # 1. Select and install the headers

@@ -97,10 +97,10 @@ template<class T>
 boost::python::list array2List( const T& matrix )
 {
   boost::python::list mat;
-  for(uint32_t line = 0; line < matrix.getRowsNb(); ++line )
+  for(uint32_t line = 0; line < matrix.getRowNb(); ++line )
   {
     boost::python::list l;
-    for(uint32_t clmn = 0; clmn < matrix.getColsNb(); ++clmn )
+    for(uint32_t clmn = 0; clmn < matrix.getColumnNb(); ++clmn )
       l.append( matrix.getAt(line, clmn) );
     mat.append(l);
   }
@@ -189,9 +189,9 @@ ViewRayPointHitBuffer * list_to_raybuf(  boost::python::list l )//beams structur
 boost::python::object raybuf_to_list(ViewRayPointHitBuffer * buf) //beams structure from C++ to python
 {
   boost::python::list res;
-  for(size_t i = 0; i < buf->getColsSize();i++){
+  for(size_t i = 0; i < buf->getColumnSize();i++){
     boost::python::list row;
-    for(size_t j = 0; j < buf->getRowsSize();j++){
+    for(size_t j = 0; j < buf->getRowSize();j++){
       boost::python::list zlist;
       for(size_t k = 0; k < buf->getAt(i,j).size();k++){
         RayPointHit& inter = buf->getAt(i,j)[k];

@@ -141,14 +141,14 @@ def azel2vect(az, el, north=0):
 
 
 
-def directionalInterception(scene, directions, north = 0, horizontal = False):
+def directionalInterception(scene, directions, north = 0, horizontal = False, screenwidth = 600):
   
   pgl.Viewer.display(scene)
   redrawPol = pgl.Viewer.redrawPolicy
   pgl.Viewer.redrawPolicy = False
   pgl.Viewer.frameGL.maximize(True)
-  pgl.Viewer.widgetGeometry.setSize(600, 600)
-  pgl.Viewer.frameGL.setSize(600,600)
+  pgl.Viewer.widgetGeometry.setSize(screenwidth, screenwidth)
+  pgl.Viewer.frameGL.setSize(screenwidth,screenwidth)
   
   cam_pos,cam_targ,cam_up = pgl.Viewer.camera.getPosition()
   pgl.Viewer.camera.setOrthographic()
@@ -188,7 +188,7 @@ def directionalInterception(scene, directions, north = 0, horizontal = False):
   return shapeLight
 
 
-def scene_irradiance(scene, directions, north = 0, horizontal = False, scene_unit = 'm'):
+def scene_irradiance(scene, directions, north = 0, horizontal = False, scene_unit = 'm', screenwidth = 600):
     """
     Compute the irradiance received by all the shapes of a given scene.
    :Parameters:
@@ -209,7 +209,7 @@ def scene_irradiance(scene, directions, north = 0, horizontal = False, scene_uni
     conv_unit2 = conv_unit**2
 
 
-    res = directionalInterception(scene, directions, north, horizontal)
+    res = directionalInterception(scene = scene, directions = directions, north = north, horizontal = horizontal, screenwidth=screenwidth)
     res = { sid : conv_unit2 * value for sid, value in res.iteritems() }
 
     surfaces = dict([(sid, conv_unit2*sum([pgl.surface(sh.geometry) for sh in shapes])) for sid, shapes in scene.todict().iteritems()])
