@@ -1,0 +1,34 @@
+{% set version = "2.0.0" %}
+
+package:
+  name: vplants.fractalysis
+  version: {{ version }}
+
+source:
+  path: ..
+
+build:
+  preserve_egg_dir: True
+  number: 0
+  script: python setup.py install --prefix=$PREFIX
+
+requirements:
+  build:
+    - python
+    - openalea.deploy #==2.0.0
+    - boost
+    - qt <5
+    - vplants.plantgl
+  run:
+    - vplants.plantgl
+    - qt <5
+
+test:
+  imports:
+    - openalea.fractalysis
+    - openalea.fractalysis.engine
+
+about:
+  home: http://openalea.gforge.inria.fr/
+  license: Cecill v2 License
+  summary: 3D Fractal analysis package
