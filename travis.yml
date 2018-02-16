@@ -8,13 +8,13 @@ sudo: required
 
 services:
   - docker
-  
+
 env:
  - CONDA_RECIPE=conda
    CONDA_VERSION=2
- - CONDA_RECIPE=conda
-   CONDA_VERSION=3
-   
+# - CONDA_RECIPE=conda
+#   CONDA_VERSION=3
+
 install:
   - git clone https://github.com/OpenAlea/travis-ci.git
   - cd travis-ci

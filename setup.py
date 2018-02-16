@@ -2,6 +2,7 @@
 
 import sys
 import os
+pj = os.path.join
 
 from setuptools import setup, find_packages
 
