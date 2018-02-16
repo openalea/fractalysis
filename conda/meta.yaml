@@ -16,10 +16,12 @@ requirements:
   build:
     - python
     - openalea.deploy #==2.0.0
+    - openalea.sconsx
     - boost
     - qt <5
     - openalea.plantgl
   run:
+    - boost
     - openalea.plantgl
     - qt <5
 
