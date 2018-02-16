@@ -2,7 +2,7 @@
 
 Import( "env" )
 
-py_dir = '../../fractalysis/engine'
+py_dir = '../../openalea/fractalysis/engine'
 
 # Build wrappers as shared libraries
 env1=env.Clone()
