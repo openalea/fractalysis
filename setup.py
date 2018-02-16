@@ -23,6 +23,8 @@ install_requires = []
 # web sites where to find eggs
 dependency_links = ['http://openalea.gforge.inria.fr/pi']
 
+build_prefix = "build-scons"
+
 # Main setup
 setup(
     # Meta data
