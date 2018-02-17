@@ -4,7 +4,7 @@ from PyQt4.QtGui import *
 pm = PackageManager()
 pm.init(verbose=False)
 
-app = QApplication([])
+#app = QApplication([])
 
 def test_demo_two_surfaces():
     """ Test dataflow demo TwoSurfaces"""
