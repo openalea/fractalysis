@@ -9,7 +9,7 @@ lib_env.ALEAIncludes( "fractalysis/light", includes )
 #dirs=lib_env.ALEAGlob('SConscript','*')
 
 # Install headers
-SConscript( dirs, exports = { "env" : lib_env } )
+#SConscript( dirs, exports = { "env" : lib_env } )
 
 # Select recursively the sources
 #sources= lib_env.ALEAGlob('*.cpp',dir = '*')
