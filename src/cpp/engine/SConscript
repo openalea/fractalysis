@@ -8,21 +8,21 @@ lib_env= env.Clone()
 includes= lib_env.ALEAGlob('*.h')
 lib_env.ALEAIncludes( "fractalysis/engine", includes )
 
-dirs=lib_env.ALEAGlob('SConscript','*') 
+#dirs=lib_env.ALEAGlob('SConscript','*')
 
 
 # 1. Select and install the headers
-SConscript( dirs, exports = { "env" : lib_env } )
+#SConscript( dirs, exports = { "env" : lib_env } )
 
- 
+
 #include_dir = str(env.Dir( "../include" ).srcnode())
 #h_pattern = re.compile( r".*\.(h|hpp)$" )
 #includes = [ "../include/%s" % ( s, ) for s in os.listdir(include_dir) if h_pattern.match( s ) ]
- 
+
 #env.ALEAIncludes( "fractalysis", includes )
- 
+
 # Select recursively the sources
-sources= lib_env.ALEAGlob('*.cpp',dir = '*')
+#sources= lib_env.ALEAGlob('*.cpp',dir = '*')
 sources+= lib_env.ALEAGlob('*.cpp')
 
 
@@ -35,8 +35,8 @@ LIBRARIES= list(lib_env['LIBS'])
 LIBRARIES.extend(['pgltool','pglmath','pglsg', 'pglgui', 'pglalgo']) #with qt3, pglgui3 instead of pglgui
 
 lib_env.ALEALibrary( "engine",
-                     sources, 
-                     CPPDEFINES = DEFINES, 
+                     sources,
+                     CPPDEFINES = DEFINES,
                      LIBS = LIBRARIES )
 
 
@@ -66,8 +66,8 @@ lib_env.ALEALibrary( "engine",
 # Build first library
 #sources= "pgl_compute.cpp"
 #target= "pglcompute"
- 
- 
+
+
 # Build the library
 #lib = env.ALEALibrary( target, sources, CPPDEFINES=DEFINES )
 

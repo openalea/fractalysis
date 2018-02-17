@@ -59,6 +59,7 @@ setup(
     include_package_data=True,
 
     # Specific options of openalea.deploy
+    scons_scripts = ['SConstruct'],
     lib_dirs={'lib': pj(build_prefix, 'lib')},
     inc_dirs={'include': pj(build_prefix, 'include')},
     share_dirs={'doc': 'doc',},
