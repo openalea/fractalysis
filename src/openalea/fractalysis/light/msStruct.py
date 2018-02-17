@@ -14,7 +14,12 @@ except:
 from time import sleep, time
 from math import radians, pi
 from numpy import array
-from openalea.color.py_color import rgb_color_map
+try:
+  from openalea.color.py_color import rgb_color_map
+except ImportError:
+  def rgb_color_map(*args):
+    return [(125, 10, 60)]
+
 
 def azel2vect(az, el):
   v = -pgl.Vector3(pgl.Vector3.Spherical( 1., radians( az ), radians( 90 - el ) ) )
@@ -50,7 +55,7 @@ def saveBeams(self,az, el, beams, pth=os.path.abspath(os.curdir)):
   #result = {'beams':beams}
   #res = fruti.ParamRes(param, result)
   if not os.path.isdir(savedir):
-    os.mkdir(savedir) 
+    os.mkdir(savedir)
   file = os.path.join(savedir, beam_file)
   f = open(file, 'wb')
   cPickle.dump(beams, f, protocol=cPickle.HIGHEST_PROTOCOL)
@@ -96,7 +101,7 @@ def saveSproj(self, az, el, sproj, pth=os.path.abspath(os.curdir)):
   #result = {'sproj':sproj}
   #res = fruti.ParamRes(param, result)
   if not os.path.isdir(savedir):
-    os.mkdir(savedir) 
+    os.mkdir(savedir)
   file = os.path.join(savedir, sproj_file)
   f = open(file, 'wb')
   cPickle.dump(sproj, f, protocol=cPickle.HIGHEST_PROTOCOL)
@@ -147,16 +152,16 @@ def removeScale(self, sc):
   for s in range( sc + 1, self.depth + 1):
     for i in self.get1Scale( s ) :
       self.getNode( i ).scale = s-1
-  self.countScale() 
+  self.countScale()
 
 def makePict(self, az, el, distrib, matrix, width, height, pth=os.path.abspath(os.curdir)):
   dis=""
   for d in distrib:
     dis+=str(d)
-  dir = "img_" + dis 
+  dir = "img_" + dis
   savedir = os.path.join(pth, self.name, dir)
   if not os.path.isdir(savedir):
-    os.mkdir(savedir) 
+    os.mkdir(savedir)
   pic_file = "az_" + str(round(az,2)) + "_el_" + str(round(el,2)) + ".jpg"
   file = os.path.join(savedir, pic_file)
   img = Image.new('L', (width, height))
@@ -192,7 +197,7 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
       b=self.computeBeams(dir, width, height, d_factor)
       if saveData:
         self.saveBeams(az, el,b, pth)
-  
+
     sproj=self.loadSproj(az, el, pth)
     if sproj != None:
       print "projected surface loaded..."
@@ -202,14 +207,14 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
       sproj=self.computeProjections( dir )
       if saveData:
         self.saveSproj(az, el, sproj, pth)
-  
+
   res={}
   row=[] #line to write in csv file
   #row.append(skt_idx)   #skyTurtle index
   row.append(az)        #azimut
   row.append(el)        #elevation
   #row.append(dir)       #vector
-  
+
   root_id = self.get1Scale(1)[0]
   s_classic = self.starClassic(root_id, dir)
   row.append(s_classic) #star with uniform leaves distribution in root hull
@@ -234,7 +239,7 @@ def computeDir(self, az=90, el=90, wg=False, distrib=None, skt_idx = False, widt
   file = os.path.join(savedir, csv_file)
   writer = csv.writer(open(file, 'ab'), dialect='excel')
   writer.writerow(row)
-  
+
   return res
 
 def received_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150, height=150, d_factor=8, pth=os.path.abspath(os.curdir)):
@@ -266,11 +271,11 @@ def received_light(self, scale, az=90, el=90, wg=1, mode="Multiscale", width=150
       elif res[id] == 0:
         sh.appearance = fruti.color(0, 0, 0 , diffu=1)
       else :
-        print "ID de merde : ", id, " : ", res[id]
+        print "Bad ID  : ", id, " : ", res[id]
         res[id]= 0
         sh.appearance = fruti.color(255, 0, 255 , diffu=1)
     return res, scene
-    
+
   elif mode == "Real":
     print "atual mode"
     return 1,1
@@ -300,7 +305,7 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
       b=self.computeBeams(dir, width, height, d_factor)
       print "now saving..."
       self.saveBeams(az, el,b, pth)
-  
+
     sproj=self.loadSproj(az, el, pth)
     if sproj != None:
       print "projected surface loaded..."
@@ -320,7 +325,7 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
   results['wg'] = wg
 
   res = {}
- 
+
   pea = n.getProjSurface(dir)
   tla = self.totalLA(root_id)
   res['pea'] = pea
@@ -339,23 +344,23 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
     essai += 1
   if essai < 500 :
     res['pla'] = pla
-  else : 
+  else :
     res['pla'] = 0.001
 
-  star_turbid = self.starClassic(root_id, dir)    
+  star_turbid = self.starClassic(root_id, dir)
   res['turbid'] = star_turbid
 
   for d in distrib:
     print "computing ",d,"..."
-    s=self.star(root_id, dir, d)    
+    s=self.star(root_id, dir, d)
     po = n.getPOmega(dir,d)
     res[tuple(d)] = (s, po)
- 
+
   results[root_id] = res
   #root is done now doing the same for all components of all scales except last one
   for scale in range(2, self.depth):
     compo = self.get1Scale(scale)
-    
+
     print "new scale distrib : "
     for d in distrib:
       d.pop(0)
@@ -364,7 +369,7 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
     for id in compo:
       res = {}
       n = self.getNode(id)
-   
+
       pea = n.getProjSurface(dir)
       tla = self.totalLA(id)
       res['pea'] = pea
@@ -387,19 +392,19 @@ def compute4Errors(self, peach = False, az=90, el=90, wg=False, skt_idx = False,
         print "pla problem for component : ", id
         res['pla'] = 0.001
 
-      star_turbid = self.starClassic(id, dir)    
+      star_turbid = self.starClassic(id, dir)
       res['turbid'] = star_turbid
       for d in distrib:
-        s = self.star(id, dir, d)    
+        s = self.star(id, dir, d)
         po = n.getPOmega(dir,d)
         res[tuple(d)] = (s, po)
-   
+
       results[id] = res
 
   savedir = os.path.join(pth, self.name)
   sproj_file = self.name + "_az_"+ str(round(az,2)) + "_el_" + str(round(el,2)) + ".err"
   if not os.path.isdir(savedir):
-    os.mkdir(savedir) 
+    os.mkdir(savedir)
   file = os.path.join(savedir, sproj_file)
   f = open(file, 'w')
   cPickle.dump(results, f, protocol=cPickle.HIGHEST_PROTOCOL)
@@ -418,7 +423,7 @@ def checkFactor(self, width, height, factor, pause=0.1):
     pix_width += pgl.Viewer.frameGL.getProjectionSize()[2]
     sleep(pause)
   return pix_width / 46.
-  
+
 def directionalG(self, az, el, **kwds):
   dir = azel2vect(az, el)
   pth = kwds.get( 'pth', os.path.abspath(os.curdir) )
@@ -434,15 +439,15 @@ def directionalG(self, az, el, **kwds):
     print "computing projections..."
     sproj=self.computeProjections( dir )
     self.saveSproj(az, el, sproj, pth)
-  
+
   nodelist = self.get1Scale(scale)
   ratio = 0
   for idx in nodelist:
     n = self.getNode(idx)
-    ratio += n.getProjSurface(dir) / n.surface 
+    ratio += n.getProjSurface(dir) / n.surface
 
   return ratio / len(nodelist)
-  
+
 
 def getPEA(self, **kwds):
   width = kwds.get('width', 150)
@@ -509,7 +514,7 @@ def vgStar(self, **kwds):
       row.append(real_star)
       savedir = os.path.join(pth, self.name)
       if not os.path.isdir(savedir):
-        os.mkdir(savedir) 
+        os.mkdir(savedir)
       csv_file = self.name + "_vgstar.csv"
       file = os.path.join(savedir, csv_file)
       writer = csv.writer(open(file, 'ab'), dialect='excel')

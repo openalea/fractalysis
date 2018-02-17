@@ -2,14 +2,14 @@
 #
 #       OpenAlea.Fractalysis : OpenAlea fractal analysis library module
 #
-#       Copyright or (C) or Copr. 2006-2009 INRIA - CIRAD - INRA  
+#       Copyright or (C) or Copr. 2006-2009 INRIA - CIRAD - INRA
 #
 #       File author(s): Da SILVA David <david.da_silva@cirad.fr>
 #
 #       Distributed under the Cecill-C License.
 #       See accompanying file LICENSE.txt or copy at
 #           http://www.cecill.info/licences/Licence_CeCILL-C_V1-en.html
-# 
+#
 #       OpenAlea WebSite : http://openalea.gforge.inria.fr
 #
 """
@@ -22,11 +22,14 @@
 
 """
 
+try:
+  from PIL import Image
+except ImportError:
+  import Image
 
-import Image
 import os
 import random
-from scipy import array
+from numpy import array
 
 import openalea.plantgl.all as pgl
 
@@ -39,7 +42,7 @@ def MSTfrom_file(filepath):
   if( os.path.isfile( filepath ) ):
     f=open(filepath, 'r')
     dico = eval(f.read()) #this should be changed
-    return MST(**dico)  
+    return MST(**dico)
 
   else:
     raise IOError, "No such file"
@@ -59,7 +62,7 @@ class MST:
       self.scales = scales
     else:
       self.scales = kwds.get( 'scales', [(3,0.5)]*self.depth )
-    #print "Dico : ", self.dico 
+    #print "Dico : ", self.dico
     self.generateComponents( src=self.root )
 
   def generateComponents( self, src ):
@@ -69,11 +72,11 @@ class MST:
     scale = src.getScale()
     div = self.scales[ scale ][ 0 ]
     pos = self.scales[ scale ][ 1 ]
-    
+
     if isinstance( pos, float ):
       proba = pos
       pos = self.posFromProba( div, proba )
-      
+
     components=[]
     for p in pos:
       n = Node( self.dim )
@@ -86,7 +89,7 @@ class MST:
 
   def posFromProba( self, div, proba ):
     """
-    Generates random positioning according to subdivision factor and 
+    Generates random positioning according to subdivision factor and
     proba which is equivalent in this case to normalized density
     """
     totalElmt = div**self.dim
@@ -103,9 +106,9 @@ class MST:
       rest=idx
       pos=[]
       for j in range( 1, self.dim ):
-        valeur = div**( self.dim-j ) 
+        valeur = div**( self.dim-j )
         p = rest / valeur
-        rest =  rest % valeur 
+        rest =  rest % valeur
         pos.append(p)
 
       pos.append( rest )
@@ -126,10 +129,10 @@ class MST:
         size = sc1[ 'unit' ]
     size*=self.root.div
     return ( pointList, size )
-  
+
   def toImage( self, filename='MST', pth = os.path.abspath(os.curdir) ):
     """
-    Generate an image of the MST and save it under the filename in the pth 
+    Generate an image of the MST and save it under the filename in the pth
     directory, also return the image (PIL)
     """
     if self.dim  < 3:
@@ -147,7 +150,7 @@ class MST:
     else:
       print "wrong dimension"
       return None
-  
+
 #  def toImage2( self, filename='MST' ):
 #    data = self.absolutePos()
 #    ptList=data[ 0 ]
@@ -211,19 +214,19 @@ class Node:
     self.div = 1
     self.components = None
     self.position = None
-    
+
   def setScale( self, s ):
     """
     Define the scale of the node
     """
     self.scale=s
-    
+
   def getScale( self ):
     """
     Get the scale of the node
     """
     return self.scale
-    
+
   def setComponents( self, component_list, div ):
     """
     Define the node components and the subdivision factor that goes along
@@ -232,7 +235,7 @@ class Node:
     self.div=div
 #    for elmt in self.components:
 #      elmt.setScale( self.scale +1 )
-      
+
   def getComponents( self ):
     """
     Get the components of a node
@@ -291,4 +294,4 @@ class Node:
       return 1.0*compo_dens/( self.div**self.dim )
     else:
       return 1
-    
+

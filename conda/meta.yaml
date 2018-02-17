@@ -1,7 +1,7 @@
 {% set version = "2.0.0" %}
 
 package:
-  name: vplants.fractalysis
+  name: openalea.fractalysis
   version: {{ version }}
 
 source:
@@ -16,12 +16,17 @@ requirements:
   build:
     - python
     - openalea.deploy #==2.0.0
+    - openalea.sconsx
     - boost
     - qt <5
-    - vplants.plantgl
+    - openalea.plantgl
   run:
-    - vplants.plantgl
+    - boost
+    - openalea.plantgl
     - qt <5
+    - numpy
+    - scipy
+    - pillow
 
 test:
   imports:
