@@ -24,6 +24,9 @@ requirements:
     - boost
     - openalea.plantgl
     - qt <5
+    - numpy
+    - scipy
+    - pillow
 
 test:
   imports:
