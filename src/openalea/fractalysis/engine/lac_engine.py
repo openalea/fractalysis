@@ -16,28 +16,33 @@ Module for computing n-dimensional lacunarity using n-dimensional matrix. The no
 __docformat__ = "restructuredtext en"
 
 import cPickle
-from scipy import zeros, ones, take, array
+from numpy import zeros, ones, take, array
 from scipy.signal import convolve
-from os.path import join, isdir, isfile, basename 
+from os.path import join, isdir, isfile, basename
 from os import makedirs, getcwd
+
+try:
+  from PIL import Image
+except ImportError:
+  import Image
 
 import openalea.fractalysis.fractutils.pgl_utils  as pgu
 #import pgl_utils  as pgu
 
 class MatrixLac:
   """
-  This class allow to study various lacunarities of a n-dimensional square matrix. The values can be binary ( 1=presence / 0=abscence ) or a floating number representing a density or something... 
-  
+  This class allow to study various lacunarities of a n-dimensional square matrix. The values can be binary ( 1=presence / 0=abscence ) or a floating number representing a density or something...
+
   """
 
   def __init__( self, name, points, size, vox_size, mass=None, spath = getcwd()):
     """
     The created matrix will be an n-dimensional array of the same size in any dimension.
     The size have to be specified whereas the dimension is embeded in the points list.
-    
+
     :Parameters:
       - `name` : identifier used to generate result directory
-      - `points` : list of n-dimensional vector 
+      - `points` : list of n-dimensional vector
       - `size` : grid size i.e. sudivision factor of initial bounding box
       - `mass` : (optional) `points`-shaped list of their associated weight
 
@@ -87,14 +92,14 @@ class MatrixLac:
         xyz = tuple(self.points[i])
         m[xyz] = mass[i]
     return m
-  
+
   def _get_convol( self, gb_radius, conv_mod = 'same'):
     """
     Inner method : convolve the matrix with a ones-matrix of given radius.
     The output size is determined by convolution mode.
-    The output matrix is a representation of the mass distribution of a gliding-box f given radius, 
+    The output matrix is a representation of the mass distribution of a gliding-box f given radius,
     if the convolution mode is set to 'valid' it is as if the gliding-box is bounded in within the matrix.
-    
+
     :Parameters:
       - `gb_radius` : gliding-box radius, the size of the gliding-box is thus 2*`gb_radius`+1 so it's always odd.
       - `conv_mod` : convolution mode can take 3 values : 'valid', 'same' or 'full', see below for explanations.
@@ -117,7 +122,7 @@ class MatrixLac:
     save_path = join(join(self.save_path, self.name), 'size_'+str(self.size) )
     savefile = 'radius_' + str( gb_radius ) + '.convol'
     saveabs = join( save_path, savefile )
-    
+
     if isfile( saveabs ):
       print "loading already computed convolution.."
       f = open(saveabs, 'r')
@@ -127,7 +132,7 @@ class MatrixLac:
       vect=[ gbSize ]*self.dim
       gb=ones( vect, dtype=float )
       conv=convolve(self.matrix, gb, mode=conv_mod )
-      cs=conv.shape[ 0 ] 
+      cs=conv.shape[ 0 ]
       if cs > self.size: #in case of conv_mod = full need to be checked
         idx=( cs - self.size )/2
         for i in range( self.dim ):
@@ -136,7 +141,7 @@ class MatrixLac:
         print "matrix shape : ", self.matrix.shape
         print "convol shape : ", conv.shape
         #transform it to an original shaped matrix ?
-  
+
       self._save_convol( gb_radius, conv )
     return conv
 
@@ -161,11 +166,11 @@ class MatrixLac:
 
     if not isdir(save_path):
       makedirs(save_path)
-    
+
     savefile = 'radius_' + str( radius ) + '.convol'
     print "saving ", savefile
     saveabs = join( save_path, savefile )
-    
+
     if isfile( saveabs ):
       print "won't overwrite existing file"
     else:
@@ -177,13 +182,13 @@ class MatrixLac:
   def _lacac( self, weight, gb_radius ):
     """
     Inner method : compute the **Allain and Cloitre lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
-    
+
     :Parameters:
       - `weight`: The gliding boxe mass distribution matrix
-    
+
     :Types:
       - `weight`: A n-dimensional square matrix
-    
+
     :returns: Triplet constitued of the number of gliding boxes, the first and the second moment of the gliding boxes mass distribution
     :returntype: ( int, float, float )
 
@@ -207,17 +212,17 @@ class MatrixLac:
       print "Error in Z1 and/or Z2 : ",Z1, Z2
       return (None, None, None)
 
-   
+
   def _lacac_ext( self, weight, gb_radius ):
     """
     Inner method : compute the **Allain and Cloitre lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
-    
+
     :Parameters:
       - `weight`: The gliding boxe mass distribution matrix
-    
+
     :Types:
       - `weight`: A n-dimensional square matrix
-    
+
     :returns: Triplet constitued of the number of gliding boxes, the first and the second moment of the gliding boxes mass distribution
     :returntype: ( int, float, float )
 
@@ -242,23 +247,23 @@ class MatrixLac:
   def _ctrdlac( self, weight, gb_radius ):
     """
     Inner method : compute the **Centered lacunarity** from the ``weight`` matrix representing the mass distribution of the gliding boxes
-    
+
     :Parameters:
       - `weight`: The gliding boxe mass distribution matrix
-    
+
     :Types:
       - `weight`: A n-dimensional square matrix
-    
-    :returns: 
+
+    :returns:
       a triplet constitued with the number of gliding boxes, the first and the second moment of the gliding boxes mass distribution
     :returntype: ( int, float, float )
-    
+
     """
 
     if weight.shape != self.matrix.shape:
       #modify the values of points to change origin position, should work for both bigger and smaller weight matrix
       diff = array([self.matrix.shape[i] - weight.shape[i] for i in range(len(weight.shape))])
-      curPoints = [ array(pt) - diff for pt in self.points ] 
+      curPoints = [ array(pt) - diff for pt in self.points ]
     else :
       curPoints = self.points
 
@@ -267,7 +272,7 @@ class MatrixLac:
     Z2=0
     for pt in curPoints:
       try :
-        xyz =  tuple(pt) 
+        xyz =  tuple(pt)
         v=weight[xyz]
         Z1+=v
         Z2+=( v**2 )
@@ -278,10 +283,10 @@ class MatrixLac:
     Z1/=nbBox
     Z2/=nbBox
     return ( nbBox, Z1, Z2 )
-    
+
   def one_scale_Lac( self, scale_radius , lac_type = None):
     """
-    The given scale_radius define the gliding box size in that way 
+    The given scale_radius define the gliding box size in that way
     gliding box size = scale_radius*2+1 so it is always odd
     """
     if lac_type == None:
@@ -289,26 +294,26 @@ class MatrixLac:
 
     gbSize = scale_radius*2+1
     wght=self._get_convol( scale_radius )
-    
+
     ( nbBox, Z1, Z2 ) = lac_type( wght, scale_radius )
     if nbBox != None :
       lac=Z2/( Z1**2 )
       return ( lac, self.vox_size*gbSize )
     else:
       return (None, None)
-   
+
   def lacunarity( self, radius_stop, radius_start=1, radius_step=1, lac_type=None ):
     lac = []
     boxSize = []
     for sc in range( radius_start, radius_stop+1, radius_step ):
       ( l, s ) = self.one_scale_Lac( sc, lac_type )
-      
+
       if l != None and s != None :
         lac.append( l )
         boxSize.append( s )
-      
+
     return ( lac, boxSize )
- 
+
 ############################ MatrixLac factory ########################################
 
 def lactrix_fromScene( scene, file_name, gridSize, density=True, spath = getcwd()):
@@ -324,7 +329,7 @@ def lactrix_fromScene( scene, file_name, gridSize, density=True, spath = getcwd(
     - `file` : string
     - `gridSize` : int
     - `density` : boolean
-  
+
   :returns: `MatrixLac` instance generated from the scene
   :returntype: `MatrixLac`
 
@@ -345,7 +350,7 @@ def lactrix_fromScene( scene, file_name, gridSize, density=True, spath = getcwd(
     #comment the 2 lines below to skip the view phase
     #print "generating visual representation..."
     #pgu.viewScene( pgu.toPglScene( mat.points, m ) )
-  return mat 
+  return mat
 
 
 def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
@@ -363,7 +368,7 @@ def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
     - `pix_width` : float
     - `savpth` : string
     - `th` : int
-  
+
   :returns: `MatrixLac` instance generated from the image
   :returntype: `MatrixLac`
 
@@ -372,25 +377,22 @@ def lactrix_fromPix(image_pth, pix_width, savpth, th=245):
   pts = []
   name = basename(image_pth).replace('.png', '')
   mat_size = 0
-  try :
-    import Image
-    im = Image.open(image_pth).convert("L")
-    pix = im.load()
-    width, height = im.size
-    assert width == height, "Image must be square"
-    mat_size = width
-    #finding points by inverting picture and removing grey levels
-    for i in range(width):
-      for j in range(height):
-        if pix[i,j] > th:
-          pix[i,j] = 0
-        else :
-          pts.append([i,j])
-          pix[i,j] = 255
-  except ImportError:
-    print "Image module not found, MatrixLac generation from image unavailable"
 
-  mat = MatrixLac(name=name, points=pts, size=mat_size, vox_size=pix_width, mass=None, spath=savpth) 
+  im = Image.open(image_pth).convert("L")
+  pix = im.load()
+  width, height = im.size
+  assert width == height, "Image must be square"
+  mat_size = width
+  #finding points by inverting picture and removing grey levels
+  for i in range(width):
+    for j in range(height):
+      if pix[i,j] > th:
+        pix[i,j] = 0
+      else :
+        pts.append([i,j])
+        pix[i,j] = 255
+
+  mat = MatrixLac(name=name, points=pts, size=mat_size, vox_size=pix_width, mass=None, spath=savpth)
   return mat
 
 
